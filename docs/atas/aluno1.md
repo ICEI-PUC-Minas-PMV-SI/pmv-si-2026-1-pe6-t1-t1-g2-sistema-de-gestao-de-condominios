@@ -1,4 +1,4 @@
-# ATA de Acompanhamento - Nome completo do aluno 1
+# ATA de Acompanhamento - Guilherme de Souza Mendonça Silva
 
 ## Registro de Atividades Semanais
 
