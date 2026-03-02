@@ -86,7 +86,24 @@ O projeto está restrito pelos itens apresentados na tabela a seguir.
 
 # Catálogo de Serviços
 
-Descreva aqui todos os serviços que serão disponibilizados pelo seu projeto, detalhando suas características e funcionalidades.
+Baseado nos conceitos de Gestão de Serviços de TI (ITSM), o projeto oferecerá os seguintes serviços de TI para dar suporte aos processos de negócio do condomínio:
+
+*   **Serviço de Gestão de Identidade e Acesso:**
+*   **Descrição:** Provê os meios para que usuários (moradores e administradores) sejam autenticados de forma segura e autorizados a acessar apenas as funcionalidades correspondentes aos seus perfis.
+*   **Funcionalidades:** Login, gestão de perfis e papéis.
+
+*   **Serviço de Agendamento de Recursos Comuns:**
+*   **Descrição:** É o serviço central da aplicação. Permite que os clientes (moradores) consumam o recurso de negócio "Reserva de Áreas Comuns" de forma automatizada.
+*   **Funcionalidades:** Consulta de disponibilidade, criação, visualização e cancelamento de reservas.
+
+*   **Serviço de Portfólio de Recursos:**
+*   **Descrição:** Permite que a administração do condomínio gerencie os ativos que serão disponibilizados para reserva.
+*   **Funcionalidades:** Cadastro, edição e remoção de áreas comuns e suas respectivas regras de negócio.
+
+*   **Serviço de Notificação:**
+*   **Descrição:** Mantém os usuários informados sobre o status de suas solicitações de serviço, garantindo a comunicação e o alinhamento.
+*   **Funcionalidades:** Envio de e-mails ou notificações push para confirmações, cancelamentos ou lembretes de reservas
+
 
 # Arquitetura da Solução
 
