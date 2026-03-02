@@ -16,13 +16,14 @@ Nesse momento, o grupo pode optar por fazer uso  de ferramentas como Design Thin
 
 ## Objetivos
 
-Aqui você deve descrever os objetivos do trabalho indicando que o objetivo geral é desenvolver um software para solucionar o problema apresentado acima. 
+#### Objetivo Geral
+Desenvolver um sistema de software distribuído para a gestão integrada de condomínios, com foco na automação e otimização do processo de reserva de áreas comuns.
 
-Apresente também alguns (pelo menos 2) objetivos específicos dependendo de onde você vai querer concentrar a sua prática investigativa, ou como você vai aprofundar no seu trabalho.
- 
-> **Links Úteis**:
-> - [Objetivo geral e objetivo específico: como fazer e quais verbos utilizar](https://blog.mettzer.com/diferenca-entre-objetivo-geral-e-objetivo-especifico/)
-
+#### Objetivos Específicos
+*   Implementar uma API RESTful monolítica utilizando .NET que centralize as regras de negócio para o cadastro de usuários (moradores, administradores), áreas comuns e o gerenciamento de reservas.
+*   Desenvolver uma interface web responsiva com React, permitindo que administradores gerenciem as áreas e que moradores consultem a disponibilidade, realizem e gerenciem suas próprias reservas de forma autônoma.
+*   Projetar e desenvolver uma aplicação móvel (framework a definir) que ofereça aos moradores a conveniência de realizar e consultar suas reservas a qualquer momento e lugar.
+  
 ## Justificativa
 
 O crescimento da população urbana e a verticalização das cidades resultaram em um aumento significativo no número de condomínios residenciais. Segundo dados do IBGE (2022), a proporção de brasileiros vivendo em apartamentos cresceu de 7,6% em 2000 para 12,5% em 2022. Com isso, a complexidade da gestão condominial aumentou, tornando os métodos tradicionais insuficientes.
