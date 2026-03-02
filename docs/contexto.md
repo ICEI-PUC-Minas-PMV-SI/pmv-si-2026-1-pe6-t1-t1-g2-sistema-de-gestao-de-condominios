@@ -1,6 +1,6 @@
 # Introdução
 
-Texto descritivo com a visão geral do projeto abordado. Inclui o contexto, o problema, os objetivos, a justificativa e o público-alvo do projeto.
+Este projeto aborda a crescente necessidade de modernização na administração de condomínios residenciais. O documento descreve a concepção e o planejamento de um sistema de software distribuído, nomeado "Gestão Integrada de Condomínios", cujo objetivo é otimizar processos administrativos e melhorar a comunicação interna. O foco principal da solução é automatizar o processo de reserva de áreas comuns, um ponto frequente de atrito e ineficiência. A aplicação será composta por uma API RESTful desenvolvida em .NET, uma aplicação web em React para acesso via navegador e um aplicativo móvel, garantindo acessibilidade e conveniência para todos os usuários. O projeto visa não apenas resolver um problema prático, mas também aplicar os conceitos de arquitetura de sistemas distribuídos, desenvolvimento de APIs e aplicações móveis, conforme o plano de ensino da disciplina.
 
 ## Problema
 Nesse momento você deve apresentar o problema que a sua aplicação deve  resolver. No entanto, não é a hora de comentar sobre a aplicação.
