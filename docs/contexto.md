@@ -64,6 +64,8 @@ As tabelas que se seguem apresentam os requisitos funcionais e não funcionais q
 | RF-007 | O sistema deve permitir que o 'Administrador' visualize, aprove, rejeite ou cancele qualquer reserva no sistema. | MÉDIA |
 | RF-008 | O sistema deve enviar uma notificação (email ou push) para o morador ao confirmar ou cancelar uma reserva. | BAIXA |
 
+### Requisitos não Funcionais
+
 | ID | Descrição do Requisito | Prioridade |
 |---|---|---|
 | RNF-001 | A aplicação web deve ser responsiva, garantindo usabilidade em desktops, tablets e smartphones. | ALTA |
@@ -72,16 +74,17 @@ As tabelas que se seguem apresentam os requisitos funcionais e não funcionais q
 | RNF-004 | O tempo de resposta para a consulta de disponibilidade no calendário não deve exceder 2 segundos em condições normais de uso. | MÉDIA |
 | RNF-005 | O sistema deve ser compatível com os navegadores Google Chrome, Mozilla Firefox e Microsoft Edge em suas duas versões mais recentes. | MÉDIA |
 
-Com base nas Histórias de Usuário, enumere os requisitos da sua solução. Classifique esses requisitos em dois grupos:
-
 ## Restrições
 
 O projeto está restrito pelos itens apresentados na tabela a seguir.
 
-|ID| Restrição                                             |
-|--|-------------------------------------------------------|
-|01| O projeto deverá ser entregue até o final do semestre |
-|02| Não pode ser desenvolvido um módulo de backend        |
+| ID | Restrição |
+|---|---|
+| 01 | A arquitetura do backend deverá ser monolítica, com todos os serviços de negócio contidos em uma única API. |
+| 02 | A API deverá ser desenvolvida obrigatoriamente com a tecnologia .NET. |
+| 03 | A aplicação web deverá ser desenvolvida obrigatoriamente com a biblioteca React. |
+| 04 | A autenticação de usuários no sistema deverá ser implementada utilizando JSON Web Tokens (JWT). |
+| 05 | O projeto deverá ser entregue na sua totalidade (código-fonte, documentação e apresentação) até a data limite estipulada no cronograma do semestre. |
 
 Enumere as restrições à sua solução. Lembre-se de que as restrições geralmente limitam a solução candidata.
 
