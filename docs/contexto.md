@@ -3,16 +3,12 @@
 Este projeto aborda a crescente necessidade de modernização na administração de condomínios residenciais. O documento descreve a concepção e o planejamento de um sistema de software distribuído, nomeado "Gestão Integrada de Condomínios", cujo objetivo é otimizar processos administrativos e melhorar a comunicação interna. O foco principal da solução é automatizar o processo de reserva de áreas comuns, um ponto frequente de atrito e ineficiência. A aplicação será composta por uma API RESTful desenvolvida em .NET, uma aplicação web em React para acesso via navegador e um aplicativo móvel, garantindo acessibilidade e conveniência para todos os usuários. O projeto visa não apenas resolver um problema prático, mas também aplicar os conceitos de arquitetura de sistemas distribuídos, desenvolvimento de APIs e aplicações móveis, conforme o plano de ensino da disciplina.
 
 ## Problema
-Nesse momento você deve apresentar o problema que a sua aplicação deve  resolver. No entanto, não é a hora de comentar sobre a aplicação.
+A gestão de áreas comuns em condomínios residenciais, como salões de festa, churrasqueiras e quadras esportivas, é frequentemente realizada de forma manual e descentralizada. Processos baseados em livros de registro na portaria, planilhas compartilhadas ou trocas de mensagens informais com o síndico ou zelador são comuns. Este cenário gera uma série de problemas:
 
-Descreva também o contexto em que essa aplicação será usada, se  houver: empresa, tecnologias, etc. Novamente, descreva apenas o que de  fato existir, pois ainda não é a hora de apresentar requisitos  detalhados ou projetos.
-
-Nesse momento, o grupo pode optar por fazer uso  de ferramentas como Design Thinking, que permite um olhar de ponta a ponta para o problema.
-
-> **Links Úteis**:
-> - [Objetivos, Problema de pesquisa e Justificativa](https://medium.com/@versioparole/objetivos-problema-de-pesquisa-e-justificativa-c98c8233b9c3)
-> - [Matriz Certezas, Suposições e Dúvidas](https://medium.com/educa%C3%A7%C3%A3o-fora-da-caixa/matriz-certezas-suposi%C3%A7%C3%B5es-e-d%C3%BAvidas-fa2263633655)
-> - [Brainstorming](https://www.euax.com.br/2018/09/brainstorming/)
+*   **Conflitos de Agendamento (Double Booking):** A falta de um sistema centralizado e em tempo real leva a erros, como a reserva da mesma área por dois moradores para a mesma data e horário.
+*   **Falta de Transparência:** Os moradores não têm uma visão clara da disponibilidade das áreas, das regras de utilização ou do histórico de reservas, dependendo sempre da consulta a um intermediário.
+*   **Sobrecarga Administrativa:** O síndico, zelador ou porteiro dedicam um tempo considerável para gerenciar pedidos, consultar disponibilidades, registrar reservas e comunicar os moradores, um trabalho repetitivo e de baixo valor agregado.
+*   **Falhas na Comunicação:** A ausência de um canal oficial para confirmação e lembrete das reservas pode causar mal-entendidos e o não cumprimento de regras associadas ao uso dos espaços.
 
 ## Objetivos
 
