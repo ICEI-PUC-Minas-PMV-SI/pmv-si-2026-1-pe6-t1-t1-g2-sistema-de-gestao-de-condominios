@@ -152,15 +152,6 @@ Definição de como o software é estruturado em termos dos componentes que faze
 
 ![arq](https://github.com/user-attachments/assets/b9402e05-8445-47c3-9d47-f11696e38a3d)
 
-# Restrições
-
-| ID | Restrição |
-|---|---|
-| 01 | A arquitetura do backend deverá ser monolítica, com todos os serviços de negócio contidos em uma única API. |
-| 02 | A API deverá ser desenvolvida obrigatoriamente com a tecnologia .NET. |
-| 03 | A aplicação web deverá ser desenvolvida obrigatoriamente com a biblioteca React. |
-| 04 | A autenticação de usuários no sistema deverá ser implementada utilizando JSON Web Tokens (JWT). |
-| 05 | O projeto deverá ser entregue na sua totalidade (código-fonte, documentação e apresentação) até a data limite estipulada no cronograma do semestre. |
 
 ## Tecnologias Utilizadas
 
