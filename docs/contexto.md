@@ -132,7 +132,7 @@ O projeto está restrito pelo item apresentados na tabela a seguir.
 Baseado nos conceitos de Gestão de Serviços de TI (ITSM), o projeto oferecerá os seguintes serviços de TI para dar suporte aos processos de negócio do condomínio:
 
 *   **Serviço de Gestão de Identidade e Acesso:**
-*   **Descrição:** Provê os meios para que usuários (moradores e administradores) sejam autenticados de forma segura e autorizados a acessar apenas as funcionalidades correspondentes aos seus perfis.
+*     **Descrição:** Provê os meios para que usuários (moradores e administradores) sejam autenticados de forma segura e autorizados a acessar apenas as funcionalidades correspondentes aos seus perfis.
 *   **Funcionalidades:** Login, gestão de perfis e papéis.
 
 *   **Serviço de Agendamento de Recursos Comuns:**
@@ -150,10 +150,50 @@ Baseado nos conceitos de Gestão de Serviços de TI (ITSM), o projeto oferecerá
 
 # Arquitetura da Solução
 
-Definição de como o software é estruturado em termos dos componentes que fazem parte da solução e do ambiente de hospedagem da aplicação.
+A arquitetura da solução seguirá um modelo monolítico de 3 camadas, que é uma abordagem robusta e comprovada para sistemas como o nosso. Os componentes estão distribuídos, mas a lógica de negócio permanece centralizada em uma única API, conforme a restrição do projeto.
 
-![arq](https://github.com/user-attachments/assets/b9402e05-8445-47c3-9d47-f11696e38a3d)
+O diagrama abaixo ilustra a interação entre os componentes da arquitetura.
 
+```mermaid
+graph TD
+subgraph "Usuários"
+    A[Morador]
+    B[Administrador]
+end
+
+subgraph "Aplicações Cliente (Frontend)"
+    C["Aplicação Web (React)"]
+    D["Aplicação Móvel (React Native)"]
+end
+
+subgraph "Servidor (Backend)"
+    E["API Monolítica (.NET)"]
+    F["Banco de Dados (PostgreSQL)"]
+end
+
+A -- "Utiliza" --> D
+A -- "Utiliza" --> C
+B -- "Utiliza" --> C
+
+C -- "Requisições HTTPS/JSON" --> E
+D -- "Requisições HTTPS/JSON" --> E
+
+E -- "Acessa os dados" --> F
+
+style C fill:#D9E8FF,stroke:#333,stroke-width:2px,color:#000
+style D fill:#D9E8FF,stroke:#333,stroke-width:2px,color:#000
+style E fill:#D9E8D8,stroke:#333,stroke-width:2px,color:#000
+style F fill:#FFE8D4,stroke:#333,stroke-width:2px,color:#000
+```
+
+
+*   **Aplicações Cliente (Frontend):**
+*   **Aplicação Web (React):** Interface rica e responsiva, acessada via navegador. Será a principal ferramenta para os **Administradores**, oferecendo painéis de controle, relatórios e gestão completa das áreas, reservas e ocorrências. Os moradores também poderão usá-la.
+*   **Aplicação Móvel (React Native):** Focada na conveniência e agilidade para o **Morador**. Permitirá realizar e consultar reservas, abrir ocorrências e receber notificações de forma rápida em dispositivos iOS e Android.
+
+*   **Servidor (Backend):**
+*   **API Monolítica (.NET):** O cérebro do sistema. Será uma única aplicação responsável por toda a lógica de negócio: autenticação de usuários (via JWT), validação de regras de reserva, gerenciamento de áreas, ocorrências e entregas. Ela expõe os dados e funcionalidades de forma segura através de endpoints RESTful.
+*   **Banco de Dados (PostgreSQL):** O repositório central de informações. Armazenará todos os dados de forma estruturada, incluindo usuários, áreas comuns, reservas, ocorrências, etc. A API será a única responsável por se comunicar com o banco de dados, garantindo a integridade e a segurança dos dados.
 
 ## Tecnologias Utilizadas
 
