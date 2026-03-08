@@ -4,10 +4,10 @@
 
 | Período | Microfundamento | Estudou? | Atividade Prevista | Atividade Realizada |
 |:-------:|:---------------:|:--------:|:------------------:|:-------------------:|
-| 09/02 - 15/02 | Gestão de Serviços de TI - Unidade 1 | ⬜ |  |  |
-| 16/02 - 22/02 | Gestão de Serviços de TI - Unidade 2 | ⬜ |  |  |
-| 23/02 - 01/03 | Arquitetura de Software Distribuído - Unidade 1 e 2 | ⬜ |  |  |
-| 02/03 - 08/03 | Arquitetura de Software Distribuído - Unidade 3 | ⬜ |  |  |
+| 09/02 - 15/02 | Gestão de Serviços de TI - Unidade 1 | ✅ | Início da documentação da Etapa 1. |  Discussão e definição do tema do projeto (Gestão de Condomínios). |
+| 16/02 - 22/02 | Gestão de Serviços de TI - Unidade 2 | ✅ |  Análise e levantamento inicial dos serviços | Definição estratégica do Catálogo de Serviços de TI, fundamentada nos princípios de ITSM (Gestão de Serviços de TI). |
+| 23/02 - 01/03 | Arquitetura de Software Distribuído - Unidade 1 e 2 | ✅ | Definição de Requisitos e Objetivos. | Consolidação da V1 do documento de contexto, finalizada para a primeira rodada de feedback e revisão. |
+| 02/03 - 08/03 | Arquitetura de Software Distribuído - Unidade 3 | ✅ | Finalização do documento da Etapa 1 | Conclusão da documentação técnica que detalha a correlação entre os serviços de TI e as funcionalidades de negócio. <br>Definindo e apoiando nas escolhas das tecnologias da arquitetura do projeto. |
 | 09/03 - 15/03 | APIs e Web Services - Unidade 1 | ⬜ |  |  |
 | 16/03 - 22/03 | APIs e Web Services - Unidade 2 | ⬜ |  |  |
 | 23/03 - 29/03 | APIs e Web Services - Unidade 2 | ⬜ |  |  |
