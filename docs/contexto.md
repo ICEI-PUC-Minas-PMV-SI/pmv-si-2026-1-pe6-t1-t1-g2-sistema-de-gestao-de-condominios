@@ -38,55 +38,19 @@ Este projeto se justifica pela oportunidade de aplicar tecnologia para resolver 
 
 ## Público-Alvo
 
-O público-alvo é dividido em dois perfis principais de acesso, conforme definido no **RF-001**, com diferentes níveis de autoridade e interação com a tecnologia.
+O público-alvo é dividido em dois perfis principais de acesso, com diferentes níveis de autoridade e interação com a tecnologia.
 
 ### **A. Perfil Morador (Usuário Final)**
-* **Perfil:** Indivíduos de diversas faixas etárias que residem no condomínio. 
-* **Conhecimentos Prévios:** Familiaridade básica com smartphones e navegação web (uso de redes sociais, apps de banco ou delivery).
-* **Relação com a Tecnologia:** Buscam agilidade e autonomia. Preferem o **aplicativo móvel** para ações rápidas e o **calendário visual (RF-003)** para evitar interações burocráticas com a portaria.
-* **Objetivo:** Realizar e gerenciar reservas de áreas comuns sem atritos, recebendo confirmações em tempo real (**RF-008**).
+*   **Perfil:** Indivíduos residentes no condomínio, com idade superior a 18 anos, aptos a realizar agendamentos.
+*   **Conhecimentos Prévios:** Familiaridade básica com smartphones e navegação web (uso de redes sociais, apps de banco ou delivery).
+*   **Relação com a Tecnologia:** Buscam agilidade e autonomia. Preferem o **aplicativo móvel** para ações rápidas e o **calendário visual** para evitar interações burocráticas com a portaria.
+*   **Objetivo:** Realizar e gerenciar reservas de áreas comuns, registrar ocorrências e acompanhar a chegada de encomendas sem atritos, recebendo confirmações em tempo real.
 
 ### **B. Perfil Administrador (Gestão)**
-* **Perfil:** Síndicos (eleitos ou profissionais) e membros da administradora do condomínio.
-* **Conhecimentos Prévios:** Familiaridade com ferramentas de gestão, planilhas e sistemas de controle administrativo.
-* **Relação com a Tecnologia:** Utilizam predominantemente a **aplicação web em React** via desktop. Valorizam a integridade dos dados e a capacidade de moderação (**RF-007**).
-* **Objetivo:** Configurar as regras do condomínio (**RF-002**) e garantir que o uso dos espaços seja justo e organizado, evitando conflitos de agendamento (**RF-005**).
-
----
-
-## 2. Personas
-
-As personas abaixo representam os extremos de uso do sistema para garantir que a **RNF-002 (Interface Intuitiva)** seja atendida.
-
-### **Persona 1: O Morador "Early Adopter"**
-> *"Quero reservar a churrasqueira agora para o próximo sábado sem ter que ligar para ninguém."*
-* **Nome:** Lucas, 29 anos.
-* **Profissão:** Analista de Marketing.
-* **Comportamento:** Extremamente conectado, realiza 90% de suas tarefas via mobile. 
-* **Dor:** Detesta processos manuais ou ter que assinar livros físicos na portaria.
-* **Necessidade no Sistema:** Autenticação rápida via **JWT**, calendário visual fluido e confirmação imediata por notificação.
-
-### **Persona 2: A Síndica Moderadora**
-> *"Preciso garantir que as regras de uso sejam respeitadas para manter a boa convivência no prédio."*
-* **Nome:** Helena, 52 anos.
-* **Profissão:** Aposentada e Síndica Moradora.
-* **Comportamento:** Organizada e rigorosa com horários. Prefere usar o computador para visualizar o cronograma completo do mês.
-* **Dor:** Conflitos entre vizinhos por causa de reservas duplicadas ou uso indevido de espaços.
-* **Necessidade no Sistema:** Painel administrativo para **aprovar ou rejeitar reservas (RF-007)** e definir as capacidades e regras de cada área (**RF-002**).
-
----
-
-## 3. Mapa de Stakeholders
-
-O sucesso do projeto depende do engajamento de diferentes partes interessadas:
-
-| Stakeholder | Tipo | Interesse / Expectativa |
-| :--- | :--- | :--- |
-| **Moradores** | Interno | Transparência na disponibilidade e facilidade de agendamento. |
-| **Síndico / Conselho** | Interno | Redução da sobrecarga administrativa e automação de processos. |
-| **Zeladores / Porteiros** | Interno | Consulta rápida de quem está autorizado a usar as áreas no dia. |
-| **Administradora** | Externo | Dados precisos para prestação de contas e histórico de uso. |
-| **Equipe de Dev (.NET)** | Técnico | Garantir a escalabilidade da API e a segurança HTTPS (**RNF-003**). |
+*   **Perfil:** Síndicos (eleitos ou profissionais) e membros da administradora do condomínio.
+*   **Conhecimentos Prévios:** Familiaridade com ferramentas de gestão, planilhas e sistemas de controle administrativo.
+*   **Relação com a Tecnologia:** Utilizam predominantemente a **aplicação web** via desktop. Valorizam a integridade dos dados e a capacidade de moderação.
+*   **Objetivo:** Configurar as regras do condomínio e garantir que o uso dos espaços seja justo, além de gerenciar ocorrências e o fluxo de entregas de forma organizada.
 
 ---
 
