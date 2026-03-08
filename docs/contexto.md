@@ -117,18 +117,15 @@ O sucesso do projeto depende do engajamento de diferentes partes interessadas:
 | RNF-003 | A comunicação entre os clientes (web/mobile) e a API deve ser criptografada utilizando o protocolo HTTPS. | ALTA |
 | RNF-004 | O tempo de resposta para a consulta de disponibilidade no calendário não deve exceder 2 segundos em condições normais de uso. | MÉDIA |
 | RNF-005 | O sistema deve ser compatível com os navegadores Google Chrome, Mozilla Firefox e Microsoft Edge em suas duas versões mais recentes. | MÉDIA |
+| RNF-006 | A autenticação de usuários no sistema deverá ser baseada em JSON Web Tokens (JWT), garantindo comunicação stateless. | ALTA |
 
 ## Restrições
 
-O projeto está restrito pelos itens apresentados na tabela a seguir.
+O projeto está restrito pelo item apresentados na tabela a seguir.
 
 | ID | Restrição |
 |---|---|
-| 01 | A arquitetura do backend deverá ser monolítica, com todos os serviços de negócio contidos em uma única API. |
-| 02 | A API deverá ser desenvolvida obrigatoriamente com a tecnologia .NET. |
-| 03 | A aplicação web deverá ser desenvolvida obrigatoriamente com a biblioteca React. |
-| 04 | A autenticação de usuários no sistema deverá ser implementada utilizando JSON Web Tokens (JWT). |
-| 05 | O projeto deverá ser entregue na sua totalidade (código-fonte, documentação e apresentação) até a data limite estipulada no cronograma do semestre. |
+| 01 | O projeto deverá ser entregue na sua totalidade (código-fonte, documentação e apresentação) até a data limite estipulada no cronograma do semestre. |
 
 # Catálogo de Serviços
 
