@@ -10,7 +10,7 @@ Descrever resumidamente, em um ou dois parágrafos, o projeto que está sendo de
 
 ## Integrantes
 
-* [Bruno Alfeu Mendes de Araújo](docs/atas/aluno1.md)
+* [Bruno Alfeu Mendes de Araújo](docs/atas/bruno.alfeu.md)
 * [Gabriel Amancio de Oliveira](docs/atas/gabriel.oliveira.md)
 * [Guilherme de Souza Mendonça Silva](docs/atas/guilherme.mendonca.md)
 * [Isaac Samuel de Carvalho](docs/atas/aluno4.md)
