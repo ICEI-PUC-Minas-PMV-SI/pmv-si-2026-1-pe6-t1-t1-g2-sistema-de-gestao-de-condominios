@@ -17,12 +17,15 @@ A gestão de áreas comuns em condomínios residenciais, como salões de festa, 
 ## Objetivos
 
 #### Objetivo Geral
-Desenvolver um sistema de software distribuído para a gestão integrada de condomínios, com foco na automação e otimização do processo de reserva de áreas comuns.
+Desenvolver um sistema de software distribuído para a gestão integrada de condomínios, com foco na automação e otimização dos processos de reserva de áreas comuns, ocorrências e controle de entregas.
 
 #### Objetivos Específicos
-*   Implementar uma API RESTful monolítica utilizando .NET que centralize as regras de negócio para o cadastro de usuários (moradores, administradores), áreas comuns e o gerenciamento de reservas.
-*   Desenvolver uma interface web responsiva com React, permitindo que administradores gerenciem as áreas e que moradores consultem a disponibilidade, realizem e gerenciem suas próprias reservas de forma autônoma.
-*   Projetar e desenvolver uma aplicação móvel (framework a definir) que ofereça aos moradores a conveniência de realizar e consultar suas reservas a qualquer momento e lugar.
+*   Centralizar as regras de negócio para o cadastro de usuários (moradores, administradores), áreas comuns e o gerenciamento de reservas em uma API de serviços.
+*   Desenvolver uma interface web responsiva que permita aos administradores gerenciar áreas, regras, reservas, ocorrências e entregas.
+*   Permitir que moradores consultem a disponibilidade de áreas, realizem e gerenciem suas próprias reservas de forma autônoma.
+*   Projetar e desenvolver uma aplicação móvel que ofereça aos moradores a conveniência de gerenciar reservas, registrar ocorrências e serem notificados sobre entregas.
+*   Implementar um serviço para registro e acompanhamento de ocorrências de manutenção solicitadas pelos moradores.
+*   Estru
   
 ## Justificativa
 
