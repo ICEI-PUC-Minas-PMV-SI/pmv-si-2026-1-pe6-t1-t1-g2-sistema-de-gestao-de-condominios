@@ -92,7 +92,7 @@ O público-alvo é dividido em dois perfis principais de acesso, com diferentes 
 
 ## Restrições
 
-O projeto está restrito pelo item apresentados na tabela a seguir.
+O projeto está restrito pelo item apresentado na tabela a seguir. As escolhas de tecnologia (.NET, React) e arquitetura (monolítica) são decisões de projeto e serão detalhadas na seção "Arquitetura da Solução".
 
 | ID | Restrição |
 |---|---|
