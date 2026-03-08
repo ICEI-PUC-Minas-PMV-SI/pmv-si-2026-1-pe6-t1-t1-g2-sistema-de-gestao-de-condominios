@@ -1,4 +1,4 @@
-# ATA de Acompanhamento - Nome completo do aluno 2
+# ATA de Acompanhamento - Gabriel Amâncio de Oliveira
 
 ## Registro de Atividades Semanais
 
