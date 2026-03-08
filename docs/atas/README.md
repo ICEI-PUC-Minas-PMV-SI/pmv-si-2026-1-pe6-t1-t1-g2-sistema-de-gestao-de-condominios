@@ -22,8 +22,8 @@ Cada ATA contém um **Registro de Atividades Semanais** com 18 semanas:
 
 | Aluno | ATA |
 |-------|-----|
-| Aluno 1 | [aluno1.md](aluno1.md) |
-| Aluno 2 | [aluno2.md](aluno2.md) |
+| Guilherme de Souza Mendonça Silva | [guilherme.mendonca.md](guilherme.mendonca.md) |
+| Gabriel Amâncio de Oliveira | [gabriel.oliveira.md](gabriel.oliveira.md) |
 | Bruno Alfeu Mendes de Araujo | [bruno.alfeu.md](bruno.alfeu.md) |
 | Matheus Godinho Blaselbauer| [matheus.blaselbauer.md](matheus.blaselbauer.md) |
 | Aluno 5 | [yan.martins.md](yan.martins.md) |
