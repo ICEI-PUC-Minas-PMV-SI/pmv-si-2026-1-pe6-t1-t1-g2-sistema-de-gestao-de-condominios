@@ -170,8 +170,8 @@ A escolha das tecnologias busca um equilíbrio entre produtividade, robustez e o
 | **Frontend (Mobile)**| **React Native** | Framework para o desenvolvimento da aplicação móvel multiplataforma (iOS/Android). |
 | **Banco de Dados**| **PostgreSQL** | Banco de dados relacional open-source para a persistência dos dados da aplicação. |
 
-
-Apresente também uma figura explicando como as tecnologias estão relacionadas ou como uma interação do usuário com o sistema vai ser conduzida, por onde ela passa até retornar uma resposta ao usuário.
+# Imagem que representa a interação sistema X usuário
+![Fluxo de Interação do Usuário](img/interacao-usuario-sistema.jpg)
 
 ## Hospedagem
 
