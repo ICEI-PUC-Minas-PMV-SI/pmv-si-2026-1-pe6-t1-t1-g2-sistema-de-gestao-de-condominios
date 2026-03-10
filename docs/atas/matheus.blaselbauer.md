@@ -3,11 +3,11 @@
 ## Registro de Atividades Semanais
 
 | Período | Microfundamento | Estudou? | Atividade Prevista | Atividade Realizada |
-|:-------:|:---------------:|:--------:|:------------------:|:-------------------:|
-| 09/02 - 15/02 | Gestão de Serviços de TI - Unidade 1 | ✅ |Início da Documentação da Etapa 1|Discussão e Definição do Tema do Projeto|
-| 16/02 - 22/02 | Gestão de Serviços de TI - Unidade 2 | ✅|Análise e Levantamento Inicial dos Serviços| Levantamento sobre o problema inicial e as restrições de desenvolvimento |
-| 23/02 - 01/03 | Arquitetura de Software Distribuído - Unidade 1 e 2 | ✅ | Definição de Requisitos e Objetivos | Revisão da estrutura do projeto conforme orientação do avaliador |
-| 02/03 - 08/03 | Arquitetura de Software Distribuído - Unidade 3 | ✅ | Finalização do Documento da Etapa 1 | Conclusão da etapa 1 com ajustes finais aplicados |
+|:-------:|:---------------:|:--------:|:------------------:|:---------------------
+| 09/02 - 15/02 | Gestão de Serviços de TI - Unidade 1 | ✅ |Mapeamento inicial dos possíveis problemas de infraestrutura tecnológica a serem enfrentados pela aplicação e como evitá-los| Mapeamento dos problemas de suporte tecnológico informacional mais comuns de ocorrerem |
+| 16/02 - 22/02 | Gestão de Serviços de TI - Unidade 2 | ✅ |Planejamento de maneiras para mitigar os problemas de serviços de TI levantados anteriormente| Implementação da seção de problemas que a aplicação visa resolver de acordo com as boas práticas do padrão de framework ITIL(Information Technology Infrastructure Library)|
+| 23/02 - 01/03 | Arquitetura de Software Distribuído - Unidade 1 e 2 | ✅ | Escolhas restritivas da arquitetura da solução | Implementação da seção de restrições arquiteturais da aplicação |
+| 02/03 - 08/03 | Arquitetura de Software Distribuído - Unidade 3 | ✅ | Revisão dos problemas e restrições arquiteturais levantados, e comparação com as boas práticas |Revisão dos problemas levantados e correção das informações de restrição implementadas|
 | 09/03 - 15/03 | APIs e Web Services - Unidade 1 | ⬜ |  |  |
 | 16/03 - 22/03 | APIs e Web Services - Unidade 2 | ⬜ |  |  |
 | 23/03 - 29/03 | APIs e Web Services - Unidade 2 | ⬜ |  |  |
