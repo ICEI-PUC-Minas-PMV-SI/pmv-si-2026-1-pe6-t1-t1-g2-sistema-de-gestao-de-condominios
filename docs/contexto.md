@@ -175,4 +175,17 @@ Apresente também uma figura explicando como as tecnologias estão relacionadas 
 
 ## Hospedagem
 
-Explique como a hospedagem e o lançamento da plataforma foi feita.
+* **Estratégia de Infraestrutura e Hospedagem**
+A arquitetura do projeto utiliza soluções em nuvem focadas em alta disponibilidade, escalabilidade e automação de processos via CI/CD.
+
+* **Serviços de Backend e Persistência:**
+A API (.NET) e o banco de dados (PostgreSQL) serão provisionados na AWS (Amazon Web Services). A escolha da AWS justifica-se pela robustez da infraestrutura e pela facilidade de gerenciamento de serviços gerenciados, garantindo a integridade dos dados e a performance das requisições.
+
+* **Frontend Web:**
+Para a aplicação React, serão utilizadas plataformas de Edge Computing como Vercel ou Netlify. Essas ferramentas permitem deploys atômicos, otimização de ativos estáticos e entrega de conteúdo via CDN, resultando em menor latência para o usuário final.
+
+* **Distribuição Mobile:**
+A aplicação móvel seguirá os fluxos de build e submissão para as lojas oficiais: Google Play Store (Android) e Apple App Store (iOS). O gerenciamento de versões será controlado via Release Tracks para garantir a estabilidade das entregas.
+
+* **Pipeline de CI/CD:**
+A automação do ciclo de vida de software será gerenciada pelo GitHub Actions. O pipeline está configurado para executar rotinas de build, testes automatizados e deploy contínuo. Toda atualização na branch principal (main) dispara automaticamente a atualização dos serviços na AWS e no provedor de frontend.
