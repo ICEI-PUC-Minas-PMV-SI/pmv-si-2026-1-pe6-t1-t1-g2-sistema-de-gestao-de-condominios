@@ -161,7 +161,15 @@ style F fill:#FFE8D4,stroke:#333,stroke-width:2px,color:#000
 
 ## Tecnologias Utilizadas
 
-Descreva aqui qual(is) tecnologias você vai usar para resolver o seu problema, ou seja, implementar a sua solução. Liste todas as tecnologias envolvidas, linguagens a serem utilizadas, serviços web, frameworks, bibliotecas, IDEs de desenvolvimento, e ferramentas.
+A escolha das tecnologias busca um equilíbrio entre produtividade, robustez e o ecossistema de ferramentas disponíveis. A tabela abaixo resume as principais plataformas e frameworks que estruturam a aplicação.
+
+| Categoria | Tecnologia | Propósito |
+| :--- | :--- | :--- |
+| **Backend (API)** | **.NET** | Plataforma de desenvolvimento principal para a construção da API RESTful, utilizando a linguagem C#. |
+| **Frontend (Web)**| **React** | Biblioteca principal para a construção da interface de usuário web. |
+| **Frontend (Mobile)**| **React Native** | Framework para o desenvolvimento da aplicação móvel multiplataforma (iOS/Android). |
+| **Banco de Dados**| **PostgreSQL** | Banco de dados relacional open-source para a persistência dos dados da aplicação. |
+
 
 Apresente também uma figura explicando como as tecnologias estão relacionadas ou como uma interação do usuário com o sistema vai ser conduzida, por onde ela passa até retornar uma resposta ao usuário.
 
