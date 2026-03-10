@@ -4,13 +4,13 @@
 
 | Período | Microfundamento | Estudou? | Atividade Prevista | Atividade Realizada |
 | :--- | :--- | :---: | :--- | :--- |
-| **09/02 - 15/02** | Gestão de Serviços de TI - Unidade 1 | ✅ | Início da documentação da Etapa 1. | - Discussão e definição do tema do projeto (Gestão de Condomínios). |
-| **16/02 - 22/02** | Gestão de Serviços de TI - Unidade 2 | ✅ | Elaboração do escopo inicial do projeto. | - Discussão sobre Público-Alvo e criação da primeira versão dos Requisitos Funcionais e Não Funcionais. |
-| **23/02 - 01/03** | Arquitetura de Software Distribuído - Unidade 1 e 2 | ✅ | Definição de Requisitos e Objetivos. | - Consolidação do documento de contexto para a primeira revisão. |
-| **02/03 - 08/03** | Arquitetura de Software Distribuído - Unidade 3 | ✅ | Finalização do documento da Etapa 1 | - Liderança na reestruturação do documento da Etapa 1 para alinhar com o feedback do professor.<br>- Expansão dos Requisitos Funcionais (CRUDs de Ocorrências e Entregas) e refino dos Requisitos Não Funcionais.<br>- Detalhamento da Arquitetura da Solução, incluindo diagrama de componentes, definição da stack (React Native, PostgreSQL) e estratégia de hospedagem (Azure).<br>- Ajuste da seção de Restrições para focar em limitações externas ao projeto. |
-| **09/03 - 15/03** | APIs e Web Services - Unidade 1 | ⬜ | | |
-| **16/03 - 22/03** | APIs e Web Services - Unidade 2 | ⬜ | | |
-| **23/03 - 29/03** | APIs e Web Services - Unidade 2 | ⬜ | | |
+| **09/02 - 15/02** | Gestão de Serviços de TI - Unidade 1 | ✅ | Definição do tema e escopo geral do projeto. | - Participei da discussão e ajudei a definir o tema do projeto como "Gestão de Condomínios". |
+| **16/02 - 22/02** | Gestão de Serviços de TI - Unidade 2 | ✅ | Elaboração do documento de contexto (Etapa 1). | - Elaborei a primeira versão das seções de Requisitos Funcionais, Requisitos Não Funcionais e Restrições. |
+| **23/02 - 01/03** | Arquitetura de Software Distribuído - Unidade 1 e 2 | ✅ | Refinamento da documentação da Etapa 1. | - Ajustei as seções de requisitos após o primeiro feedback do professor, adicionando os CRUDs de "Gestão de Ocorrências" e "Gestão de Entregas". |
+| **02/03 - 08/03** | Arquitetura de Software Distribuído - Unidade 3 | ✅ | Finalização do documento da Etapa 1 com a arquitetura. | - Elaborei a seção de Arquitetura da Solução.<br>- Apoiei nas escolhas para as seções "Tecnologias Utilizadas" e "Estratégia de Hospedagem" de acordo com o feedback da aula 4 (trocando Azure por AWS). |
+| **09/03 - 15/03** | APIs e Web Services - Unidade 1 | ✅ | Início do planejamento da Etapa 2 (API). | - Apoiei os membros da equipe nas correções finais da Etapa 1.<br>- Participei do planejamento inicial para a divisão de tarefas da API. |
+| **16/03 - 22/03** | APIs e Web Services - Unidade 2 | ⬜ | Desenvolvimento dos endpoints da API. | |
+| **23/03 - 29/03** | APIs e Web Services - Unidade 2 | ⬜ | Testes e documentação da API. | |
 | **30/03 - 05/04** | Recuperação de Informação na Web e Redes Sociais - Unidade 1 | ⬜ | | |
 | **06/04 - 12/04** | Recuperação de Informação na Web e Redes Sociais - Unidade 2 | ⬜ | | |
 | **13/04 - 19/04** | Computação Ubíqua e Pervasiva e IoT - Unidade 1 | ⬜ | | |
