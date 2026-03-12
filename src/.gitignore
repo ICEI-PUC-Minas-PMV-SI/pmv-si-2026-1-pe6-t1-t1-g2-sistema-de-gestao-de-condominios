@@ -1,0 +1,22 @@
+# Build output
+backend/bin/
+backend/obj/
+
+# Visual Studio / usuário
+.vs/
+backend/.vs/
+backend/*.user
+backend/*.rsuser
+backend/*.suo
+
+# Logs e arquivos temporários
+backend/*.log
+backend/logs/
+backend/TestResults/
+
+# Publicação local
+backend/publish/
+backend/artifacts/
+
+# Segredos locais (User Secrets)
+backend/secrets.json
