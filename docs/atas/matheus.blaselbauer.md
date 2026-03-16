@@ -8,7 +8,7 @@
 | 16/02 - 22/02 | Gestão de Serviços de TI - Unidade 2 | ✅ |Planejamento de maneiras para mitigar os problemas de serviços de TI levantados anteriormente| Implementação da seção de problemas que a aplicação visa resolver de acordo com as boas práticas do padrão de framework ITIL(Information Technology Infrastructure Library)|
 | 23/02 - 01/03 | Arquitetura de Software Distribuído - Unidade 1 e 2 | ✅ | Escolhas restritivas da arquitetura da solução | Implementação da seção de restrições arquiteturais da aplicação |
 | 02/03 - 08/03 | Arquitetura de Software Distribuído - Unidade 3 | ✅ | Revisão dos problemas e restrições arquiteturais levantados, e comparação com as boas práticas |Revisão dos problemas levantados e correção das informações de restrição implementadas|
-| 09/03 - 15/03 | APIs e Web Services - Unidade 1 | ⬜ |  |  |
+| 15/03 - 15/03 | APIs e Web Services - Unidade 1 | ✅| CRUD inicial de delivery implementado | CRUD inicial de delivery implementado |
 | 16/03 - 22/03 | APIs e Web Services - Unidade 2 | ⬜ |  |  |
 | 23/03 - 29/03 | APIs e Web Services - Unidade 2 | ⬜ |  |  |
 | 30/03 - 05/04 | Recuperação de Informação na Web e Redes Sociais - Unidade 1 | ⬜ |  |  |
