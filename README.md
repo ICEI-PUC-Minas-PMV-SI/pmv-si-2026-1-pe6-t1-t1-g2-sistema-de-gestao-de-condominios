@@ -15,7 +15,7 @@ Descrever resumidamente, em um ou dois parágrafos, o projeto que está sendo de
 * [Guilherme de Souza Mendonça Silva](docs/atas/guilherme.mendonca.md)
 * [Isaac Samuel de Carvalho](docs/atas/isaac.samuel.md)
 * [Yan Guimarães Martins](docs/atas/yan.martins.md)
-* [Matheus Godinho Blaselbauer](docs/atas/matheus.godinho.md)
+* [Matheus Godinho Blaselbauer](docs/atas/matheus.blaselbauer.md)
 
 ## Orientador
 
