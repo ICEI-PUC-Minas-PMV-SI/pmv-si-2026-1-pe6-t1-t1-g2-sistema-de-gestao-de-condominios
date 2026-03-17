@@ -20,3 +20,6 @@ backend/artifacts/
 
 # Segredos locais (User Secrets)
 backend/secrets.json
+
+# Configurações de ambiente
+backend/appsettings.Development.json
