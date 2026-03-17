@@ -11,6 +11,20 @@ builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
+app.Lifetime.ApplicationStarted.Register(() =>
+{
+    if (!app.Environment.IsDevelopment())
+    {
+        return;
+    }
+
+    var logger = app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Startup");
+    foreach (var url in app.Urls)
+    {
+        logger.LogInformation("Swagger disponível em: {SwaggerUrl}", $"{url.TrimEnd('/')}/swagger");
+    }
+});
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
