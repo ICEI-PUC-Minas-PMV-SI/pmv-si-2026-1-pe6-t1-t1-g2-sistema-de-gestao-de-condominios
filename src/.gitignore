@@ -23,8 +23,8 @@ backend/secrets.json
 
 # Configurações de ambiente
 <<<<<<< HEAD
-backend/appsettings.*.json
+#backend/appsettings.*.json
 =======
-backend/appsettings.Development.json
+#backend/appsettings.Development.json
 backend/appsettings.json
 >>>>>>> 5d1214c (fix: rm env vars from commit)
