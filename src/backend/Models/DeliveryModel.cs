@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using backend.Dtos;
 
 namespace backend.Models
 {
@@ -30,5 +31,9 @@ namespace backend.Models
 
         [JsonPropertyName("updated_at")]
         public DateTime? UpdatedAt { get; set; }
+
+        [JsonPropertyName("links")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public List<Link>? Links { get; set; }
     }
 }

@@ -1,3 +1,4 @@
+using backend.Dtos;
 using backend.Models;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
@@ -39,7 +40,9 @@ namespace backend.Controllers
 
                 while (await reader.ReadAsync(cancellationToken))
                 {
-                    deliveries.Add(MapDelivery(reader));
+                    var delivery = MapDelivery(reader);
+                    delivery.Links = BuildLinks(delivery.Id);
+                    deliveries.Add(delivery);
                 }
 
                 return Ok(deliveries);
@@ -78,7 +81,9 @@ namespace backend.Controllers
                     return NotFound();
                 }
 
-                return Ok(MapDelivery(reader));
+                var getByIdDelivery = MapDelivery(reader);
+                getByIdDelivery.Links = BuildLinks(getByIdDelivery.Id);
+                return Ok(getByIdDelivery);
             }
             catch (Exception ex)
             {
@@ -124,6 +129,7 @@ namespace backend.Controllers
                 }
 
                 var delivery = MapDelivery(reader);
+                delivery.Links = BuildLinks(delivery.Id);
                 return CreatedAtAction(nameof(GetById), new { id = delivery.Id }, delivery);
             }
             catch (Exception ex)
@@ -177,7 +183,9 @@ namespace backend.Controllers
                     return NotFound();
                 }
 
-                return Ok(MapDelivery(reader));
+                var updatedDelivery = MapDelivery(reader);
+                updatedDelivery.Links = BuildLinks(updatedDelivery.Id);
+                return Ok(updatedDelivery);
             }
             catch (Exception ex)
             {
@@ -230,6 +238,17 @@ namespace backend.Controllers
             }
 
             return (connectionString, null);
+        }
+
+        private List<Link> BuildLinks(int deliveryId)
+        {
+            return
+            [
+                new(Url.ActionLink(nameof(GetById), values: new { id = deliveryId }) ?? string.Empty, "self", "GET"),
+                new(Url.ActionLink(nameof(Update), values: new { id = deliveryId }) ?? string.Empty, "update", "PUT"),
+                new(Url.ActionLink(nameof(Delete), values: new { id = deliveryId }) ?? string.Empty, "delete", "DELETE"),
+                new(Url.ActionLink(nameof(GetAll)) ?? string.Empty, "collection", "GET")
+            ];
         }
 
         private static Delivery MapDelivery(NpgsqlDataReader reader)
