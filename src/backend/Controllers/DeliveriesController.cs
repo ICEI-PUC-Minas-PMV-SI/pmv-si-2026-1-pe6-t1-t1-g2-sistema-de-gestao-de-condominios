@@ -92,7 +92,7 @@ namespace backend.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Delivery>> Create([FromBody] Delivery requestBody, CancellationToken cancellationToken)
+        public async Task<ActionResult<Delivery>> Create([FromBody] DeliveryUpsertRequest requestBody, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
             {
@@ -139,7 +139,7 @@ namespace backend.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<Delivery>> Update(int id, [FromBody] Delivery requestBody, CancellationToken cancellationToken)
+        public async Task<ActionResult<Delivery>> Update(int id, [FromBody] DeliveryUpsertRequest requestBody, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
             {
@@ -242,13 +242,22 @@ namespace backend.Controllers
 
         private List<Link> BuildLinks(int deliveryId)
         {
-            return
-            [
-                new(Url.ActionLink(nameof(GetById), values: new { id = deliveryId }) ?? string.Empty, "self", "GET"),
-                new(Url.ActionLink(nameof(Update), values: new { id = deliveryId }) ?? string.Empty, "update", "PUT"),
-                new(Url.ActionLink(nameof(Delete), values: new { id = deliveryId }) ?? string.Empty, "delete", "DELETE"),
-                new(Url.ActionLink(nameof(GetAll)) ?? string.Empty, "collection", "GET")
-            ];
+            var links = new List<Link>();
+
+            AddLinkIfAvailable(links, Url.ActionLink(nameof(GetById), values: new { id = deliveryId }), "self", "GET");
+            AddLinkIfAvailable(links, Url.ActionLink(nameof(Update), values: new { id = deliveryId }), "update", "PUT");
+            AddLinkIfAvailable(links, Url.ActionLink(nameof(Delete), values: new { id = deliveryId }), "delete", "DELETE");
+            AddLinkIfAvailable(links, Url.ActionLink(nameof(GetAll)), "collection", "GET");
+
+            return links;
+        }
+
+        private static void AddLinkIfAvailable(List<Link> links, string? href, string rel, string method)
+        {
+            if (!string.IsNullOrWhiteSpace(href))
+            {
+                links.Add(new Link(href, rel, method));
+            }
         }
 
         private static Delivery MapDelivery(NpgsqlDataReader reader)
