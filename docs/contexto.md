@@ -1,10 +1,10 @@
 # Introdução
 
-A crescente verticalização das cidades brasileiras tem transformado a dinâmica da vida em comunidade, intensificando a complexidade da administração condominial. Com isso, métodos de gestão tradicionais, muitas vezes manuais, tornaram-se fontes de ineficiência e atrito entre os moradores.
+As cidades brasileiras não param de crescer para o alto. Viver em condomínio virou o novo padrão, mas administrar esses espaços ficou cada vez mais difícil. Aqueles métodos antigos, baseados em papel ou conversas soltas, já não dão mais conta do recado e acabam gerando confusão e estresse entre os vizinhos.
 
-Dentre os desafios operacionais, o gerenciamento da reserva de áreas comuns é um dos processos mais sensíveis. A utilização de controles analógicos frequentemente resulta em conflitos, falta de transparência e sobrecarga administrativa para a gestão.
+Um dos maiores "nós" dessa gestão é o uso das áreas comuns. Quem nunca teve problemas para reservar o salão de festas ou a churrasqueira? A falta de um sistema claro causa brigas, falta de confiança e deixa o síndico sobrecarregado com mensagens o dia todo.
 
-Este projeto aborda diretamente esse cenário, propondo o desenvolvimento de um sistema de software distribuído, o "Gestão Integrada de Condomínios". O objetivo é conceber e planejar uma solução tecnológica que otimize e automatize processos administrativos, com foco na modernização do sistema de reservas, oferecendo uma plataforma centralizada e transparente para todos os envolvidos.
+Para resolver isso, criamos o "Gestão Integrada de Condomínios". Este projeto é uma solução digital pensada para organizar a casa: um sistema fácil de usar que automatiza as reservas e centraliza tudo em um só lugar. O objetivo é simples: trazer mais transparência, modernidade e, acima de tudo, paz para a convivência em comunidade.
 
 ## Problema
 A gestão de áreas comuns em condomínios residenciais, como salões de festa, churrasqueiras e quadras esportivas, é frequentemente realizada de forma manual e descentralizada. Processos baseados em livros de registro na portaria, planilhas compartilhadas ou trocas de mensagens informais com o síndico ou zelador são comuns. Este cenário gera uma série de problemas:
