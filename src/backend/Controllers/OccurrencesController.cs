@@ -79,7 +79,7 @@ namespace backend.Controllers
                 await connection.OpenAsync(ct);
                 const string sql = @"
                     INSERT INTO public.occurrences (user_id, title, description, status)
-                    VALUES (@u, @t, @d, @s)
+                    VALUES (@u, @t, @d, @s::occurrence_status)
                     RETURNING *;";
                 await using var command = new NpgsqlCommand(sql, connection);
                 command.Parameters.AddWithValue("u", (object?)model.UserId ?? DBNull.Value);
@@ -111,7 +111,7 @@ namespace backend.Controllers
                 await connection.OpenAsync(ct);
                 const string sql = @"
                     UPDATE public.occurrences 
-                    SET user_id = @u, title = @t, description = @d, status = @s, updated_at = CURRENT_TIMESTAMP
+                    SET user_id = @u, title = @t, description = @d, status = @s::occurrence_status, updated_at = CURRENT_TIMESTAMP
                     WHERE id = @id
                     RETURNING *;";
                 await using var command = new NpgsqlCommand(sql, connection);
@@ -157,10 +157,26 @@ namespace backend.Controllers
             }
         }
 
-        private (string, ActionResult?) GetConnectionString()
+        private (string ConnectionString, ActionResult? Error) GetConnectionString()
         {
             var s = _configuration.GetConnectionString("DefaultConnection");
-            return string.IsNullOrEmpty(s) ? ("", StatusCode(500, "Configure ConnectionStrings:DefaultConnection.")) : (s, null);
+            if (string.IsNullOrEmpty(s)) return ("", StatusCode(500, "Configure ConnectionStrings:DefaultConnection."));
+
+            // Ensure SSL settings recommended by Supabase
+            try
+            {
+                var builder = new NpgsqlConnectionStringBuilder(s)
+                {
+                    SslMode = SslMode.Require,
+                    TrustServerCertificate = true
+                };
+
+                return (builder.ConnectionString, null);
+            }
+            catch
+            {
+                return (s, null);
+            }
         }
 
         private static Occurrence MapOccurrence(NpgsqlDataReader r) => new()
