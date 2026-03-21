@@ -8,7 +8,7 @@
 | 16/02 - 22/02 | Gestão de Serviços de TI - Unidade 2 | ✅ | Levantamento e Análise de Serviços | Estruturação do Catálogo de Serviços fundamentada em princípios de ITSM |
 | 23/02 - 01/03 | Arquitetura de Software Distribuído - Unidade 1 e 2 | ✅ | Definição de Requisitos e Objetivos | Definição de requisitos e ajuste da documentação após feedback do professor |
 | 02/03 - 08/03 | Arquitetura de Software Distribuído - Unidade 3 | ✅ | Consolidação da Etapa 1 | Finalização do documento e definição da stack tecnológica do projeto |
-| 09/03 - 15/03 | APIs e Web Services - Unidade 1 | ⬜ |  |  |
+| 09/03 - 15/03 | APIs e Web Services - Unidade 1 | ✅ | CRUD notifications | CRUD notifications |
 | 16/03 - 22/03 | APIs e Web Services - Unidade 2 | ⬜ |  |  |
 | 23/03 - 29/03 | APIs e Web Services - Unidade 2 | ⬜ |  |  |
 | 30/03 - 05/04 | Recuperação de Informação na Web e Redes Sociais - Unidade 1 | ⬜ |  |  |
