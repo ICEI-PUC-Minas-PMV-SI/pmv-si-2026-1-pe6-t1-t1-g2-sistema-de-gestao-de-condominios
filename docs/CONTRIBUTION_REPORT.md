@@ -1,6 +1,6 @@
 # 📊 Relatório de Contribuições do Projeto
 
-**Última atualização:** 21/03/2026 17:07
+**Última atualização:** 21/03/2026 17:08
 
 ---
 
@@ -13,18 +13,18 @@
 | Gabriel Oliveira      |        14 |        58 |        36 |          6 |             12 |               4 |
 | Guilherme Mendonca    |         2 |       355 |        17 |          4 |              1 |               1 |
 | Isaac                 |         1 |       264 |         0 |          2 |              0 |               0 |
-| Isaac Samuel          |         9 |        72 |        67 |          5 |              8 |               4 |
+| Isaac Samuel          |        10 |        74 |        69 |          5 |              9 |               4 |
 | Mathbkj               |         8 |       408 |        41 |         10 |              0 |               0 |
 | Mukimiw4a             |        10 |        28 |        23 |          7 |             10 |               6 |
 | YanGuimaraesMartins   |        10 |       300 |        16 |          8 |              7 |               4 |
-| github-actions[bot]   |         7 |        72 |        70 |          3 |              7 |               1 |
+| github-actions[bot]   |         8 |        76 |        74 |          3 |              8 |               1 |
 | github-classroom[bot] |         1 |      2152 |         0 |         45 |              1 |              13 |
 | guigsmendonca         |        12 |       104 |        82 |          4 |             12 |               3 |
 
 
 ## 📅 Contribuições Semanais (Todo o Semestre)
 
-**2026-03-14**: Bruno Alfeu: 3, Gabriel: 2, Gabriel Oliveira: 2, Guilherme Mendonca: 2, Isaac: 1, Isaac Samuel: 3, Mathbkj: 8, Mukimiw4a: 2, YanGuimaraesMartins: 3, github-actions[bot]: 7
+**2026-03-14**: Bruno Alfeu: 3, Gabriel: 2, Gabriel Oliveira: 2, Guilherme Mendonca: 2, Isaac: 1, Isaac Samuel: 4, Mathbkj: 8, Mukimiw4a: 2, YanGuimaraesMartins: 3, github-actions[bot]: 8
 
 **2026-03-07**: Bruno Alfeu: 6, Gabriel: 1, Gabriel Oliveira: 10, Isaac Samuel: 5, Mukimiw4a: 6, YanGuimaraesMartins: 5, guigsmendonca: 6
 
