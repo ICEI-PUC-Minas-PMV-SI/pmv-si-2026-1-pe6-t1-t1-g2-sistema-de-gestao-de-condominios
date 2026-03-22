@@ -1,7 +1,7 @@
+using backend.Data;
 using backend.Models;
-using backend.Services;
 using Microsoft.AspNetCore.Mvc;
-using Npgsql;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers
 {
@@ -9,45 +9,27 @@ namespace backend.Controllers
     [Route("api/reservas")]
     public class ReservasController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
+        private readonly ApplicationDbContext _context;
 
         private static readonly HashSet<string> AllowedStatus =
             new(StringComparer.OrdinalIgnoreCase) { "Confirmada", "Pendente", "Cancelada" };
 
-        public ReservasController(IConfiguration configuration)
+        public ReservasController(ApplicationDbContext context)
         {
-            _configuration = configuration;
+            _context = context;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ReservaAreaComum>>> GetAll(CancellationToken cancellationToken)
         {
-            var (connectionString, errorResult) = GetConnectionString();
-            if (errorResult is not null)
-            {
-                return errorResult;
-            }
-
             try
             {
-                await using var connection = new NpgsqlConnection(connectionString);
-                await connection.OpenAsync(cancellationToken);
+                var list = await _context.Reservas
+                    .AsNoTracking()
+                    .OrderBy(r => r.Id)
+                    .ToListAsync(cancellationToken);
 
-                const string sql = @"
-                    SELECT id, area_comum_id, morador_id, data_hora_inicio, data_hora_fim, status, observacao, created_at, updated_at
-                    FROM public.reservas
-                    ORDER BY id;";
-
-                await using var command = new NpgsqlCommand(sql, connection);
-                await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-
-                var reservas = new List<ReservaAreaComum>();
-                while (await reader.ReadAsync(cancellationToken))
-                {
-                    reservas.Add(MapReserva(reader));
-                }
-
-                return Ok(reservas);
+                return Ok(list);
             }
             catch (Exception ex)
             {
@@ -58,33 +40,18 @@ namespace backend.Controllers
         [HttpGet("{id:int}")]
         public async Task<ActionResult<ReservaAreaComum>> GetById(int id, CancellationToken cancellationToken)
         {
-            var (connectionString, errorResult) = GetConnectionString();
-            if (errorResult is not null)
-            {
-                return errorResult;
-            }
-
             try
             {
-                await using var connection = new NpgsqlConnection(connectionString);
-                await connection.OpenAsync(cancellationToken);
+                var reserva = await _context.Reservas
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
 
-                const string sql = @"
-                    SELECT id, area_comum_id, morador_id, data_hora_inicio, data_hora_fim, status, observacao, created_at, updated_at
-                    FROM public.reservas
-                    WHERE id = @id
-                    LIMIT 1;";
-
-                await using var command = new NpgsqlCommand(sql, connection);
-                command.Parameters.AddWithValue("id", id);
-
-                await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-                if (!await reader.ReadAsync(cancellationToken))
+                if (reserva is null)
                 {
                     return NotFound();
                 }
 
-                return Ok(MapReserva(reader));
+                return Ok(reserva);
             }
             catch (Exception ex)
             {
@@ -106,19 +73,9 @@ namespace backend.Controllers
                 return BadRequest(validationError);
             }
 
-            var (connectionString, errorResult) = GetConnectionString();
-            if (errorResult is not null)
-            {
-                return errorResult;
-            }
-
             try
             {
-                await using var connection = new NpgsqlConnection(connectionString);
-                await connection.OpenAsync(cancellationToken);
-
                 if (await ExistsOverlappingReservationAsync(
-                        connection,
                         requestBody.AreaComumId,
                         requestBody.DataHoraInicio,
                         requestBody.DataHoraFim,
@@ -128,27 +85,23 @@ namespace backend.Controllers
                     return Conflict("Já existe reserva ativa (não cancelada) neste horário para esta área comum.");
                 }
 
-                const string sql = @"
-                    INSERT INTO public.reservas (area_comum_id, morador_id, data_hora_inicio, data_hora_fim, status, observacao)
-                    VALUES (@area_comum_id, @morador_id, @data_hora_inicio, @data_hora_fim, @status, @observacao)
-                    RETURNING id, area_comum_id, morador_id, data_hora_inicio, data_hora_fim, status, observacao, created_at, updated_at;";
-
-                await using var command = new NpgsqlCommand(sql, connection);
-                command.Parameters.AddWithValue("area_comum_id", requestBody.AreaComumId);
-                command.Parameters.AddWithValue("morador_id", requestBody.MoradorId);
-                command.Parameters.AddWithValue("data_hora_inicio", requestBody.DataHoraInicio);
-                command.Parameters.AddWithValue("data_hora_fim", requestBody.DataHoraFim);
-                command.Parameters.AddWithValue("status", requestBody.Status);
-                command.Parameters.AddWithValue("observacao", requestBody.Observacao is null ? DBNull.Value : requestBody.Observacao);
-
-                await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-                if (!await reader.ReadAsync(cancellationToken))
+                var now = DateTime.UtcNow;
+                var entity = new ReservaAreaComum
                 {
-                    return StatusCode(502, "Banco retornou resposta vazia para a criação de reserva.");
-                }
+                    AreaComumId = requestBody.AreaComumId,
+                    MoradorId = requestBody.MoradorId,
+                    DataHoraInicio = requestBody.DataHoraInicio,
+                    DataHoraFim = requestBody.DataHoraFim,
+                    Status = requestBody.Status,
+                    Observacao = requestBody.Observacao,
+                    CreatedAt = now,
+                    UpdatedAt = now
+                };
 
-                var reserva = MapReserva(reader);
-                return CreatedAtAction(nameof(GetById), new { id = reserva.Id }, reserva);
+                _context.Reservas.Add(entity);
+                await _context.SaveChangesAsync(cancellationToken);
+
+                return CreatedAtAction(nameof(GetById), new { id = entity.Id }, entity);
             }
             catch (Exception ex)
             {
@@ -170,19 +123,15 @@ namespace backend.Controllers
                 return BadRequest(validationError);
             }
 
-            var (connectionString, errorResult) = GetConnectionString();
-            if (errorResult is not null)
-            {
-                return errorResult;
-            }
-
             try
             {
-                await using var connection = new NpgsqlConnection(connectionString);
-                await connection.OpenAsync(cancellationToken);
+                var entity = await _context.Reservas.FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
+                if (entity is null)
+                {
+                    return NotFound();
+                }
 
                 if (await ExistsOverlappingReservationAsync(
-                        connection,
                         requestBody.AreaComumId,
                         requestBody.DataHoraInicio,
                         requestBody.DataHoraFim,
@@ -192,34 +141,17 @@ namespace backend.Controllers
                     return Conflict("Já existe reserva ativa (não cancelada) neste horário para esta área comum.");
                 }
 
-                const string sql = @"
-                    UPDATE public.reservas
-                    SET area_comum_id = @area_comum_id,
-                        morador_id = @morador_id,
-                        data_hora_inicio = @data_hora_inicio,
-                        data_hora_fim = @data_hora_fim,
-                        status = @status,
-                        observacao = @observacao,
-                        updated_at = CURRENT_TIMESTAMP
-                    WHERE id = @id
-                    RETURNING id, area_comum_id, morador_id, data_hora_inicio, data_hora_fim, status, observacao, created_at, updated_at;";
+                entity.AreaComumId = requestBody.AreaComumId;
+                entity.MoradorId = requestBody.MoradorId;
+                entity.DataHoraInicio = requestBody.DataHoraInicio;
+                entity.DataHoraFim = requestBody.DataHoraFim;
+                entity.Status = requestBody.Status;
+                entity.Observacao = requestBody.Observacao;
+                entity.UpdatedAt = DateTime.UtcNow;
 
-                await using var command = new NpgsqlCommand(sql, connection);
-                command.Parameters.AddWithValue("id", id);
-                command.Parameters.AddWithValue("area_comum_id", requestBody.AreaComumId);
-                command.Parameters.AddWithValue("morador_id", requestBody.MoradorId);
-                command.Parameters.AddWithValue("data_hora_inicio", requestBody.DataHoraInicio);
-                command.Parameters.AddWithValue("data_hora_fim", requestBody.DataHoraFim);
-                command.Parameters.AddWithValue("status", requestBody.Status);
-                command.Parameters.AddWithValue("observacao", requestBody.Observacao is null ? DBNull.Value : requestBody.Observacao);
+                await _context.SaveChangesAsync(cancellationToken);
 
-                await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-                if (!await reader.ReadAsync(cancellationToken))
-                {
-                    return NotFound();
-                }
-
-                return Ok(MapReserva(reader));
+                return Ok(entity);
             }
             catch (Exception ex)
             {
@@ -230,30 +162,16 @@ namespace backend.Controllers
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {
-            var (connectionString, errorResult) = GetConnectionString();
-            if (errorResult is not null)
-            {
-                return errorResult;
-            }
-
             try
             {
-                await using var connection = new NpgsqlConnection(connectionString);
-                await connection.OpenAsync(cancellationToken);
-
-                const string sql = @"
-                    DELETE FROM public.reservas
-                    WHERE id = @id
-                    RETURNING id;";
-
-                await using var command = new NpgsqlCommand(sql, connection);
-                command.Parameters.AddWithValue("id", id);
-
-                var deletedId = await command.ExecuteScalarAsync(cancellationToken);
-                if (deletedId is null)
+                var entity = await _context.Reservas.FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
+                if (entity is null)
                 {
                     return NotFound();
                 }
+
+                _context.Reservas.Remove(entity);
+                await _context.SaveChangesAsync(cancellationToken);
 
                 return NoContent();
             }
@@ -263,54 +181,24 @@ namespace backend.Controllers
             }
         }
 
-        private (string ConnectionString, ActionResult? ErrorResult) GetConnectionString()
-        {
-            var connectionString = _configuration.GetConnectionString("DefaultConnection");
-
-            if (string.IsNullOrWhiteSpace(connectionString))
-            {
-                return (string.Empty,
-                    StatusCode(500, "Configure ConnectionStrings:DefaultConnection no appsettings ou variaveis de ambiente."));
-            }
-
-            return (connectionString, null);
-        }
-
         /// <summary>
-        /// Reservas com status Cancelada não ocupam o horário. Usa a mesma condição que
-        /// <see cref="ReservaConflito.IntervalosSeSobrepoe"/>.
+        /// Reservas com status Cancelada não ocupam o horário. Equivalente a
+        /// <see cref="Services.ReservaConflito.IntervalosSeSobrepoe"/> para o par de intervalos.
         /// </summary>
-        private static async Task<bool> ExistsOverlappingReservationAsync(
-            NpgsqlConnection connection,
+        private Task<bool> ExistsOverlappingReservationAsync(
             int areaComumId,
             DateTime inicio,
             DateTime fim,
             int? excludeReservaId,
             CancellationToken cancellationToken)
         {
-            const string sql = @"
-                SELECT EXISTS (
-                    SELECT 1
-                    FROM public.reservas r
-                    WHERE r.area_comum_id = @area_comum_id
-                      AND r.status <> 'Cancelada'
-                      AND (@exclude_id IS NULL OR r.id <> @exclude_id)
-                      AND r.data_hora_inicio < @fim
-                      AND r.data_hora_fim > @inicio
-                );";
-
-            await using var command = new NpgsqlCommand(sql, connection);
-            command.Parameters.AddWithValue("area_comum_id", areaComumId);
-            command.Parameters.AddWithValue("inicio", inicio);
-            command.Parameters.AddWithValue("fim", fim);
-            var excludeParam = new NpgsqlParameter("exclude_id", NpgsqlTypes.NpgsqlDbType.Integer)
-            {
-                Value = excludeReservaId.HasValue ? excludeReservaId.Value : DBNull.Value
-            };
-            command.Parameters.Add(excludeParam);
-
-            var scalar = await command.ExecuteScalarAsync(cancellationToken);
-            return scalar is bool b && b;
+            return _context.Reservas.AnyAsync(
+                r => r.AreaComumId == areaComumId
+                     && r.Status != "Cancelada"
+                     && (!excludeReservaId.HasValue || r.Id != excludeReservaId.Value)
+                     && r.DataHoraInicio < fim
+                     && r.DataHoraFim > inicio,
+                cancellationToken);
         }
 
         private static string? ValidateRequest(ReservaAreaComum requestBody)
@@ -341,22 +229,6 @@ namespace backend.Controllers
             }
 
             return null;
-        }
-
-        private static ReservaAreaComum MapReserva(NpgsqlDataReader reader)
-        {
-            return new ReservaAreaComum
-            {
-                Id = reader.GetInt32(reader.GetOrdinal("id")),
-                AreaComumId = reader.GetInt32(reader.GetOrdinal("area_comum_id")),
-                MoradorId = reader.GetInt32(reader.GetOrdinal("morador_id")),
-                DataHoraInicio = reader.GetDateTime(reader.GetOrdinal("data_hora_inicio")),
-                DataHoraFim = reader.GetDateTime(reader.GetOrdinal("data_hora_fim")),
-                Status = reader.IsDBNull(reader.GetOrdinal("status")) ? string.Empty : reader.GetString(reader.GetOrdinal("status")),
-                Observacao = reader.IsDBNull(reader.GetOrdinal("observacao")) ? null : reader.GetString(reader.GetOrdinal("observacao")),
-                CreatedAt = reader.IsDBNull(reader.GetOrdinal("created_at")) ? null : reader.GetDateTime(reader.GetOrdinal("created_at")),
-                UpdatedAt = reader.IsDBNull(reader.GetOrdinal("updated_at")) ? null : reader.GetDateTime(reader.GetOrdinal("updated_at"))
-            };
         }
     }
 }
