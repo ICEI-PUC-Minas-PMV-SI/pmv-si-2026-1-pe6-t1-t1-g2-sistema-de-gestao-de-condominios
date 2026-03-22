@@ -1,4 +1,5 @@
 using backend.Models;
+using backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
 
@@ -116,6 +117,17 @@ namespace backend.Controllers
                 await using var connection = new NpgsqlConnection(connectionString);
                 await connection.OpenAsync(cancellationToken);
 
+                if (await ExistsOverlappingReservationAsync(
+                        connection,
+                        requestBody.AreaComumId,
+                        requestBody.DataHoraInicio,
+                        requestBody.DataHoraFim,
+                        excludeReservaId: null,
+                        cancellationToken))
+                {
+                    return Conflict("Já existe reserva ativa (não cancelada) neste horário para esta área comum.");
+                }
+
                 const string sql = @"
                     INSERT INTO public.reservas (area_comum_id, morador_id, data_hora_inicio, data_hora_fim, status, observacao)
                     VALUES (@area_comum_id, @morador_id, @data_hora_inicio, @data_hora_fim, @status, @observacao)
@@ -168,6 +180,17 @@ namespace backend.Controllers
             {
                 await using var connection = new NpgsqlConnection(connectionString);
                 await connection.OpenAsync(cancellationToken);
+
+                if (await ExistsOverlappingReservationAsync(
+                        connection,
+                        requestBody.AreaComumId,
+                        requestBody.DataHoraInicio,
+                        requestBody.DataHoraFim,
+                        excludeReservaId: id,
+                        cancellationToken))
+                {
+                    return Conflict("Já existe reserva ativa (não cancelada) neste horário para esta área comum.");
+                }
 
                 const string sql = @"
                     UPDATE public.reservas
@@ -251,6 +274,43 @@ namespace backend.Controllers
             }
 
             return (connectionString, null);
+        }
+
+        /// <summary>
+        /// Reservas com status Cancelada não ocupam o horário. Usa a mesma condição que
+        /// <see cref="ReservaConflito.IntervalosSeSobrepoe"/>.
+        /// </summary>
+        private static async Task<bool> ExistsOverlappingReservationAsync(
+            NpgsqlConnection connection,
+            int areaComumId,
+            DateTime inicio,
+            DateTime fim,
+            int? excludeReservaId,
+            CancellationToken cancellationToken)
+        {
+            const string sql = @"
+                SELECT EXISTS (
+                    SELECT 1
+                    FROM public.reservas r
+                    WHERE r.area_comum_id = @area_comum_id
+                      AND r.status <> 'Cancelada'
+                      AND (@exclude_id IS NULL OR r.id <> @exclude_id)
+                      AND r.data_hora_inicio < @fim
+                      AND r.data_hora_fim > @inicio
+                );";
+
+            await using var command = new NpgsqlCommand(sql, connection);
+            command.Parameters.AddWithValue("area_comum_id", areaComumId);
+            command.Parameters.AddWithValue("inicio", inicio);
+            command.Parameters.AddWithValue("fim", fim);
+            var excludeParam = new NpgsqlParameter("exclude_id", NpgsqlTypes.NpgsqlDbType.Integer)
+            {
+                Value = excludeReservaId.HasValue ? excludeReservaId.Value : DBNull.Value
+            };
+            command.Parameters.Add(excludeParam);
+
+            var scalar = await command.ExecuteScalarAsync(cancellationToken);
+            return scalar is bool b && b;
         }
 
         private static string? ValidateRequest(ReservaAreaComum requestBody)

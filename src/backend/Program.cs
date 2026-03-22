@@ -54,3 +54,8 @@ app.MapControllerRoute(
 app.MapControllers();
 
 app.Run();
+
+// Permite WebApplicationFactory em testes de integração.
+public partial class Program
+{
+}
