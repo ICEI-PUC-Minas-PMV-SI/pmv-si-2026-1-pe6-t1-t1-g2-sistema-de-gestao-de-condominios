@@ -1,5 +1,21 @@
+using backend.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Se DefaultConnection estiver vazio, usa DATABASE_URL ou SUPABASE_DB_URL (URI postgresql://... do Supabase).
+// Isso alinha com o "Direct connection" do painel. Variaveis de ambiente no Windows: DATABASE_URL ou
+// ConnectionStrings__DefaultConnection (com dois sublinhados).
+var defaultConnection = builder.Configuration.GetConnectionString("DefaultConnection");
+if (string.IsNullOrWhiteSpace(defaultConnection))
+{
+    var fromSupabaseUrl = builder.Configuration["DATABASE_URL"] ?? builder.Configuration["SUPABASE_DB_URL"];
+    if (!string.IsNullOrWhiteSpace(fromSupabaseUrl))
+    {
+        builder.Configuration.AddInMemoryCollection(
+            new Dictionary<string, string?> { ["ConnectionStrings:DefaultConnection"] = fromSupabaseUrl.Trim() });
+    }
+}
 
 // Swagger UI Documentation
 builder.Services.AddEndpointsApiExplorer();
@@ -8,6 +24,9 @@ builder.Services.AddSwaggerGen();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
