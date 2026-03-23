@@ -11,9 +11,6 @@ namespace backend.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        private static readonly HashSet<string> AllowedStatus =
-            new(StringComparer.OrdinalIgnoreCase) { "Confirmada", "Pendente", "Cancelada" };
-
         public ReservasController(ApplicationDbContext context)
         {
             _context = context;
@@ -194,7 +191,7 @@ namespace backend.Controllers
         {
             return _context.Reservas.AnyAsync(
                 r => r.AreaComumId == areaComumId
-                     && r.Status != "Cancelada"
+                     && r.Status != ReservationStatus.Cancelada
                      && (!excludeReservaId.HasValue || r.Id != excludeReservaId.Value)
                      && r.DataHoraInicio < fim
                      && r.DataHoraFim > inicio,
@@ -216,16 +213,6 @@ namespace backend.Controllers
             if (requestBody.DataHoraFim <= requestBody.DataHoraInicio)
             {
                 return "DataHoraFim deve ser maior que DataHoraInicio.";
-            }
-
-            if (string.IsNullOrWhiteSpace(requestBody.Status))
-            {
-                return "Status é obrigatório.";
-            }
-
-            if (!AllowedStatus.Contains(requestBody.Status))
-            {
-                return "Status inválido. Valores aceitos: Confirmada, Pendente, Cancelada.";
             }
 
             return null;

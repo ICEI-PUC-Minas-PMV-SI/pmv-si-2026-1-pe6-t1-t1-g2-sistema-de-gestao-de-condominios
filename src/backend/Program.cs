@@ -1,5 +1,7 @@
 using backend.Data;
+using backend.Models;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,8 +27,22 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Enum nativo PostgreSQL (coluna status em public.reservations). Nome do tipo deve coincidir com o Supabase.
+var resolvedConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (!string.IsNullOrWhiteSpace(resolvedConnectionString))
+{
+    var dataSourceBuilder = new NpgsqlDataSourceBuilder(resolvedConnectionString);
+    dataSourceBuilder.MapEnum<ReservationStatus>("reservation_status");
+    var npgsqlDataSource = dataSourceBuilder.Build();
+    builder.Services.AddSingleton(npgsqlDataSource);
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseNpgsql(npgsqlDataSource));
+}
+else
+{
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseNpgsql(resolvedConnectionString));
+}
 
 var app = builder.Build();
 

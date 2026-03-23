@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace backend.Models
@@ -7,22 +8,28 @@ namespace backend.Models
         [JsonPropertyName("id")]
         public int Id { get; set; }
 
-        [JsonPropertyName("area_comum_id")]
+        [JsonPropertyName("common_area_id")]
         public int AreaComumId { get; set; }
 
-        [JsonPropertyName("morador_id")]
+        [JsonPropertyName("user_id")]
         public int MoradorId { get; set; }
 
-        [JsonPropertyName("data_hora_inicio")]
+        [JsonPropertyName("start_time")]
         public DateTime DataHoraInicio { get; set; }
 
-        [JsonPropertyName("data_hora_fim")]
+        [JsonPropertyName("end_time")]
         public DateTime DataHoraFim { get; set; }
 
         [JsonPropertyName("status")]
-        public string Status { get; set; } = string.Empty;
+        [JsonRequired]
+        [JsonConverter(typeof(ReservationStatusJsonConverter))]
+        public ReservationStatus Status { get; set; }
 
-        [JsonPropertyName("observacao")]
+        /// <summary>
+        /// Opcional na API; não há coluna correspondente em <c>public.reservations</c> no Supabase (não persistido).
+        /// </summary>
+        [NotMapped]
+        [JsonPropertyName("notes")]
         public string? Observacao { get; set; }
 
         [JsonPropertyName("created_at")]

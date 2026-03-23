@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace backend.Data;
 
 /// <summary>
-/// Contexto EF Core para PostgreSQL (tabela public.reservas e demais entidades conforme evolução do projeto).
+/// Contexto EF Core para PostgreSQL. Tabela <c>public.reservations</c> (Supabase / schema em inglês).
 /// </summary>
 public class ApplicationDbContext : DbContext
 {
@@ -19,17 +19,17 @@ public class ApplicationDbContext : DbContext
     {
         modelBuilder.Entity<ReservaAreaComum>(entity =>
         {
-            entity.ToTable("reservas", "public");
+            entity.ToTable("reservations", "public");
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Id)
                 .HasColumnName("id")
                 .ValueGeneratedOnAdd();
-            entity.Property(e => e.AreaComumId).HasColumnName("area_comum_id");
-            entity.Property(e => e.MoradorId).HasColumnName("morador_id");
-            entity.Property(e => e.DataHoraInicio).HasColumnName("data_hora_inicio");
-            entity.Property(e => e.DataHoraFim).HasColumnName("data_hora_fim");
+            entity.Property(e => e.AreaComumId).HasColumnName("common_area_id");
+            entity.Property(e => e.MoradorId).HasColumnName("user_id");
+            entity.Property(e => e.DataHoraInicio).HasColumnName("start_time");
+            entity.Property(e => e.DataHoraFim).HasColumnName("end_time");
+            // Tipo PostgreSQL registrado em Program.cs (MapEnum). Se o nome no Supabase for outro, ajuste lá.
             entity.Property(e => e.Status).HasColumnName("status");
-            entity.Property(e => e.Observacao).HasColumnName("observacao");
             entity.Property(e => e.CreatedAt).HasColumnName("created_at");
             entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
         });
