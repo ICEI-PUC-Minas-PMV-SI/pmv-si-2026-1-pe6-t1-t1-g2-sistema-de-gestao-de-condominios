@@ -8,8 +8,8 @@ Expor recursos REST para web e mobile: usuários, áreas comuns, reservas, ocorr
 
 ## Modelagem da Aplicação
 
-- Entidades principais alinhadas às tabelas no PostgreSQL (ex.: `common_areas`, `reservas`, `users`).
-- Modelo de reserva: `ReservaAreaComum` com chaves `area_comum_id`, `morador_id`, intervalo `data_hora_inicio` / `data_hora_fim`, `status` e `observacao` opcional.
+- Entidades principais alinhadas às tabelas no PostgreSQL (ex.: `common_areas`, `reservations`, `users`).
+- Modelo de reserva: `ReservaAreaComum` mapeado para `public.reservations`; no JSON da API: `common_area_id`, `user_id`, `start_time`, `end_time`, `status`, `notes` (opcional).
 - Scripts de referência para índices e FKs: [`docs/sql/reservas-supabase.sql`](sql/reservas-supabase.sql).
 
 ## Tecnologias Utilizadas
@@ -31,7 +31,7 @@ Base URL relativa: `api/reservas` (definida em [`ReservasController`](../src/bac
 |--------|------|-----------|
 | GET | `/api/reservas` | Lista todas as reservas. |
 | GET | `/api/reservas/{id}` | Obtém uma reserva por ID. |
-| POST | `/api/reservas` | Cria reserva. Corpo JSON com `area_comum_id`, `morador_id`, `data_hora_inicio`, `data_hora_fim`, `status`, `observacao` (opcional). |
+| POST | `/api/reservas` | Cria reserva. Corpo JSON com `common_area_id`, `user_id`, `start_time`, `end_time`, `status`, `notes` (opcional). |
 | PUT | `/api/reservas/{id}` | Atualiza reserva existente. |
 | DELETE | `/api/reservas/{id}` | Remove reserva. Resposta `204 No Content` em sucesso. |
 
@@ -40,9 +40,9 @@ Base URL relativa: `api/reservas` (definida em [`ReservasController`](../src/bac
 **Regras de negócio:**
 
 - `DataHoraFim` deve ser maior que `DataHoraInicio`.
-- Não é permitida **sobreposição de horários** na mesma `area_comum_id` entre reservas com status diferente de `Cancelada`. Em conflito, a API responde **409 Conflict** com mensagem explicativa.
+- Não é permitida **sobreposição de horários** na mesma área (`common_area_id`) entre reservas com status diferente de `Cancelada`. Em conflito, a API responde **409 Conflict** com mensagem explicativa.
 
-**Payload JSON (exemplo):** propriedades em snake_case conforme `JsonPropertyName` no model (ex.: `area_comum_id`, `data_hora_inicio`).
+**Payload JSON:** propriedades em snake_case conforme `JsonPropertyName` (ex.: `common_area_id`, `start_time`, `end_time`).
 
 ### Documentação OpenAPI (Swagger)
 

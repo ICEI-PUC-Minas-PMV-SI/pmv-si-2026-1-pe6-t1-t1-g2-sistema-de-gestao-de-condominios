@@ -1,34 +1,33 @@
--- Referência para Supabase / PostgreSQL: tabela public.reservas, FKs e índices.
--- Ajuste o nome da tabela referenciada por morador_id conforme o seu modelo (ex.: users, moradores).
+-- Referência para Supabase / PostgreSQL: tabela public.reservations (schema em inglês), FKs e índices.
+-- Se o seu projeto ainda usar public.reservas com colunas em PT, ajuste ApplicationDbContext em src/backend/Data/ApplicationDbContext.cs.
 
--- Exemplo de criação (se ainda não existir), alinhado ao uso na API:
--- CREATE TABLE IF NOT EXISTS public.reservas (
+-- Exemplo de criação alinhado ao EF atual (nomes de coluna em inglês):
+-- CREATE TABLE IF NOT EXISTS public.reservations (
 --   id SERIAL PRIMARY KEY,
---   area_comum_id INTEGER NOT NULL,
---   morador_id INTEGER NOT NULL,
---   data_hora_inicio TIMESTAMPTZ NOT NULL,
---   data_hora_fim TIMESTAMPTZ NOT NULL,
+--   common_area_id INTEGER NOT NULL,
+--   user_id INTEGER NOT NULL,
+--   start_time TIMESTAMPTZ NOT NULL,
+--   end_time TIMESTAMPTZ NOT NULL,
 --   status TEXT NOT NULL,
---   observacao TEXT,
+--   notes TEXT,
 --   created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
 --   updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 -- );
 
 -- Chaves estrangeiras (execute apenas se as tabelas alvo existirem)
--- ALTER TABLE public.reservas
---   ADD CONSTRAINT fk_reservas_common_area
---   FOREIGN KEY (area_comum_id) REFERENCES public.common_areas (id)
+-- ALTER TABLE public.reservations
+--   ADD CONSTRAINT fk_reservations_common_area
+--   FOREIGN KEY (common_area_id) REFERENCES public.common_areas (id)
 --   ON DELETE RESTRICT;
 
--- ALTER TABLE public.reservas
---   ADD CONSTRAINT fk_reservas_morador
---   FOREIGN KEY (morador_id) REFERENCES public.users (id)
+-- ALTER TABLE public.reservations
+--   ADD CONSTRAINT fk_reservations_user
+--   FOREIGN KEY (user_id) REFERENCES public.users (id)
 --   ON DELETE RESTRICT;
 
--- Índice para consultas por área e intervalo (conflito de horários e listagens)
-CREATE INDEX IF NOT EXISTS idx_reservas_area_tempo
-  ON public.reservas (area_comum_id, data_hora_inicio, data_hora_fim);
+CREATE INDEX IF NOT EXISTS idx_reservations_area_tempo
+  ON public.reservations (common_area_id, start_time, end_time);
 
-CREATE INDEX IF NOT EXISTS idx_reservas_status
-  ON public.reservas (status)
+CREATE INDEX IF NOT EXISTS idx_reservations_status
+  ON public.reservations (status)
   WHERE status <> 'Cancelada';
