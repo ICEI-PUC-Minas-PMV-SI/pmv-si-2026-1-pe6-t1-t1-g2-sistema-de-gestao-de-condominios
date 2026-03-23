@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace backend.Models
@@ -20,8 +21,14 @@ namespace backend.Models
         public DateTime DataHoraFim { get; set; }
 
         [JsonPropertyName("status")]
-        public string Status { get; set; } = string.Empty;
+        [JsonRequired]
+        [JsonConverter(typeof(ReservationStatusJsonConverter))]
+        public ReservationStatus Status { get; set; }
 
+        /// <summary>
+        /// Opcional na API; não há coluna correspondente em <c>public.reservations</c> no Supabase (não persistido).
+        /// </summary>
+        [NotMapped]
         [JsonPropertyName("notes")]
         public string? Observacao { get; set; }
 

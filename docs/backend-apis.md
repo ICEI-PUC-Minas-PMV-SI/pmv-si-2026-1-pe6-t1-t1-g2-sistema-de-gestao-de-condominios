@@ -1,6 +1,6 @@
 # APIs e Web Services
 
-Documentação da camada de API do **Sistema de Gestão de Condomínios**: backend em ASP.NET Core, persistência com **PostgreSQL** via **Npgsql** (SQL direto; **não** se utiliza Entity Framework Core neste repositório).
+Documentação da camada de API do **Sistema de Gestão de Condomínios**: backend em ASP.NET Core, persistência com **PostgreSQL** via **Entity Framework Core** (reservas em `public.reservations`) e **Npgsql** com SQL direto nos demais controladores.
 
 ## Objetivos da API
 
@@ -9,7 +9,7 @@ Expor recursos REST para web e mobile: usuários, áreas comuns, reservas, ocorr
 ## Modelagem da Aplicação
 
 - Entidades principais alinhadas às tabelas no PostgreSQL (ex.: `common_areas`, `reservations`, `users`).
-- Modelo de reserva: `ReservaAreaComum` mapeado para `public.reservations`; no JSON da API: `common_area_id`, `user_id`, `start_time`, `end_time`, `status`, `notes` (opcional).
+- Modelo de reserva: `ReservaAreaComum` mapeado para `public.reservations`; no JSON da API: `common_area_id`, `user_id`, `start_time`, `end_time`, `status` (enum no PostgreSQL; valores aceitos abaixo), `notes` (opcional, **não há coluna no Supabase** — não é persistido).
 - Scripts de referência para índices e FKs: [`docs/sql/reservas-supabase.sql`](sql/reservas-supabase.sql).
 
 ## Tecnologias Utilizadas
@@ -18,7 +18,7 @@ Expor recursos REST para web e mobile: usuários, áreas comuns, reservas, ocorr
 |------------|------------|
 | Runtime | .NET (ASP.NET Core) |
 | Banco de dados | PostgreSQL (ex.: Supabase) |
-| Acesso a dados | **Npgsql** (ADO.NET), comandos SQL parametrizados |
+| Acesso a dados | **EF Core** + **Npgsql** (reservas); **Npgsql** direto (demais módulos) |
 | Documentação interativa | **Swagger** / OpenAPI (habilitado em ambiente Development) |
 
 ## API Endpoints
@@ -31,7 +31,7 @@ Base URL relativa: `api/reservas` (definida em [`ReservasController`](../src/bac
 |--------|------|-----------|
 | GET | `/api/reservas` | Lista todas as reservas. |
 | GET | `/api/reservas/{id}` | Obtém uma reserva por ID. |
-| POST | `/api/reservas` | Cria reserva. Corpo JSON com `common_area_id`, `user_id`, `start_time`, `end_time`, `status`, `notes` (opcional). |
+| POST | `/api/reservas` | Cria reserva. Corpo JSON com `common_area_id`, `user_id`, `start_time`, `end_time`, `status`, `notes` (opcional; não persistido no BD). |
 | PUT | `/api/reservas/{id}` | Atualiza reserva existente. |
 | DELETE | `/api/reservas/{id}` | Remove reserva. Resposta `204 No Content` em sucesso. |
 

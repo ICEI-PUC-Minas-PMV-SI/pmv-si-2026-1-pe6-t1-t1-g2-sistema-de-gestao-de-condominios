@@ -28,8 +28,8 @@ public class ApplicationDbContext : DbContext
             entity.Property(e => e.MoradorId).HasColumnName("user_id");
             entity.Property(e => e.DataHoraInicio).HasColumnName("start_time");
             entity.Property(e => e.DataHoraFim).HasColumnName("end_time");
+            // Tipo PostgreSQL registrado em Program.cs (MapEnum). Se o nome no Supabase for outro, ajuste lá.
             entity.Property(e => e.Status).HasColumnName("status");
-            entity.Property(e => e.Observacao).HasColumnName("notes");
             entity.Property(e => e.CreatedAt).HasColumnName("created_at");
             entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
         });
