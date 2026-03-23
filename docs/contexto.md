@@ -65,19 +65,19 @@ O público-alvo é dividido em dois perfis principais de acesso, com diferentes 
 
 | ID | Descrição do Requisito | Prioridade | Responsável |
 |---|---|---|---|
-| RF-001 | O sistema deve permitir o cadastro e autenticação de usuários com perfis de 'Administrador' e 'Morador'. | ALTA |  |
-| RF-002 | O sistema deve permitir que o 'Administrador' cadastre, visualize, edite e remova áreas comuns (ex: nome, capacidade, regras de uso). | ALTA |  |
+| RF-001 | O sistema deve permitir o cadastro e autenticação de usuários com perfis de 'Administrador' e 'Morador'. | ALTA | Gabriel Amâncio |
+| RF-002 | O sistema deve permitir que o 'Administrador' cadastre, visualize, edite e remova áreas comuns (ex: nome, capacidade, regras de uso). | ALTA | Gabriel Amâncio |
 | RF-003 | O sistema deve permitir que o 'Morador' consulte a disponibilidade de áreas comuns através de um calendário visual. | ALTA |  |
 | RF-004 | O sistema deve permitir que o 'Morador' realize uma reserva para uma área comum em uma data e horário disponíveis. | ALTA | Guilherme Mendonça |
 | RF-005 | O sistema deve impedir a criação de reservas em horários já ocupados ou fora das regras estabelecidas para a área. | ALTA | Guilherme Mendonça |
 | RF-006 | O sistema deve permitir que o 'Morador' visualize e cancele suas próprias reservas futuras. | MÉDIA | Guilherme Mendonça |
 | RF-007 | O sistema deve permitir que o 'Administrador' visualize, aprove, rejeite ou cancele qualquer reserva no sistema. | MÉDIA | Guilherme Mendonça |
 | RF-008 | O sistema deve enviar uma notificação (email ou push) para o morador ao confirmar ou cancelar uma reserva. | BAIXA |  |
-| RF-009 | O sistema deve permitir que o 'Morador' abra um chamado de ocorrência/manutenção, descrevendo o problema e anexando uma foto. | MÉDIA |  |
-| RF-010 | O sistema deve permitir que o 'Administrador' visualize, atualize o status (ex: "Aberto", "Em andamento", "Resolvido") e finalize as ocorrências. | MÉDIA |  |
+| RF-009 | O sistema deve permitir que o 'Morador' abra um chamado de ocorrência/manutenção, descrevendo o problema e anexando uma foto. | MÉDIA | Gabriel Amâncio |
+| RF-010 | O sistema deve permitir que o 'Administrador' visualize, atualize o status (ex: "Aberto", "Em andamento", "Resolvido") e finalize as ocorrências. | MÉDIA | Gabriel Amâncio |
 | RF-011 | O sistema deve permitir que o 'Administrador' (ou 'Porteiro', se criarmos esse perfil) registre a chegada de uma encomenda para um morador/unidade. | MÉDIA |  |
-| RF-012 | O sistema deve notificar o morador sobre a chegada de uma encomenda. | BAIXA |  |
-| RF-013 | O sistema deve permitir que o 'Administrador' (ou 'Porteiro') dê baixa na encomenda no momento da retirada pelo morador. | MÉDIA |  |
+| RF-012 | O sistema deve notificar o morador sobre a chegada de uma encomenda. | BAIXA | Gabriel Amâncio |
+| RF-013 | O sistema deve permitir que o 'Administrador' (ou 'Porteiro') dê baixa na encomenda no momento da retirada pelo morador. | MÉDIA | Gabriel Amâncio |
 
 ### Requisitos não Funcionais
 
