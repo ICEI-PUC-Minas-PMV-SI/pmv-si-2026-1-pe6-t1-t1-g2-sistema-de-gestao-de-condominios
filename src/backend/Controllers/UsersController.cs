@@ -1,6 +1,7 @@
 ﻿using backend.Models;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
+using System.Security.Cryptography;
 
 namespace backend.Controllers
 {
@@ -39,7 +40,7 @@ namespace backend.Controllers
 
                 while (await reader.ReadAsync(cancellationToken))
                 {
-                    users.Add(MapUser(reader));
+                    users.Add(ToSafeUser(MapUser(reader)));
                 }
 
                 return Ok(users);
@@ -78,7 +79,7 @@ namespace backend.Controllers
                     return NotFound();
                 }
 
-                return Ok(MapUser(reader));
+                return Ok(ToSafeUser(MapUser(reader)));
             }
             catch (Exception ex)
             {
@@ -105,13 +106,18 @@ namespace backend.Controllers
                 await using var connection = new NpgsqlConnection(connectionString);
                 await connection.OpenAsync(cancellationToken);
                 const string sql = @"
-                    INSERT INTO public.users (username, password_hash, email, profile)
-                    VALUES (@username, @password_hash, @email, @profile::user_profile)
+                    INSERT INTO public.users (id, username, password_hash, email, profile)
+                    SELECT COALESCE(MAX(id), 0) + 1, @username, @password_hash, @email, @profile::user_profile
+                    FROM public.users
                     RETURNING id, username, password_hash, email, profile, created_at, updated_at;";
+
+                var passwordHash = string.IsNullOrWhiteSpace(requestBody.PasswordHash)
+                    ? null
+                    : HashPassword(requestBody.PasswordHash);
 
                 await using var command = new NpgsqlCommand(sql, connection);
                 command.Parameters.AddWithValue("username", requestBody.Username is null ? DBNull.Value : requestBody.Username);
-                command.Parameters.AddWithValue("password_hash", requestBody.PasswordHash is null ? DBNull.Value : requestBody.PasswordHash);
+                command.Parameters.AddWithValue("password_hash", passwordHash is null ? DBNull.Value : passwordHash);
                 command.Parameters.AddWithValue("email", requestBody.Email is null ? DBNull.Value : requestBody.Email);
                 command.Parameters.AddWithValue("profile", requestBody.Profile is null ? DBNull.Value : requestBody.Profile);
 
@@ -121,7 +127,7 @@ namespace backend.Controllers
                     return StatusCode(502, "Banco retornou resposta vazia para a criação de usuario.");
                 }
 
-                var user = MapUser(reader);
+                var user = ToSafeUser(MapUser(reader));
                 return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
             }
             catch (PostgresException ex) when (ex.SqlState == "23505")
@@ -155,17 +161,21 @@ namespace backend.Controllers
                 const string sql = @"
                     UPDATE public.users
                     SET username = @username,
-                        password_hash = @password_hash,
+                        password_hash = COALESCE(@password_hash, password_hash),
                         email = @email,
                         profile = @profile::user_profile,
                         updated_at = CURRENT_TIMESTAMP
                     WHERE id = @id
                     RETURNING id, username, password_hash, email, profile, created_at, updated_at;";
 
+                var passwordHash = string.IsNullOrWhiteSpace(requestBody.PasswordHash)
+                    ? null
+                    : HashPassword(requestBody.PasswordHash);
+
                 await using var command = new NpgsqlCommand(sql, connection);
                 command.Parameters.AddWithValue("id", id);
                 command.Parameters.AddWithValue("username", requestBody.Username is null ? DBNull.Value : requestBody.Username);
-                command.Parameters.AddWithValue("password_hash", requestBody.PasswordHash is null ? DBNull.Value : requestBody.PasswordHash);
+                command.Parameters.AddWithValue("password_hash", passwordHash is null ? DBNull.Value : passwordHash);
                 command.Parameters.AddWithValue("email", requestBody.Email is null ? DBNull.Value : requestBody.Email);
                 command.Parameters.AddWithValue("profile", requestBody.Profile is null ? DBNull.Value : requestBody.Profile);
 
@@ -175,7 +185,7 @@ namespace backend.Controllers
                     return NotFound();
                 }
 
-                return Ok(MapUser(reader));
+                return Ok(ToSafeUser(MapUser(reader)));
             }
             catch (PostgresException ex) when (ex.SqlState == "23505")
             {
@@ -246,6 +256,21 @@ namespace backend.Controllers
                 CreatedAt = reader.IsDBNull(reader.GetOrdinal("created_at")) ? null : reader.GetDateTime(reader.GetOrdinal("created_at")),
                 UpdatedAt = reader.IsDBNull(reader.GetOrdinal("updated_at")) ? null : reader.GetDateTime(reader.GetOrdinal("updated_at"))
             };
+        }
+
+        private static User ToSafeUser(User user)
+        {
+            user.PasswordHash = null;
+            return user;
+        }
+
+        private static string HashPassword(string rawPassword)
+        {
+            const int iterations = 120000;
+            var salt = RandomNumberGenerator.GetBytes(16);
+            var hash = Rfc2898DeriveBytes.Pbkdf2(rawPassword, salt, iterations, HashAlgorithmName.SHA256, 32);
+
+            return $"pbkdf2-sha256${iterations}${Convert.ToBase64String(salt)}${Convert.ToBase64String(hash)}";
         }
     }
 }
