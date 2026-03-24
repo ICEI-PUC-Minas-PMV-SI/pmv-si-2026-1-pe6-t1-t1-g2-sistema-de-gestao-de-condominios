@@ -4,12 +4,14 @@ using System.Text.Json.Serialization;
 namespace backend.Models;
 
 /// <summary>
-/// Valores alinhados ao enum PostgreSQL (ex.: <c>reservation_status</c> no Supabase).
+/// Valores alinhados ao enum PostgreSQL <c>public.reservation_status</c> no Supabase
+/// (confirmado via MCP: Pendente, Aprovada, Rejeitada, Cancelada).
 /// </summary>
 public enum ReservationStatus
 {
     Pendente,
-    Confirmada,
+    Aprovada,
+    Rejeitada,
     Cancelada
 }
 
@@ -31,12 +33,18 @@ public sealed class ReservationStatusJsonConverter : JsonConverter<ReservationSt
             throw new JsonException("O campo status não pode ser vazio.");
         }
 
+        // Compat: API antiga usava "Confirmada"; no BD o rótulo é "Aprovada".
+        if (string.Equals(s, "Confirmada", StringComparison.OrdinalIgnoreCase))
+        {
+            return ReservationStatus.Aprovada;
+        }
+
         if (Enum.TryParse<ReservationStatus>(s, ignoreCase: true, out var value))
         {
             return value;
         }
 
-        throw new JsonException("Status inválido. Valores aceitos: Pendente, Confirmada, Cancelada.");
+        throw new JsonException("Status inválido. Valores aceitos: Pendente, Aprovada, Rejeitada, Cancelada.");
     }
 
     public override void Write(Utf8JsonWriter writer, ReservationStatus value, JsonSerializerOptions options)
