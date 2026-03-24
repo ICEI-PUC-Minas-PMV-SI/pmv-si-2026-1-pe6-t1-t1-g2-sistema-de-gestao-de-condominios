@@ -179,7 +179,7 @@ namespace backend.Controllers
         }
 
         /// <summary>
-        /// Reservas com status Cancelada ou Rejeitada não ocupam o horário. Equivalente a
+        /// Reservas com status Cancelada não ocupam o horário. Equivalente a
         /// <see cref="Services.ReservaConflito.IntervalosSeSobrepoe"/> para o par de intervalos.
         /// </summary>
         private Task<bool> ExistsOverlappingReservationAsync(
@@ -192,7 +192,6 @@ namespace backend.Controllers
             return _context.Reservas.AnyAsync(
                 r => r.AreaComumId == areaComumId
                      && r.Status != ReservationStatus.Cancelada
-                     && r.Status != ReservationStatus.Rejeitada
                      && (!excludeReservaId.HasValue || r.Id != excludeReservaId.Value)
                      && r.DataHoraInicio < fim
                      && r.DataHoraFim > inicio,
@@ -201,6 +200,16 @@ namespace backend.Controllers
 
         private static string? ValidateRequest(ReservaAreaComum requestBody)
         {
+            if (requestBody.AreaComumId <= 0)
+            {
+                return "AreaComumId deve ser maior que zero.";
+            }
+
+            if (requestBody.MoradorId <= 0)
+            {
+                return "MoradorId deve ser maior que zero.";
+            }
+
             if (requestBody.DataHoraFim <= requestBody.DataHoraInicio)
             {
                 return "DataHoraFim deve ser maior que DataHoraInicio.";

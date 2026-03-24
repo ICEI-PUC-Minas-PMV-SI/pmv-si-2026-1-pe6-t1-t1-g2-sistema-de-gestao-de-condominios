@@ -5,9 +5,8 @@
 -- start_time, end_time, status (enum nativo PostgreSQL, ex. default 'Pendente'::...),
 -- created_at, updated_at. Não há coluna notes — o campo opcional na API não é persistido.
 --
--- Enum real no projeto Supabase (via MCP): Pendente, Aprovada, Rejeitada, Cancelada.
--- Exemplo ilustrativo (ajuste TIMESTAMPTZ conforme o seu projeto):
--- CREATE TYPE public.reservation_status AS ENUM ('Pendente', 'Aprovada', 'Rejeitada', 'Cancelada');
+-- Exemplo ilustrativo (ajuste o tipo enum e TIMESTAMPTZ conforme o seu projeto):
+-- CREATE TYPE public.reservation_status AS ENUM ('Pendente', 'Confirmada', 'Cancelada');
 -- CREATE TABLE IF NOT EXISTS public.reservations (
 --   id SERIAL PRIMARY KEY,
 --   common_area_id INTEGER,
@@ -35,7 +34,7 @@ CREATE INDEX IF NOT EXISTS idx_reservations_area_tempo
 
 CREATE INDEX IF NOT EXISTS idx_reservations_status
   ON public.reservations (status)
-  WHERE status NOT IN ('Cancelada', 'Rejeitada');
+  WHERE status <> 'Cancelada';
 
 -- Ver o nome exato do tipo PostgreSQL da coluna status (use o mesmo em Program.cs: MapEnum<...>("...")):
 -- SELECT format_type(a.atttypid, a.atttypmod) AS status_column_type
