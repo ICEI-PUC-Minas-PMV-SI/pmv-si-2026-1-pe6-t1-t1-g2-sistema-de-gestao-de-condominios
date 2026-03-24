@@ -10,7 +10,7 @@
 | 02/03 - 08/03 | Arquitetura de Software Distribuído - Unidade 3 | ✅ | Finalização do documento da Etapa 1 | Conclusão da documentação e correção com base no feedback do professor |
 | 09/03 - 15/03 | APIs e Web Services - Unidade 1 | ✅| Elaboração da arquitetura do proejto e divisão de tarefas | Definimos os responsaveis para os CRUDS |
 | 16/03 - 22/03 | APIs e Web Services - Unidade 2 | ✅ | Criação do CRUD de usários | CRUD de users e suporte ao time no desenvolvimento dos demais CRUDS |
-| 23/03 - 29/03 | APIs e Web Services - Unidade 2 | ⬜ |  |  |
+| 23/03 - 29/03 | APIs e Web Services - Unidade 2 | ⬜ | Finalizar os RF e testes unitários |  |
 | 30/03 - 05/04 | Recuperação de Informação na Web e Redes Sociais - Unidade 1 | ⬜ |  |  |
 | 06/04 - 12/04 | Recuperação de Informação na Web e Redes Sociais - Unidade 2 | ⬜ |  |  |
 | 13/04 - 19/04 | Computação Ubíqua e Pervasiva e IoT - Unidade 1 | ⬜ |  |  |
