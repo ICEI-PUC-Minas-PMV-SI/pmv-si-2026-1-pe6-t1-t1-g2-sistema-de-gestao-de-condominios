@@ -35,12 +35,12 @@ Base URL relativa: `api/reservas` (definida em [`ReservasController`](../src/bac
 | PUT | `/api/reservas/{id}` | Atualiza reserva existente. |
 | DELETE | `/api/reservas/{id}` | Remove reserva. Resposta `204 No Content` em sucesso. |
 
-**Status aceitos** (campo `status`): `Confirmada`, `Pendente`, `Cancelada`.
+**Status aceitos** (campo `status`, enum `public.reservation_status` no Supabase): `Pendente`, `Aprovada`, `Rejeitada`, `Cancelada`. Para compatibilidade, o JSON `Confirmada` é aceito e mapeado para `Aprovada`.
 
 **Regras de negócio:**
 
 - `DataHoraFim` deve ser maior que `DataHoraInicio`.
-- Não é permitida **sobreposição de horários** na mesma área (`common_area_id`) entre reservas com status diferente de `Cancelada`. Em conflito, a API responde **409 Conflict** com mensagem explicativa.
+- Não é permitida **sobreposição de horários** na mesma área (`common_area_id`) entre reservas cujo status **ocupe** o horário (considera-se ocupação para `Pendente` e `Aprovada`; `Cancelada` e `Rejeitada` não bloqueiam). Em conflito, a API responde **409 Conflict** com mensagem explicativa.
 
 **Payload JSON:** propriedades em snake_case conforme `JsonPropertyName` (ex.: `common_area_id`, `start_time`, `end_time`).
 
