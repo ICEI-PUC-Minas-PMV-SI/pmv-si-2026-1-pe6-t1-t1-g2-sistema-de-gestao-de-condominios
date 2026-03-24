@@ -9,7 +9,8 @@ namespace backend.Models;
 public enum ReservationStatus
 {
     Pendente,
-    Confirmada,
+    Aprovada,
+    Rejeitada,
     Cancelada
 }
 
@@ -36,7 +37,13 @@ public sealed class ReservationStatusJsonConverter : JsonConverter<ReservationSt
             return value;
         }
 
-        throw new JsonException("Status inválido. Valores aceitos: Pendente, Confirmada, Cancelada.");
+        if (string.Equals(s, "Confirmada", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(s, "Confirmado", StringComparison.OrdinalIgnoreCase))
+        {
+            return ReservationStatus.Aprovada;
+        }
+
+        throw new JsonException("Status inválido. Valores aceitos: Pendente, Aprovada (ou Confirmada), Cancelada.");
     }
 
     public override void Write(Utf8JsonWriter writer, ReservationStatus value, JsonSerializerOptions options)

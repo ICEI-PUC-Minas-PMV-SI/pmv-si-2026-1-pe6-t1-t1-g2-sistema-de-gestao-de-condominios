@@ -17,6 +17,8 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasPostgresEnum<ReservationStatus>("reservation_status");
+
         modelBuilder.Entity<ReservaAreaComum>(entity =>
         {
             entity.ToTable("reservations", "public");
@@ -29,7 +31,9 @@ public class ApplicationDbContext : DbContext
             entity.Property(e => e.DataHoraInicio).HasColumnName("start_time");
             entity.Property(e => e.DataHoraFim).HasColumnName("end_time");
             // Tipo PostgreSQL registrado em Program.cs (MapEnum). Se o nome no Supabase for outro, ajuste lá.
-            entity.Property(e => e.Status).HasColumnName("status");
+            entity.Property(e => e.Status)
+                .HasColumnName("status")
+                .HasColumnType("reservation_status");
             entity.Property(e => e.CreatedAt).HasColumnName("created_at");
             entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
         });
