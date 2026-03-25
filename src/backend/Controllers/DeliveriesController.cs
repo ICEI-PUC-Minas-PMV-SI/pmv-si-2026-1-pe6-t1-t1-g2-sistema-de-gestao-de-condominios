@@ -1,9 +1,12 @@
 using backend.Models;
+using backend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
 
 namespace backend.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class DeliveriesController : ControllerBase
@@ -17,6 +20,7 @@ namespace backend.Controllers
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Delivery>>> GetAll(CancellationToken cancellationToken)
+
         {
             var (connectionString, errorResult) = GetConnectionString();
             if (errorResult is not null)
@@ -49,6 +53,7 @@ namespace backend.Controllers
                 return StatusCode(500, $"Erro ao consultar entregas: {ex.Message}");
             }
         }
+        
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Delivery>> GetById(int id, CancellationToken cancellationToken)
