@@ -8,6 +8,8 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using backend.Services;
 using Microsoft.OpenApi;
+using Microsoft.VisualBasic;
+using System.Reflection.Metadata;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,31 +29,18 @@ if (string.IsNullOrWhiteSpace(defaultConnection))
 
 // Swagger UI Documentation
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.AddSecurityDefinition("Bearer",new OpenApiSecurityScheme
-    {
-       In=ParameterLocation.Header,
-       Description="Please enter a valid token",
-       Name="Authorization",
-       Type=SecuritySchemeType.ApiKey,
-       Scheme="Bearer" 
+
+builder.Services.AddSwaggerGen(c=>{
+    c.AddSecurityDefinition("Bearer",new OpenApiSecurityScheme{
+        In=ParameterLocation.Header,
+        Description="Insira um token para logar",
+        Name="Authorization",
+        Type=SecuritySchemeType.Http,
+        BearerFormat="JWT",
+        Scheme="bearer"
     });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference=new OpenApiReference
-                {
-                    Type=ReferenceType.SecurityScheme,
-                    Id="Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
-});
+}
+);
 
 // Add authentication services (JWT Bearer)
 var signInKey = Environment.GetEnvironmentVariable("JWT_SECRET");

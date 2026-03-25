@@ -1,5 +1,6 @@
 using backend.Data;
 using backend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
@@ -7,6 +8,7 @@ using System.Data;
 
 namespace backend.Controllers
 {
+    [Authorize(Roles ="Administrador")]
     [ApiController]
     [Route("api/reservas")]
     public class ReservasController : ControllerBase
@@ -117,7 +119,6 @@ namespace backend.Controllers
                 return StatusCode(500, $"Erro ao consultar reserva: {ex.Message}");
             }
         }
-
         [HttpPost]
         public async Task<ActionResult<ReservaAreaComum>> Create([FromBody] ReservaAreaComum requestBody, CancellationToken cancellationToken)
         {
