@@ -1,4 +1,6 @@
 ﻿using backend.Models;
+using backend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
 using System.Security.Cryptography;
@@ -85,6 +87,43 @@ namespace backend.Controllers
             {
                 return StatusCode(500, $"Erro ao consultar usuario: {ex.Message}");
             }
+        }
+        
+         [AllowAnonymous]
+         [HttpPost("auth")]
+        public async Task<IActionResult> Authenticate(AuthDto model)
+        {
+            var(connectionString,errorResult) = GetConnectionString();
+            if(errorResult is not null)
+            {
+                return errorResult;
+            }
+           
+                await using var connection = new NpgsqlConnection(connectionString);
+                await connection.OpenAsync();
+                const string sql = @"
+                    SELECT id,password_hash,profile
+                    FROM public.users
+                    WHERE id = @id
+                    LIMIT 1;";
+
+                await using var command = new NpgsqlCommand(sql, connection);
+                command.Parameters.AddWithValue("id", model.Id);
+
+                await using var reader = await command.ExecuteReaderAsync();
+
+                await reader.ReadAsync();
+                var userId = reader.GetInt32(reader.GetOrdinal("id"));
+                var storedHash = reader.GetString(reader.GetOrdinal("password_hash"));
+                var profile = reader.GetString(reader.GetOrdinal("profile"));
+
+                if (string.IsNullOrEmpty(userId.ToString()) || !BCrypt.Net.BCrypt.Verify(model.Password, storedHash))
+                {
+                    return Unauthorized("Usuário ou senha inválidos.");
+                }
+             
+               return Ok(new {Token = JwtGen.CreateToken(userId, profile) });
+            
         }
 
         [HttpPost]
@@ -266,11 +305,7 @@ namespace backend.Controllers
 
         private static string HashPassword(string rawPassword)
         {
-            const int iterations = 120000;
-            var salt = RandomNumberGenerator.GetBytes(16);
-            var hash = Rfc2898DeriveBytes.Pbkdf2(rawPassword, salt, iterations, HashAlgorithmName.SHA256, 32);
-
-            return $"pbkdf2-sha256${iterations}${Convert.ToBase64String(salt)}${Convert.ToBase64String(hash)}";
+            return BCrypt.Net.BCrypt.HashPassword(rawPassword);
         }
     }
 }

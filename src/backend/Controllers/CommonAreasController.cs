@@ -1,4 +1,5 @@
 using backend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
 
@@ -81,6 +82,7 @@ namespace backend.Controllers
 
         // --- CRUD ----------------------------------------------------------------------
 
+        [Authorize(Roles = "Administrador, Morador")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CommonArea>>> GetAll(CancellationToken ct)
         {

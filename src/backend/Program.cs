@@ -1,7 +1,15 @@
 using backend.Data;
 using backend.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Npgsql;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Mvc;
+using backend.Services;
+using Microsoft.OpenApi;
+using Microsoft.VisualBasic;
+using System.Reflection.Metadata;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +29,43 @@ if (string.IsNullOrWhiteSpace(defaultConnection))
 
 // Swagger UI Documentation
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(c=>{
+    c.AddSecurityDefinition("Bearer",new OpenApiSecurityScheme{
+        In=ParameterLocation.Header,
+        Description="Insira um token para logar",
+        Name="Authorization",
+        Type=SecuritySchemeType.Http,
+        BearerFormat="JWT",
+        Scheme="bearer"
+    });
+}
+);
+
+// Add authentication services (JWT Bearer)
+var signInKey = Environment.GetEnvironmentVariable("JWT_SECRET");
+if (string.IsNullOrEmpty(signInKey))
+{
+    throw new InvalidOperationException("JWT_SECRET environment variable is not set.");
+}
+JwtGen.secret_key = signInKey;
+builder.Services.AddAuthentication(options =>
+{
+   options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; 
+   options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+   options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false; // Em produção, isso deve ser true.
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+    {
+        ValidateIssuer=false,
+        ValidateAudience=false,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signInKey))
+    };
+
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -77,6 +121,8 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+// Utilizar autenticação e autorização.
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
@@ -89,8 +135,3 @@ app.MapControllerRoute(
 app.MapControllers();
 
 app.Run();
-
-// Permite WebApplicationFactory em testes de integração.
-public partial class Program
-{
-}
