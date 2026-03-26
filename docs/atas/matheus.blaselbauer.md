@@ -10,7 +10,7 @@
 | 02/03 - 08/03 | Arquitetura de Software Distribuído - Unidade 3 | ✅ | Revisão dos problemas e restrições arquiteturais levantados, e comparação com as boas práticas |Revisão dos problemas levantados e correção das informações de restrição implementadas|
 | 15/03 - 15/03 | APIs e Web Services - Unidade 1 | ✅| CRUD inicial de delivery implementado | CRUD inicial de delivery implementado |
 | 16/03 - 25/03 | APIs e Web Services - Unidade 2 | ✅ | Autenticação e Autorização de acesso aos recursos da API  | Autenticação e Autorização de acesso aos recursos da API |
-| 23/03 - 29/03 | APIs e Web Services - Unidade 2 | ⬜ |  |  |
+| 23/03 - 29/03 | APIs e Web Services - Unidade 2 | ⬜ | Recuperação de dados de uma encomenda na API |  |
 | 30/03 - 05/04 | Recuperação de Informação na Web e Redes Sociais - Unidade 1 | ⬜ |  |  |
 | 06/04 - 12/04 | Recuperação de Informação na Web e Redes Sociais - Unidade 2 | ⬜ |  |  |
 | 13/04 - 19/04 | Computação Ubíqua e Pervasiva e IoT - Unidade 1 | ⬜ |  |  |
