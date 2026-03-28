@@ -1,74 +1,81 @@
 # APIs e Web Services
 
-Documentação da camada de API do **Sistema de Gestão de Condomínios**: backend em ASP.NET Core, persistência com **PostgreSQL** via **Entity Framework Core** (reservas em `public.reservations`) e **Npgsql** com SQL direto nos demais controladores.
+O planejamento de uma aplicação de APIS Web é uma etapa fundamental para o sucesso do projeto. Ao planejar adequadamente, você pode evitar muitos problemas e garantir que a sua API seja segura, escalável e eficiente.
+
+Aqui estão algumas etapas importantes que devem ser consideradas no planejamento de uma aplicação de APIS Web.
+
+[Inclua uma breve descrição do projeto.]
 
 ## Objetivos da API
 
-Expor recursos REST para web e mobile: usuários, áreas comuns, reservas, ocorrências, entregas, notificações e demais módulos definidos no contexto do projeto. A API é consumida por aplicações internas do condomínio (moradores e administradores).
+O primeiro passo é definir os objetivos da sua API. O que você espera alcançar com ela? Você quer que ela seja usada por clientes externos ou apenas por aplicações internas? Quais são os recursos que a API deve fornecer?
+
+[Inclua os objetivos da sua api.]
+
 
 ## Modelagem da Aplicação
+[Descreva a modelagem da aplicação, incluindo a estrutura de dados, diagramas de classes ou entidades, e outras representações visuais relevantes.]
 
-- Entidades principais alinhadas às tabelas no PostgreSQL (ex.: `common_areas`, `reservations`, `users`).
-- Modelo de reserva: `ReservaAreaComum` mapeado para `public.reservations`; no JSON da API: `common_area_id`, `user_id`, `start_time`, `end_time`, `status` (enum no PostgreSQL; valores aceitos abaixo), `notes` (opcional, **não há coluna no Supabase** — não é persistido).
-- Scripts de referência para índices e FKs: [`docs/sql/reservas-supabase.sql`](sql/reservas-supabase.sql).
 
 ## Tecnologias Utilizadas
 
-| Componente | Tecnologia |
-|------------|------------|
-| Runtime | .NET (ASP.NET Core) |
-| Banco de dados | PostgreSQL (ex.: Supabase) |
-| Acesso a dados | **EF Core** + **Npgsql** (reservas); **Npgsql** direto (demais módulos) |
-| Documentação interativa | **Swagger** / OpenAPI (habilitado em ambiente Development) |
+Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs Web. A tecnologia certa para o seu projeto dependerá dos seus objetivos, dos seus clientes e dos recursos que a API deve fornecer.
+
+[Lista das tecnologias principais que serão utilizadas no projeto.]
 
 ## API Endpoints
 
-### Reservas de áreas comuns — `/api/reservas`
+[Liste os principais endpoints da API, incluindo as operações disponíveis, os parâmetros esperados e as respostas retornadas.]
 
-Base URL relativa: `api/reservas` (definida em [`ReservasController`](../src/backend/Controllers/ReservasController.cs)).
-
-| Método | Rota | Descrição |
-|--------|------|-----------|
-| GET | `/api/reservas` | Lista todas as reservas. |
-| GET | `/api/reservas/{id}` | Obtém uma reserva por ID. |
-| POST | `/api/reservas` | Cria reserva. Corpo JSON com `common_area_id`, `user_id`, `start_time`, `end_time`, `status`, `notes` (opcional; não persistido no BD). |
-| PUT | `/api/reservas/{id}` | Atualiza reserva existente. |
-| DELETE | `/api/reservas/{id}` | Remove reserva. Resposta `204 No Content` em sucesso. |
-
-**Status aceitos** (campo `status`): `Confirmada`, `Pendente`, `Cancelada`.
-
-**Regras de negócio:**
-
-- `DataHoraFim` deve ser maior que `DataHoraInicio`.
-- Não é permitida **sobreposição de horários** na mesma área (`common_area_id`) entre reservas com status diferente de `Cancelada`. Em conflito, a API responde **409 Conflict** com mensagem explicativa.
-
-**Payload JSON:** propriedades em snake_case conforme `JsonPropertyName` (ex.: `common_area_id`, `start_time`, `end_time`).
-
-### Documentação OpenAPI (Swagger)
-
-Em **Development**, com a aplicação em execução, a UI Swagger fica disponível em `/swagger` (a URL exata é logada na inicialização).
+### Endpoint 1
+- Método: GET
+- URL: /endpoint1
+- Parâmetros:
+  - param1: [descrição]
+- Resposta:
+  - Sucesso (200 OK)
+    ```
+    {
+      "message": "Success",
+      "data": {
+        ...
+      }
+    }
+    ```
+  - Erro (4XX, 5XX)
+    ```
+    {
+      "message": "Error",
+      "error": {
+        ...
+      }
+    }
+    ```
 
 ## Considerações de Segurança
 
-- Connection string em `ConnectionStrings:DefaultConnection` — preferir **User Secrets** ou variáveis de ambiente em desenvolvimento; **não** versionar credenciais.
-- Endpoints atuais não implementam autenticação JWT nesta documentação; evoluir conforme [`docs/contexto.md`](contexto.md).
+[Discuta as considerações de segurança relevantes para a aplicação distribuída, como autenticação, autorização, proteção contra ataques, etc.]
 
 ## Implantação
 
-1. Definir connection string do PostgreSQL (SSL conforme provedor, ex.: Supabase).
-2. Aplicar schema e índices necessários (ver `docs/sql/`).
-3. Publicar o projeto [`src/backend`](../src/backend) no ambiente escolhido.
-4. Configurar variáveis de ambiente ou secrets para produção.
+[Instruções para implantar a aplicação distribuída em um ambiente de produção.]
+
+1. Defina os requisitos de hardware e software necessários para implantar a aplicação em um ambiente de produção.
+2. Escolha uma plataforma de hospedagem adequada, como um provedor de nuvem ou um servidor dedicado.
+3. Configure o ambiente de implantação, incluindo a instalação de dependências e configuração de variáveis de ambiente.
+4. Faça o deploy da aplicação no ambiente escolhido, seguindo as instruções específicas da plataforma de hospedagem.
+5. Realize testes para garantir que a aplicação esteja funcionando corretamente no ambiente de produção.
 
 ## Testes
 
-- **Unitários:** projeto [`src/backend.tests`](../src/backend.tests) — regras de intervalo de tempo para reservas (`ReservaConflito`).
-- **Integração:** ver [`src/backend.tests/README.md`](../src/backend.tests/README.md) (Postgres via Testcontainers ou banco de teste dedicado).
+[Descreva a estratégia de teste, incluindo os tipos de teste a serem realizados (unitários, integração, carga, etc.) e as ferramentas a serem utilizadas.]
 
-1. Casos de teste alinhados aos requisitos funcionais.
-2. Testes de integração opcionais com HTTP + PostgreSQL.
-3. Executar: `dotnet test src/backend.tests/backend.tests.csproj`.
+1. Crie casos de teste para cobrir todos os requisitos funcionais e não funcionais da aplicação.
+2. Implemente testes unitários para testar unidades individuais de código, como funções e classes.
+3. Realize testes de integração para verificar a interação correta entre os componentes da aplicação.
+4. Execute testes de carga para avaliar o desempenho da aplicação sob carga significativa.
+5. Utilize ferramentas de teste adequadas, como frameworks de teste e ferramentas de automação de teste, para agilizar o processo de teste.
 
 # Referências
 
-Documentação ASP.NET Core Web API, Npgsql e OpenAPI/Swashbuckle.
+Inclua todas as referências (livros, artigos, sites, etc) utilizados no desenvolvimento do trabalho.
