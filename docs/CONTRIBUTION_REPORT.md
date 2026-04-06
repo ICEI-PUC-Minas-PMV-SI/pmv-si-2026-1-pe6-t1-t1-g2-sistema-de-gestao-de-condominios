@@ -1,6 +1,6 @@
 # 📊 Relatório de Contribuições do Projeto
 
-**Última atualização:** 06/04/2026 00:54
+**Última atualização:** 06/04/2026 18:26
 
 ---
 
@@ -8,7 +8,7 @@
 
 | Aluno                 |   Commits |   Linhas+ |   Linhas- |   Arquivos |   Docs Commits |   Docs Arquivos |
 |-----------------------|-----------|-----------|-----------|------------|----------------|-----------------|
-| Bruno Alfeu           |        11 |       273 |        35 |          8 |              8 |               4 |
+| Bruno Alfeu           |        12 |       274 |        36 |          8 |              9 |               4 |
 | Gabriel               |         5 |     83976 |        74 |         87 |              0 |               0 |
 | Gabriel Oliveira      |        17 |        67 |        45 |          6 |             15 |               4 |
 | Guilherme Mendonca    |         7 |       993 |       358 |         19 |              5 |               2 |
@@ -17,22 +17,24 @@
 | Mathbkj               |        10 |       587 |        79 |         19 |              0 |               0 |
 | Mukimiw4a             |        13 |        30 |        25 |          7 |             12 |               6 |
 | YanGuimaraesMartins   |        10 |       300 |        16 |          8 |              7 |               4 |
-| github-actions[bot]   |        24 |       180 |       174 |          3 |             24 |               1 |
+| github-actions[bot]   |        25 |       183 |       177 |          3 |             25 |               1 |
 | github-classroom[bot] |         1 |      2152 |         0 |         45 |              1 |              13 |
 | guigsmendonca         |        19 |       178 |       150 |          9 |             16 |               4 |
 
 
 ## 📅 Contribuições Semanais (Todo o Semestre)
 
-**2026-03-23**: Gabriel: 2, Gabriel Oliveira: 3, Guilherme Mendonca: 3, Isaac: 1, Mathbkj: 2, Mukimiw4a: 3, github-actions[bot]: 12, guigsmendonca: 5
+**2026-03-30**: Bruno Alfeu: 1, github-actions[bot]: 1
 
-**2026-03-16**: Bruno Alfeu: 3, Gabriel: 2, Gabriel Oliveira: 2, Guilherme Mendonca: 4, Isaac: 1, Isaac Samuel: 4, Mathbkj: 8, Mukimiw4a: 2, YanGuimaraesMartins: 3, github-actions[bot]: 12, guigsmendonca: 2
+**2026-03-23**: Gabriel: 2, Gabriel Oliveira: 3, Guilherme Mendonca: 2, Isaac: 1, Mathbkj: 2, Mukimiw4a: 3, github-actions[bot]: 12, guigsmendonca: 5
+
+**2026-03-16**: Bruno Alfeu: 3, Gabriel: 2, Gabriel Oliveira: 2, Guilherme Mendonca: 5, Isaac: 1, Isaac Samuel: 4, Mathbkj: 8, Mukimiw4a: 2, YanGuimaraesMartins: 3, github-actions[bot]: 12, guigsmendonca: 2
 
 **2026-03-09**: Bruno Alfeu: 2, Gabriel: 1, Gabriel Oliveira: 5, Mukimiw4a: 1, guigsmendonca: 1
 
-**2026-03-02**: Bruno Alfeu: 5, Gabriel Oliveira: 7, Isaac Samuel: 6, Mukimiw4a: 7, YanGuimaraesMartins: 7, guigsmendonca: 10
+**2026-03-02**: Bruno Alfeu: 4, Gabriel Oliveira: 5, Isaac Samuel: 6, Mukimiw4a: 5, YanGuimaraesMartins: 6, guigsmendonca: 6
 
-**2026-02-23**: Bruno Alfeu: 1, guigsmendonca: 1
+**2026-02-23**: Bruno Alfeu: 2, Gabriel Oliveira: 2, Mukimiw4a: 2, YanGuimaraesMartins: 1, guigsmendonca: 5
 
 **2026-02-16**: github-classroom[bot]: 1
 
