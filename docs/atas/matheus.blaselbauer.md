@@ -9,9 +9,9 @@
 | 23/02 - 01/03 | Arquitetura de Software Distribuído - Unidade 1 e 2 | ✅ | Escolhas restritivas da arquitetura da solução | Implementação da seção de restrições arquiteturais da aplicação |
 | 02/03 - 08/03 | Arquitetura de Software Distribuído - Unidade 3 | ✅ | Revisão dos problemas e restrições arquiteturais levantados, e comparação com as boas práticas |Revisão dos problemas levantados e correção das informações de restrição implementadas|
 | 15/03 - 15/03 | APIs e Web Services - Unidade 1 | ✅| CRUD inicial de delivery implementado | CRUD inicial de delivery implementado |
-| 16/03 - 25/03 | APIs e Web Services - Unidade 2 | ✅ | Autenticação e Autorização de acesso aos recursos da API  | Autenticação e Autorização de acesso aos recursos da API |
-| 23/03 - 29/03 | APIs e Web Services - Unidade 2 | ⬜ | Recuperação de dados de uma encomenda na API |  |
-| 30/03 - 05/04 | Recuperação de Informação na Web e Redes Sociais - Unidade 1 | ⬜ |  |  |
+| 16/03 - 25/03 | APIs e Web Services - Unidade 2 | ✅ | Autenticação aos recursos da API  | Autenticação e Autorização de acesso aos recursos da API |
+| 23/03 - 29/03 | APIs e Web Services - Unidade 2 | ✅ | Autorização aos recursos da API | Autorização de acesso aos recursos de acordo com o cargo do usuário |
+| 30/03 - 05/04 | Recuperação de Informação na Web e Redes Sociais - Unidade 1 | ✅ | Implementação do envio de notificações de email por push ao cancelar ou aprovar reservas do morador | Envio de email ao usuário ao confirmar ou cancelar reservas |
 | 06/04 - 12/04 | Recuperação de Informação na Web e Redes Sociais - Unidade 2 | ⬜ |  |  |
 | 13/04 - 19/04 | Computação Ubíqua e Pervasiva e IoT - Unidade 1 | ⬜ |  |  |
 | 20/04 - 26/04 | Computação Ubíqua e Pervasiva e IoT - Unidade 2 | ⬜ |  |  |
