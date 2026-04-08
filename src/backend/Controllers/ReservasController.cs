@@ -15,12 +15,9 @@ namespace backend.Controllers
     public class ReservasController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly EmailService _emailService;
-
         public ReservasController(ApplicationDbContext context, EmailService emailService)
         {
             _context = context;
-            _emailService = emailService;
         }
 
         [HttpGet]
@@ -193,16 +190,8 @@ namespace backend.Controllers
                         entity = MapReserva(reader);
                     }
 
-                    if (entity.Status == ReservationStatus.Aprovada)
-                    {
-                        var userEmail = await _emailService.GetUserEmailById(entity.MoradorId, cancellationToken);
-                        if (!string.IsNullOrEmpty(userEmail))
-                        {
-                            var subject = "Confirmação de Reserva de Área Comum";
-                            var content = $"Olá,\n\nSua reserva para a área comum {entity.AreaComumId} foi confirmada para o período de {entity.DataHoraInicio:u} a {entity.DataHoraFim:u}.\n\nObrigado.";
-                            await _emailService.SendMail(userEmail, subject, content);
-                        }
-                    }
+                    
+
                     return CreatedAtAction(nameof(GetById), new { id = entity.Id }, entity);
                 }
                 finally
@@ -322,26 +311,7 @@ namespace backend.Controllers
 
                         entity = MapReserva(reader);
                     }
-
-                    if (previousStatus != ReservationStatus.Aprovada && entity.Status == ReservationStatus.Aprovada)
-                    {
-                        var userEmail = await _emailService.GetUserEmailById(entity.MoradorId, cancellationToken);
-                        if (!string.IsNullOrEmpty(userEmail))
-                        {
-                            var subject = "Confirmação de Reserva de Área Comum";
-                            var content = $"Olá,\n\nSua reserva para a área comum {entity.AreaComumId} foi aprovada para o período de {entity.DataHoraInicio:u} a {entity.DataHoraFim:u}.\n\nObrigado.";
-                            await _emailService.SendMail(userEmail, subject, content);
-                        }
-                    }
-                    if(previousStatus != ReservationStatus.Cancelada && entity.Status == ReservationStatus.Cancelada){
-                        var userEmail = await _emailService.GetUserEmailById(entity.MoradorId, cancellationToken);
-                        if (!string.IsNullOrEmpty(userEmail))
-                        {
-                            var subject = "Cancelamento de Reserva de Área Comum";
-                            var content = $"Olá,\n\nSua reserva para a área comum {entity.AreaComumId} no período de {entity.DataHoraInicio:u} a {entity.DataHoraFim:u} foi cancelada.\n\nObrigado.";
-                            await _emailService.SendMail(userEmail, subject, content);
-                        }
-                    }
+                   
 
                     return Ok(entity);
                 }
