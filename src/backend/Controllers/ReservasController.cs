@@ -1,5 +1,6 @@
 using backend.Data;
 using backend.Models;
+using backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +15,12 @@ namespace backend.Controllers
     public class ReservasController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly EmailService _emailService;
 
-        public ReservasController(ApplicationDbContext context)
+        public ReservasController(ApplicationDbContext context, EmailService emailService)
         {
             _context = context;
+            _emailService = emailService;
         }
 
         [HttpGet]
@@ -179,13 +182,27 @@ namespace backend.Controllers
                     command.Parameters.AddWithValue("created_at", now);
                     command.Parameters.AddWithValue("updated_at", now);
 
-                    await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-                    if (!await reader.ReadAsync(cancellationToken))
+                    ReservaAreaComum entity;
+                    await using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                     {
-                        return StatusCode(502, "Banco retornou resposta vazia para a criação de reserva.");
+                        if (!await reader.ReadAsync(cancellationToken))
+                        {
+                            return StatusCode(502, "Banco retornou resposta vazia para a criação de reserva.");
+                        }
+
+                        entity = MapReserva(reader);
                     }
 
-                    var entity = MapReserva(reader);
+                    if (entity.Status == ReservationStatus.Aprovada)
+                    {
+                        var userEmail = await _emailService.GetUserEmailById(entity.MoradorId, cancellationToken);
+                        if (!string.IsNullOrEmpty(userEmail))
+                        {
+                            var subject = "Confirmação de Reserva de Área Comum";
+                            var content = $"Olá,\n\nSua reserva para a área comum {entity.AreaComumId} foi confirmada para o período de {entity.DataHoraInicio:u} a {entity.DataHoraFim:u}.\n\nObrigado.";
+                            await _emailService.SendMail(userEmail, subject, content);
+                        }
+                    }
                     return CreatedAtAction(nameof(GetById), new { id = entity.Id }, entity);
                 }
                 finally
@@ -251,6 +268,28 @@ namespace backend.Controllers
                     await connection.OpenAsync(cancellationToken);
                 }
 
+                ReservationStatus previousStatus;
+                {
+                    const string statusSql = @"
+                        SELECT status::text
+                        FROM public.reservations
+                        WHERE id = @id
+                        LIMIT 1;";
+
+                    await using var statusCommand = new NpgsqlCommand(statusSql, connection);
+                    statusCommand.Parameters.AddWithValue("id", id);
+
+                    var statusResult = await statusCommand.ExecuteScalarAsync(cancellationToken);
+                    if (statusResult is null)
+                    {
+                        return NotFound();
+                    }
+
+                    previousStatus = Enum.TryParse<ReservationStatus>(statusResult.ToString(), true, out var parsedStatus)
+                        ? parsedStatus
+                        : ReservationStatus.Pendente;
+                }
+
                 const string sql = @"
                     UPDATE public.reservations
                     SET common_area_id = @common_area_id,
@@ -273,13 +312,38 @@ namespace backend.Controllers
                     command.Parameters.AddWithValue("status", requestBody.Status.ToString());
                     command.Parameters.AddWithValue("updated_at", DateTime.UtcNow);
 
-                    await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-                    if (!await reader.ReadAsync(cancellationToken))
+                    ReservaAreaComum entity;
+                    await using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                     {
-                        return NotFound();
+                        if (!await reader.ReadAsync(cancellationToken))
+                        {
+                            return NotFound();
+                        }
+
+                        entity = MapReserva(reader);
                     }
 
-                    return Ok(MapReserva(reader));
+                    if (previousStatus != ReservationStatus.Aprovada && entity.Status == ReservationStatus.Aprovada)
+                    {
+                        var userEmail = await _emailService.GetUserEmailById(entity.MoradorId, cancellationToken);
+                        if (!string.IsNullOrEmpty(userEmail))
+                        {
+                            var subject = "Confirmação de Reserva de Área Comum";
+                            var content = $"Olá,\n\nSua reserva para a área comum {entity.AreaComumId} foi aprovada para o período de {entity.DataHoraInicio:u} a {entity.DataHoraFim:u}.\n\nObrigado.";
+                            await _emailService.SendMail(userEmail, subject, content);
+                        }
+                    }
+                    if(previousStatus != ReservationStatus.Cancelada && entity.Status == ReservationStatus.Cancelada){
+                        var userEmail = await _emailService.GetUserEmailById(entity.MoradorId, cancellationToken);
+                        if (!string.IsNullOrEmpty(userEmail))
+                        {
+                            var subject = "Cancelamento de Reserva de Área Comum";
+                            var content = $"Olá,\n\nSua reserva para a área comum {entity.AreaComumId} no período de {entity.DataHoraInicio:u} a {entity.DataHoraFim:u} foi cancelada.\n\nObrigado.";
+                            await _emailService.SendMail(userEmail, subject, content);
+                        }
+                    }
+
+                    return Ok(entity);
                 }
                 finally
                 {
