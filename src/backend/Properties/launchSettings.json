@@ -9,7 +9,8 @@
       "applicationUrl": "http://localhost:5219",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "JWT_SECRET": "my_super_secret_key_for_jwt_generation"
+        "JWT_SECRET": "my_super_secret_key_for_jwt_generation",
+        "RESEND_API_KEY": "re_9s1Kez48_5ShVQjnJfgDYjuMgmD9YdfhS"
       }
     },
     "https": {
