@@ -15,9 +15,11 @@ namespace backend.Controllers
     public class ReservasController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly EmailService _emailService;
         public ReservasController(ApplicationDbContext context, EmailService emailService)
         {
             _context = context;
+            _emailService = emailService;
         }
 
         [HttpGet]
@@ -190,7 +192,14 @@ namespace backend.Controllers
                         entity = MapReserva(reader);
                     }
 
-                    
+                    if (entity.Status == ReservationStatus.Aprovada)
+                    {
+                        var notificationId = await CreateNotificationAsync(connection, entity, "Reserva Confirmada", cancellationToken);
+                        if (notificationId > 0)
+                        {
+                            await SendNotificationAsync(notificationId);
+                        }
+                    }
 
                     return CreatedAtAction(nameof(GetById), new { id = entity.Id }, entity);
                 }
@@ -311,7 +320,24 @@ namespace backend.Controllers
 
                         entity = MapReserva(reader);
                     }
-                   
+
+                    if (entity.Status == ReservationStatus.Aprovada)
+                    {
+                        var notificationId = await CreateNotificationAsync(connection, entity, "Reserva Confirmada", cancellationToken);
+                        if (notificationId > 0)
+                        {
+                            await SendNotificationAsync(notificationId);
+                        }
+                    }
+
+                    if (previousStatus != ReservationStatus.Cancelada && entity.Status == ReservationStatus.Cancelada)
+                    {
+                        var notificationId = await CreateNotificationAsync(connection, entity, "Reserva Cancelada", cancellationToken);
+                        if (notificationId > 0)
+                        {
+                            await SendNotificationAsync(notificationId);
+                        }
+                    }
 
                     return Ok(entity);
                 }
@@ -526,6 +552,41 @@ namespace backend.Controllers
             }
 
             return DateTime.SpecifyKind(value, DateTimeKind.Local).ToUniversalTime();
+        }
+
+        private async Task<int> CreateNotificationAsync(
+            NpgsqlConnection connection,
+            ReservaAreaComum reservation,
+            string type,
+            CancellationToken cancellationToken)
+        {
+            const string sql = @"
+                INSERT INTO public.notifications
+                    (user_id, type, message, is_read, reservation_id, occurrence_id, delivery_id)
+                VALUES
+                    (@user_id, @type::notification_type, @message, @is_read, @reservation_id, @occurrence_id, @delivery_id)
+                RETURNING id;";
+
+            var message = type == "Reserva Cancelada"
+                ? $"Sua reserva da área comum (ID: {reservation.Id}) foi cancelada."
+                : $"Sua reserva da área comum (ID: {reservation.Id}) foi confirmada.";
+
+            await using var command = new NpgsqlCommand(sql, connection);
+            command.Parameters.AddWithValue("user_id", reservation.MoradorId);
+            command.Parameters.AddWithValue("type", type);
+            command.Parameters.AddWithValue("message", message);
+            command.Parameters.AddWithValue("is_read", false);
+            command.Parameters.AddWithValue("reservation_id", reservation.Id);
+            command.Parameters.AddWithValue("occurrence_id", DBNull.Value);
+            command.Parameters.AddWithValue("delivery_id", DBNull.Value);
+
+            var result = await command.ExecuteScalarAsync(cancellationToken);
+            return result is null ? -1 : Convert.ToInt32(result);
+        }
+
+        private async Task SendNotificationAsync(int notificationId)
+        {
+            await _emailService.SendMail(notificationId);
         }
     }
 }
