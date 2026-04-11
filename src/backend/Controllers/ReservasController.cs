@@ -511,14 +511,13 @@ namespace backend.Controllers
 
                 try
                 {
-                    
                     const string sql = @"
-                SELECT start_time, end_time 
-                FROM public.reservations 
-                WHERE common_area_id = @areaId 
-                  AND status <> 'Cancelada'::reservation_status
-                  AND start_time::date = @data::date
-                ORDER BY start_time;";
+                        SELECT start_time, end_time 
+                        FROM public.reservations 
+                        WHERE common_area_id = @areaId 
+                          AND status <> 'Cancelada'::reservation_status
+                          AND start_time::date = @data::date
+                        ORDER BY start_time;";
 
                     await using var command = new NpgsqlCommand(sql, connection);
                     command.Parameters.AddWithValue("areaId", areaId);
