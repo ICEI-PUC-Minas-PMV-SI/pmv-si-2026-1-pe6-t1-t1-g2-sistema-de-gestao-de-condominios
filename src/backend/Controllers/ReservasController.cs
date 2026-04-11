@@ -9,7 +9,7 @@ using System.Data;
 
 namespace backend.Controllers
 {
-    [Authorize(Roles ="Administrador")]
+    [AllowAnonymous]
     [ApiController]
     [Route("api/reservas")]
     public class ReservasController : ControllerBase
@@ -554,6 +554,60 @@ namespace backend.Controllers
             return DateTime.SpecifyKind(value, DateTimeKind.Local).ToUniversalTime();
         }
 
+
+        [HttpGet("disponibilidade")]
+        [AllowAnonymous] 
+        public async Task<ActionResult<IEnumerable<object>>> GetDisponibilidade(int areaId, DateTime data, CancellationToken ct)
+        {
+            try
+            {
+                var dbConnection = _context.Database.GetDbConnection();
+                if (dbConnection is not NpgsqlConnection connection)
+                {
+                    return StatusCode(500, "Conexão inválida.");
+                }
+
+                var shouldCloseConnection = connection.State != ConnectionState.Open;
+                if (shouldCloseConnection) await connection.OpenAsync(ct);
+
+                try
+                {
+                    const string sql = @"
+                        SELECT start_time, end_time 
+                        FROM public.reservations 
+                        WHERE common_area_id = @areaId 
+                          AND status <> 'Cancelada'::reservation_status
+                          AND start_time::date = @data::date
+                        ORDER BY start_time;";
+
+                    await using var command = new NpgsqlCommand(sql, connection);
+                    command.Parameters.AddWithValue("areaId", areaId);
+                    command.Parameters.AddWithValue("data", data.Date);
+
+                    await using var reader = await command.ExecuteReaderAsync(ct);
+                    var ocupados = new List<object>();
+
+                    while (await reader.ReadAsync(ct))
+                    {
+                        ocupados.Add(new
+                        {
+                            inicio = reader.GetDateTime(0),
+                            fim = reader.GetDateTime(1)
+                        });
+                    }
+
+                    return Ok(ocupados);
+                }
+                finally
+                {
+                    if (shouldCloseConnection) await connection.CloseAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro: {ex.Message}");
+            }
+        }
         private async Task<int> CreateNotificationAsync(
             NpgsqlConnection connection,
             ReservaAreaComum reservation,
@@ -587,6 +641,7 @@ namespace backend.Controllers
         private async Task SendNotificationAsync(int notificationId)
         {
             await _emailService.SendMail(notificationId);
+
         }
     }
 }
