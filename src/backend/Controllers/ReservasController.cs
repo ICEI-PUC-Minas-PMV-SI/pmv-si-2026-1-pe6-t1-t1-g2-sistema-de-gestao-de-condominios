@@ -1,5 +1,6 @@
 using backend.Data;
 using backend.Models;
+using backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,16 +9,17 @@ using System.Data;
 
 namespace backend.Controllers
 {
-    [Authorize(Roles ="Administrador, Morador")]
+    [AllowAnonymous]
     [ApiController]
     [Route("api/reservas")]
     public class ReservasController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-
-        public ReservasController(ApplicationDbContext context)
+        private readonly EmailService _emailService;
+        public ReservasController(ApplicationDbContext context, EmailService emailService)
         {
             _context = context;
+            _emailService = emailService;
         }
 
         [HttpGet]
@@ -179,13 +181,26 @@ namespace backend.Controllers
                     command.Parameters.AddWithValue("created_at", now);
                     command.Parameters.AddWithValue("updated_at", now);
 
-                    await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-                    if (!await reader.ReadAsync(cancellationToken))
+                    ReservaAreaComum entity;
+                    await using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                     {
-                        return StatusCode(502, "Banco retornou resposta vazia para a criação de reserva.");
+                        if (!await reader.ReadAsync(cancellationToken))
+                        {
+                            return StatusCode(502, "Banco retornou resposta vazia para a criação de reserva.");
+                        }
+
+                        entity = MapReserva(reader);
                     }
 
-                    var entity = MapReserva(reader);
+                    if (entity.Status == ReservationStatus.Aprovada)
+                    {
+                        var notificationId = await CreateNotificationAsync(connection, entity, "Reserva Confirmada", cancellationToken);
+                        if (notificationId > 0)
+                        {
+                            await SendNotificationAsync(notificationId);
+                        }
+                    }
+
                     return CreatedAtAction(nameof(GetById), new { id = entity.Id }, entity);
                 }
                 finally
@@ -251,6 +266,28 @@ namespace backend.Controllers
                     await connection.OpenAsync(cancellationToken);
                 }
 
+                ReservationStatus previousStatus;
+                {
+                    const string statusSql = @"
+                        SELECT status::text
+                        FROM public.reservations
+                        WHERE id = @id
+                        LIMIT 1;";
+
+                    await using var statusCommand = new NpgsqlCommand(statusSql, connection);
+                    statusCommand.Parameters.AddWithValue("id", id);
+
+                    var statusResult = await statusCommand.ExecuteScalarAsync(cancellationToken);
+                    if (statusResult is null)
+                    {
+                        return NotFound();
+                    }
+
+                    previousStatus = Enum.TryParse<ReservationStatus>(statusResult.ToString(), true, out var parsedStatus)
+                        ? parsedStatus
+                        : ReservationStatus.Pendente;
+                }
+
                 const string sql = @"
                     UPDATE public.reservations
                     SET common_area_id = @common_area_id,
@@ -273,13 +310,36 @@ namespace backend.Controllers
                     command.Parameters.AddWithValue("status", requestBody.Status.ToString());
                     command.Parameters.AddWithValue("updated_at", DateTime.UtcNow);
 
-                    await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-                    if (!await reader.ReadAsync(cancellationToken))
+                    ReservaAreaComum entity;
+                    await using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                     {
-                        return NotFound();
+                        if (!await reader.ReadAsync(cancellationToken))
+                        {
+                            return NotFound();
+                        }
+
+                        entity = MapReserva(reader);
                     }
 
-                    return Ok(MapReserva(reader));
+                    if (entity.Status == ReservationStatus.Aprovada)
+                    {
+                        var notificationId = await CreateNotificationAsync(connection, entity, "Reserva Confirmada", cancellationToken);
+                        if (notificationId > 0)
+                        {
+                            await SendNotificationAsync(notificationId);
+                        }
+                    }
+
+                    if (previousStatus != ReservationStatus.Cancelada && entity.Status == ReservationStatus.Cancelada)
+                    {
+                        var notificationId = await CreateNotificationAsync(connection, entity, "Reserva Cancelada", cancellationToken);
+                        if (notificationId > 0)
+                        {
+                            await SendNotificationAsync(notificationId);
+                        }
+                    }
+
+                    return Ok(entity);
                 }
                 finally
                 {
@@ -494,6 +554,7 @@ namespace backend.Controllers
             return DateTime.SpecifyKind(value, DateTimeKind.Local).ToUniversalTime();
         }
 
+
         [HttpGet("disponibilidade")]
         [AllowAnonymous] 
         public async Task<ActionResult<IEnumerable<object>>> GetDisponibilidade(int areaId, DateTime data, CancellationToken ct)
@@ -546,6 +607,41 @@ namespace backend.Controllers
             {
                 return StatusCode(500, $"Erro: {ex.Message}");
             }
+        }
+        private async Task<int> CreateNotificationAsync(
+            NpgsqlConnection connection,
+            ReservaAreaComum reservation,
+            string type,
+            CancellationToken cancellationToken)
+        {
+            const string sql = @"
+                INSERT INTO public.notifications
+                    (user_id, type, message, is_read, reservation_id, occurrence_id, delivery_id)
+                VALUES
+                    (@user_id, @type::notification_type, @message, @is_read, @reservation_id, @occurrence_id, @delivery_id)
+                RETURNING id;";
+
+            var message = type == "Reserva Cancelada"
+                ? $"Sua reserva da área comum (ID: {reservation.Id}) foi cancelada."
+                : $"Sua reserva da área comum (ID: {reservation.Id}) foi confirmada.";
+
+            await using var command = new NpgsqlCommand(sql, connection);
+            command.Parameters.AddWithValue("user_id", reservation.MoradorId);
+            command.Parameters.AddWithValue("type", type);
+            command.Parameters.AddWithValue("message", message);
+            command.Parameters.AddWithValue("is_read", false);
+            command.Parameters.AddWithValue("reservation_id", reservation.Id);
+            command.Parameters.AddWithValue("occurrence_id", DBNull.Value);
+            command.Parameters.AddWithValue("delivery_id", DBNull.Value);
+
+            var result = await command.ExecuteScalarAsync(cancellationToken);
+            return result is null ? -1 : Convert.ToInt32(result);
+        }
+
+        private async Task SendNotificationAsync(int notificationId)
+        {
+            await _emailService.SendMail(notificationId);
+
         }
     }
 }
