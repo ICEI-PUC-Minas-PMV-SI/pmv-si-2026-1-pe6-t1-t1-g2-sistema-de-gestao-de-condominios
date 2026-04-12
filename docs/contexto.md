@@ -72,10 +72,10 @@ O público-alvo é dividido em dois perfis principais de acesso, com diferentes 
 | RF-005 | O sistema deve impedir a criação de reservas em horários já ocupados ou fora das regras estabelecidas para a área. | ALTA | Guilherme Mendonça |
 | RF-006 | O sistema deve permitir que o 'Morador' visualize e cancele suas próprias reservas futuras. | MÉDIA | Guilherme Mendonça |
 | RF-007 | O sistema deve permitir que o 'Administrador' visualize, aprove, rejeite ou cancele qualquer reserva no sistema. | MÉDIA | Guilherme Mendonça |
-| RF-008 | O sistema deve enviar uma notificação (email ou push) para o morador ao confirmar ou cancelar uma reserva. | BAIXA |  |
+| RF-008 | O sistema deve enviar uma notificação (email ou push) para o morador ao confirmar ou cancelar uma reserva. | BAIXA | Gabriel Amâncio |
 | RF-009 | O sistema deve permitir que o 'Morador' abra um chamado de ocorrência/manutenção, descrevendo o problema e anexando uma foto. | MÉDIA | Gabriel Amâncio |
 | RF-010 | O sistema deve permitir que o 'Administrador' visualize, atualize o status (ex: "Aberto", "Em andamento", "Resolvido") e finalize as ocorrências. | MÉDIA | Gabriel Amâncio |
-| RF-011 | O sistema deve permitir que o 'Administrador' (ou 'Porteiro', se criarmos esse perfil) registre a chegada de uma encomenda para um morador/unidade. | MÉDIA |  |
+| RF-011 | O sistema deve permitir que o 'Administrador' (ou 'Porteiro', se criarmos esse perfil) registre a chegada de uma encomenda para um morador/unidade. | MÉDIA | Gabriel Amâncio |
 | RF-012 | O sistema deve notificar o morador sobre a chegada de uma encomenda. | BAIXA | Gabriel Amâncio |
 | RF-013 | O sistema deve permitir que o 'Administrador' (ou 'Porteiro') dê baixa na encomenda no momento da retirada pelo morador. | MÉDIA | Gabriel Amâncio |
 
