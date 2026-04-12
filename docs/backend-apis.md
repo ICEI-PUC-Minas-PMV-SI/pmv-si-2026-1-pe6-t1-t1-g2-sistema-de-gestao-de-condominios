@@ -277,7 +277,30 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
 
 ## Considerações de Segurança
 
-[Discuta as considerações de segurança relevantes para a aplicação distribuída, como autenticação, autorização, proteção contra ataques, etc.]
+Esta seção detalha os mecanismos de proteção implementados na API e apresenta uma análise crítica sobre os riscos e vulnerabilidades remanescentes no código.
+
+### 1. Mecanismos Implementados
+
+* **Autenticação e Autorização (JWT):** O acesso a endpoints sensíveis é controlado via JSON Web Tokens. O sistema utiliza perfis de acesso (*Roles*) para restringir funcionalidades:
+    * **Administrador:** Possui permissões para gerir todas as ocorrências e áreas comuns.
+    * **Morador:** Restrito a funcionalidades de consulta e criação de registros próprios.
+* **Proteção contra SQL Injection:** A utilização do **Entity Framework Core** como ORM garante a parametrização das consultas, mitigando ataques de injeção de SQL.
+* **Segurança na Camada de Transporte:** A conexão com a base de dados PostgreSQL está configurada para exigir SSL (`SslMode = SslMode.Require`), protegendo os dados em trânsito.
+* **Validação de Uploads (Ocorrências):**
+    * **Tipo de Arquivo:** O sistema verifica o tipo MIME, aceitando apenas formatos de imagem específicos (JPEG, PNG, GIF, WebP).
+    * **Tamanho do Arquivo:** Existe uma verificação lógica que limita o upload a **5MB** por arquivo no controlador de ocorrências.
+* **Proteção contra Acesso Indevido (IDOR):** No módulo de ocorrências, o sistema valida se o usuário que tenta anexar uma imagem é de fato o proprietário do registro.
+
+### 2. Análise de Riscos e Incoerências (Sinceridade Técnica)
+
+Como solicitado pela coordenação do projeto, abaixo são listados os pontos de falha e incoerências que representam riscos à segurança da aplicação:
+
+* **Incoerência nos Limites de Upload:** Existe uma contradição técnica no código. Enquanto o controlador de ocorrências limita o arquivo a **5MB**, a configuração global do servidor no arquivo `Program.cs` permite corpos de requisição de até **100MB** (`MultipartBodyLengthLimit`). Isso pode permitir que ataques de negação de serviço (DoS) ocupem recursos do servidor antes mesmo da lógica do controlador barrar o arquivo.
+* **CORS Excessivamente Permissivo:** A API está configurada com `AllowAnyOrigin()`, `AllowAnyMethod()` e `AllowAnyHeader()`. Isso significa que qualquer site malicioso pode tentar realizar requisições contra a API, representando um risco grave de segurança em ambiente de produção.
+* **Configuração Insegura de Metadados HTTPS:** No `Program.cs`, a opção `RequireHttpsMetadata` está definida como `false`. O próprio comentário no código admite que isso é inseguro e deveria ser `true` para garantir que o token JWT nunca viaje por conexões não criptografadas.
+* **Vulnerabilidade a Ataques de Força Bruta:** Não foi implementado nenhum mecanismo de *Rate Limiting*. Um atacante pode realizar milhares de tentativas de login ou consultas aos endpoints sem ser bloqueado automaticamente pelo sistema.
+* **Risco de Exposição de IDs Sequenciais:** O uso de IDs numéricos simples (1, 2, 3...) facilita a enumeração de recursos por atacantes. A ausência de identificadores únicos complexos (GUIDs) torna o sistema mais vulnerável a tentativas de adivinhação de registros.
+* **Ausência de Revogação de Tokens:** O sistema não possui uma "lista negra" para tokens. Se um token for comprometido, ele permanecerá válido até sua expiração natural, mesmo que o usuário saia do sistema ou mude a senha.
 
 ## Implantação
 
