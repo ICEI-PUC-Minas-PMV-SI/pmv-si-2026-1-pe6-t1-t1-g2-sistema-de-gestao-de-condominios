@@ -53,7 +53,7 @@ namespace backend.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro ao consultar notificações: {ex.Message}");
+                return StatusCode(500, new ApiError($"Erro ao consultar notificações: {ex.Message}"));
             }
         }
 
@@ -86,7 +86,7 @@ namespace backend.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro ao consultar notificação: {ex.Message}");
+                return StatusCode(500, new ApiError($"Erro ao consultar notificação: {ex.Message}"));
             }
         }
 
@@ -124,14 +124,82 @@ namespace backend.Controllers
 
                 await using var reader = await command.ExecuteReaderAsync(cancellationToken);
                 if (!await reader.ReadAsync(cancellationToken))
-                    return StatusCode(502, "Banco retornou resposta vazia para a criação de notificação.");
+                    return StatusCode(502, new ApiError("Banco retornou resposta vazia para a criação de notificação."));
 
                 var notification = MapNotification(reader);
                 return CreatedAtAction(nameof(GetById), new { id = notification.Id }, notification);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro ao criar notificação: {ex.Message}");
+                return StatusCode(500, new ApiError($"Erro ao criar notificação: {ex.Message}"));
+            }
+        }
+
+        [HttpPatch("{id:int}")]
+        public async Task<ActionResult<Notification>> Update(int id, [FromBody] Notification requestBody, CancellationToken cancellationToken)
+        {
+            var (connectionString, errorResult) = GetConnectionString();
+            if (errorResult is not null) return errorResult;
+
+            try
+            {
+                await using var connection = new NpgsqlConnection(connectionString);
+                await connection.OpenAsync(cancellationToken);
+
+                // Verificar se existe
+                const string checkSql = @"SELECT 1 FROM public.notifications WHERE id = @id LIMIT 1;";
+                await using (var checkCmd = new NpgsqlCommand(checkSql, connection))
+                {
+                    checkCmd.Parameters.AddWithValue("id", id);
+                    var exists = await checkCmd.ExecuteScalarAsync(cancellationToken);
+                    if (exists is null)
+                        return NotFound(new ApiError("Notificação não encontrada."));
+                }
+
+                // Construir SQL dinamicamente baseado nos campos fornecidos
+                var updates = new List<string>();
+
+                if (!string.IsNullOrEmpty(requestBody.Message))
+                {
+                    updates.Add("message = @message");
+                }
+
+                if (requestBody.IsRead)
+                {
+                    updates.Add("is_read = @is_read");
+                }
+
+                if (updates.Count == 0)
+                    return BadRequest(new ApiError("Nenhum campo para atualizar foi fornecido."));
+
+                updates.Add("updated_at = CURRENT_TIMESTAMP");
+
+                var sql = $@"
+                    UPDATE public.notifications
+                    SET {string.Join(", ", updates)}
+                    WHERE id = @id
+                    RETURNING id, user_id, type, message, is_read,
+                              reservation_id, occurrence_id, delivery_id,
+                              created_at, updated_at;";
+
+                await using var command = new NpgsqlCommand(sql, connection);
+                command.Parameters.AddWithValue("@id", id);
+
+                if (!string.IsNullOrEmpty(requestBody.Message))
+                    command.Parameters.AddWithValue("@message", requestBody.Message);
+
+                if (requestBody.IsRead)
+                    command.Parameters.AddWithValue("@is_read", requestBody.IsRead);
+
+                await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+                if (!await reader.ReadAsync(cancellationToken))
+                    return NotFound();
+
+                return Ok(MapNotification(reader));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiError($"Erro ao atualizar notificação: {ex.Message}"));
             }
         }
 
@@ -194,7 +262,7 @@ namespace backend.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro ao remover notificação: {ex.Message}");
+                return StatusCode(500, new ApiError($"Erro ao remover notificação: {ex.Message}"));
             }
         }
 
@@ -202,7 +270,7 @@ namespace backend.Controllers
         {
             var connectionString = _configuration.GetConnectionString("DefaultConnection");
             if (string.IsNullOrWhiteSpace(connectionString))
-                return (string.Empty, StatusCode(500, "Configure ConnectionStrings:DefaultConnection."));
+                return (string.Empty, StatusCode(500, new ApiError("Configure ConnectionStrings:DefaultConnection.")));
 
             return (connectionString, null);
         }

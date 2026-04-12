@@ -55,7 +55,7 @@ namespace backend.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro ao consultar entregas: {ex.Message}");
+                return StatusCode(500, new ApiError($"Erro ao consultar entregas: {ex.Message}"));
             }
         }
         
@@ -92,7 +92,7 @@ namespace backend.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro ao consultar entrega: {ex.Message}");
+                return StatusCode(500, new ApiError($"Erro ao consultar entrega: {ex.Message}"));
             }
         }
 
@@ -114,6 +114,22 @@ namespace backend.Controllers
             {
                 await using var connection = new NpgsqlConnection(connectionString);
                 await connection.OpenAsync(cancellationToken);
+
+                // Validar se os usuários existem
+                if (requestBody.RecipientUserId.HasValue)
+                {
+                    var userExists = await UserExistsAsync(connection, requestBody.RecipientUserId.Value, cancellationToken);
+                    if (!userExists)
+                        return BadRequest(new ApiError("Usuário destinatário não existe."));
+                }
+
+                if (requestBody.RegisteredByUserId.HasValue)
+                {
+                    var userExists = await UserExistsAsync(connection, requestBody.RegisteredByUserId.Value, cancellationToken);
+                    if (!userExists)
+                        return BadRequest(new ApiError("Usuário registrador não existe."));
+                }
+
                 const string sql = @"
                     INSERT INTO public.deliveries (recipient_user_id, registered_by_user_id, description, arrival_date, pickup_date, status)
                     VALUES (@recipient_user_id, @registered_by_user_id, @description, @arrival_date, @pickup_date, @status::delivery_status)
@@ -132,7 +148,7 @@ namespace backend.Controllers
                 {
                     if (!await reader.ReadAsync(cancellationToken))
                     {
-                        return StatusCode(502, "Banco retornou resposta vazia para a criação de entrega.");
+                        return StatusCode(502, new ApiError("Banco retornou resposta vazia para a criação de entrega."));
                     }
 
                     delivery = MapDelivery(reader);
@@ -146,9 +162,13 @@ namespace backend.Controllers
 
                 return CreatedAtAction(nameof(GetById), new { id = delivery.Id }, delivery);
             }
+            catch (PostgresException pgEx) when (pgEx.SqlState == "23503")  // Foreign key violation
+            {
+                return BadRequest(new ApiError("Um dos usuários referenciados não existe."));
+            }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro ao criar entrega: {ex.Message}");
+                return StatusCode(500, new ApiError($"Erro ao criar entrega: {ex.Message}"));
             }
         }
 
@@ -234,9 +254,13 @@ namespace backend.Controllers
                 
                 return Ok(delivery);
             }
+            catch (PostgresException pgEx) when (pgEx.SqlState == "23503")  // Foreign key violation
+            {
+                return BadRequest(new ApiError("Um dos usuários referenciados não existe."));
+            }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro ao atualizar entrega: {ex.Message}");
+                return StatusCode(500, new ApiError($"Erro ao atualizar entrega: {ex.Message}"));
             }
         }
 
@@ -341,6 +365,16 @@ namespace backend.Controllers
 
             var result = await command.ExecuteScalarAsync(cancellationToken);
             return result != null ? (int)result : -1;
+        }
+
+        private static async Task<bool> UserExistsAsync(NpgsqlConnection connection, int userId, CancellationToken cancellationToken)
+        {
+            const string sql = @"SELECT 1 FROM public.users WHERE id = @id LIMIT 1;";
+            await using var command = new NpgsqlCommand(sql, connection);
+            command.Parameters.AddWithValue("id", userId);
+
+            var result = await command.ExecuteScalarAsync(cancellationToken);
+            return result != null;
         }
     }
 }
