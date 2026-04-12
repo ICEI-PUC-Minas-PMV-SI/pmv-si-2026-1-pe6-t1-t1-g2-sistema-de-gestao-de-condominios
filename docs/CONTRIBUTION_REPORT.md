@@ -1,6 +1,6 @@
 # 📊 Relatório de Contribuições do Projeto
 
-**Última atualização:** 12/04/2026 02:14
+**Última atualização:** 12/04/2026 02:40
 
 ---
 
@@ -9,7 +9,7 @@
 | Aluno                 |   Commits |   Linhas+ |   Linhas- |   Arquivos |   Docs Commits |   Docs Arquivos |
 |-----------------------|-----------|-----------|-----------|------------|----------------|-----------------|
 | Bruno Alfeu           |        16 |       339 |        47 |         10 |              9 |               4 |
-| Gabriel               |         8 |     97557 |       107 |        100 |              0 |               0 |
+| Gabriel               |        10 |     97732 |       107 |        102 |              0 |               0 |
 | Gabriel Oliveira      |        19 |        72 |        50 |          6 |             17 |               4 |
 | Guilherme Mendonca    |         7 |       993 |       358 |         19 |              5 |               2 |
 | Isaac                 |         2 |       424 |       224 |          6 |              0 |               0 |
@@ -17,14 +17,14 @@
 | Mathbkj               |        13 |       911 |       160 |         20 |              0 |               0 |
 | Mukimiw4a             |        17 |        33 |        28 |          7 |             13 |               6 |
 | YanGuimaraesMartins   |        10 |       300 |        16 |          8 |              7 |               4 |
-| github-actions[bot]   |        33 |       247 |       239 |          3 |             33 |               1 |
+| github-actions[bot]   |        34 |       251 |       243 |          3 |             34 |               1 |
 | github-classroom[bot] |         1 |      2152 |         0 |         45 |              1 |              13 |
 | guigsmendonca         |        19 |       178 |       150 |          9 |             16 |               4 |
 
 
 ## 📅 Contribuições Semanais (Todo o Semestre)
 
-**2026-04-05**: Bruno Alfeu: 5, Gabriel: 3, Gabriel Oliveira: 2, Mathbkj: 3, Mukimiw4a: 4, github-actions[bot]: 9
+**2026-04-05**: Bruno Alfeu: 5, Gabriel: 5, Gabriel Oliveira: 2, Mathbkj: 3, Mukimiw4a: 4, github-actions[bot]: 10
 
 **2026-03-29**: github-actions[bot]: 1
 
