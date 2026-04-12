@@ -10,7 +10,18 @@ Aqui estão algumas etapas importantes que devem ser consideradas no planejament
 
 O primeiro passo é definir os objetivos da sua API. O que você espera alcançar com ela? Você quer que ela seja usada por clientes externos ou apenas por aplicações internas? Quais são os recursos que a API deve fornecer?
 
-[Inclua os objetivos da sua api.]
+### Objetivos específicos — módulo Reservas de áreas comuns
+
+O módulo de **reservas de áreas comuns** expõe um CRUD REST sobre a tabela PostgreSQL `public.reservations`, para ser consumido por **aplicações internas** do condomínio (interfaces web e mobile planejadas no projeto), e não como API pública aberta a clientes externos arbitrários.
+
+Os objetivos operacionais deste módulo são:
+
+- Permitir **listar** e **consultar por id** as reservas cadastradas, com ordenação por `id`.
+- Permitir **criar** e **atualizar** reservas com validação de negócio: `common_area_id` e `user_id` devem ser maiores que zero; o intervalo `start_time`–`end_time` deve ser válido (`end_time` posterior a `start_time`); as datas enviadas são **normalizadas para UTC** no servidor antes de persistir.
+- Impedir **sobreposição de horários** na mesma área comum (`common_area_id`) quando já existir outra reserva cujo status **não** seja `Cancelada`, retornando **409 Conflict** com mensagem explicativa.
+- Permitir **remover** uma reserva por identificador, com resposta **204 No Content** em caso de sucesso.
+- Expor o recurso apenas a usuários autenticados com papel **Administrador** (autorização JWT), alinhado ao atributo `[Authorize(Roles = "Administrador")]` no controlador de reservas.
+- Em falhas de banco (ex.: violação de chave estrangeira, valor inválido para enum de status), retornar mensagens tratadas de forma amigável quando possível (mapeamento de erros PostgreSQL no controlador).
 
 
 ## Modelagem da Aplicação
