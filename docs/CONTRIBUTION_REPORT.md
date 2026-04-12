@@ -1,6 +1,6 @@
 # 📊 Relatório de Contribuições do Projeto
 
-**Última atualização:** 12/04/2026 19:10
+**Última atualização:** 12/04/2026 19:32
 
 ---
 
@@ -8,7 +8,7 @@
 
 | Aluno                 |   Commits |   Linhas+ |   Linhas- |   Arquivos |   Docs Commits |   Docs Arquivos |
 |-----------------------|-----------|-----------|-----------|------------|----------------|-----------------|
-| Bruno Alfeu           |        17 |       403 |        47 |         11 |             10 |               5 |
+| Bruno Alfeu           |        18 |       423 |        52 |         11 |             11 |               5 |
 | Gabriel               |        10 |     97732 |       107 |        102 |              0 |               0 |
 | Gabriel Oliveira      |        19 |        72 |        50 |          6 |             17 |               4 |
 | Guilherme Mendonca    |         7 |       993 |       358 |         19 |              5 |               2 |
@@ -17,14 +17,14 @@
 | Mathbkj               |        15 |      1098 |       170 |         27 |              0 |               0 |
 | Mukimiw4a             |        18 |       163 |        40 |          8 |             14 |               7 |
 | YanGuimaraesMartins   |        10 |       300 |        16 |          8 |              7 |               4 |
-| github-actions[bot]   |        37 |       265 |       257 |          3 |             37 |               1 |
+| github-actions[bot]   |        38 |       269 |       261 |          3 |             38 |               1 |
 | github-classroom[bot] |         1 |      2152 |         0 |         45 |              1 |              13 |
 | guigsmendonca         |        19 |       178 |       150 |          9 |             16 |               4 |
 
 
 ## 📅 Contribuições Semanais (Todo o Semestre)
 
-**2026-04-05**: Bruno Alfeu: 6, Gabriel: 5, Gabriel Oliveira: 2, Mathbkj: 5, Mukimiw4a: 5, github-actions[bot]: 13
+**2026-04-05**: Bruno Alfeu: 7, Gabriel: 5, Gabriel Oliveira: 2, Mathbkj: 5, Mukimiw4a: 5, github-actions[bot]: 14
 
 **2026-03-29**: github-actions[bot]: 1
 
