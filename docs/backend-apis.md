@@ -27,30 +27,148 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
 
 [Liste os principais endpoints da API, incluindo as operações disponíveis, os parâmetros esperados e as respostas retornadas.]
 
-### Endpoint 1
+### CommonAreas
 - Método: GET
-- URL: /endpoint1
+- URL: /api/areas-comuns
+- Headers: Authorization -> Bearer 'token_aqui'
+- Resposta:
+  - Sucesso (200 OK)
+    ```
+    [
+      {
+        "id": 4,
+        "name": "Piscina",
+        "capacity": 20,
+        "rules": "string"
+      }
+    ]
+    ```
+  - Erro (401)
+    ```
+    status: 401 Not Authorized
+    ```
+- Método: GET
+- URL: /api/areas-comuns
+- Headers: Authorization -> Bearer 'token_aqui'
 - Parâmetros:
-  - param1: [descrição]
+  - id: [id da area comum]
 - Resposta:
   - Sucesso (200 OK)
     ```
     {
-      "message": "Success",
-      "data": {
-        ...
-      }
+      "id": 11,
+      "name": "Salao",
+      "capacity": 10,
+      "rules": "string",
+      "created_at": "2026-04-12T18:19:41.694662",
+      "updated_at": "2026-04-12T18:19:41.694662"
     }
     ```
-  - Erro (4XX, 5XX)
+  - Erro (401)
+    ```
+    status: 401 Not Authorized
+    ```
+- Método: POST
+- URL: /api/areas-comuns
+- Headers: Authorization -> Bearer 'token_aqui'
+- Corpo da Requisição:
+  ```
+  {
+    "name": "Churrasqueira",
+    "capacity": 10,
+    "rules": "string",
+    "created_at": "2026-04-12T17:38:28.531Z",
+    "updated_at": "2026-04-12T17:38:28.531Z"
+  }
+  ```
+- Resposta:
+  - Sucesso (201 Created)
+  ```
+  {
+    "id": 12,
+    "name": "Churrasqueira",
+    "capacity": 10,
+    "rules": "string",
+    "created_at": "2026-04-12T18:21:57.590449",
+    "updated_at": "2026-04-12T18:21:57.590449"
+  }
+  ```
+  - Erro (400)
+  ```
+    {
+      message: "Já existe uma área comum com este nome"
+    }
+  ```
+  - Erro (401)
+    ```
+    status: 401 Not Authorized
+    ```
+  - Erro (403)
+    ```
+    status: 403 Forbidden
+    ```
+- Método: PUT
+- URL: /api/areas-comuns
+- Headers: Authorization -> Bearer 'token_aqui'
+- Corpo da Requisição:
+  ```
+  {
+    "name": "Churrasqueira",
+    "capacity": 20,
+    "rules": "string",
+    "created_at": "2026-04-12T17:38:28.531Z",
+    "updated_at": "2026-04-12T17:38:28.531Z"
+  }
+  ```
+- Parâmetros:
+  - id: [id da area comum]
+- Resposta:
+  - Sucesso (200 OK)
     ```
     {
-      "message": "Error",
-      "error": {
-        ...
-      }
+      "id": 12,
+      "name": "Churrasqueira",
+      "capacity": 20,
+      "rules": "string",
+      "created_at": "2026-04-12T18:21:57.590449",
+      "updated_at": "2026-04-12T18:23:07.549357"
     }
     ```
+  - Erro (400)
+    ```
+    status: 400 Bad Request
+    Não é possível editar esta área comum pois existe reserva futura associada.
+    ```
+  - Erro (401)
+    ```
+    status: 401 Not Authorized
+    ```
+  - Erro (403)
+    ```
+    status: 403 Forbidden
+    ```
+- Método: DELETE
+- URL: /api/areas-comuns
+- Headers: Authorization -> Bearer 'token_aqui'
+- Parâmetros:
+  - id: [id da area comum]
+- Resposta:
+  - Sucesso (204 No Content)
+  - Erro (400)
+    ```
+    status: 400 Bad Request
+    Não é possível editar esta área comum pois existe reserva futura associada.
+    ```
+  - Erro (401)
+    ```
+    status: 401 Not Authorized
+    ```
+  - Erro (403)
+    ```
+    status: 403 Forbidden
+    ```
+  
+
 
 ## Considerações de Segurança
 
