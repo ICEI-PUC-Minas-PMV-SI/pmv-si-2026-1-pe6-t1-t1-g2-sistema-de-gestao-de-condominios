@@ -148,26 +148,13 @@ namespace backend.Controllers
             }
         }
 
-        // MORADOR: upload de foto
+        // MORADOR: upload de foto (arquivo ou URL)
         [Authorize(Roles = "Morador")]
         [HttpPost("{id:int}/images")]
-        [Consumes("multipart/form-data")]
-        public async Task<ActionResult<OccurrenceImage>> UploadImage(int id, IFormFile file, CancellationToken ct)
+        public async Task<ActionResult<OccurrenceImage>> UploadImage(int id, IFormFile? file, CancellationToken ct)
         {
             var userId = GetCurrentUserId();
             if (userId == 0) return Unauthorized("Usuário não autenticado");
-
-            if (file == null || file.Length == 0)
-                return BadRequest("Arquivo não foi enviado");
-
-            // Validar tipo de arquivo
-            var allowedTypes = new[] { "image/jpeg", "image/png", "image/gif", "image/webp" };
-            if (!allowedTypes.Contains(file.ContentType))
-                return BadRequest("Tipo de arquivo não permitido. Use: JPEG, PNG, GIF ou WebP");
-
-            // Validar tamanho (máx 5MB)
-            if (file.Length > 5 * 1024 * 1024)
-                return BadRequest("Arquivo deve ter no máximo 5MB");
 
             var (connectionString, error) = GetConnectionString();
             if (error != null) return error;
@@ -188,6 +175,51 @@ namespace backend.Controllers
                 if ((int)occurrenceUserId != userId)
                     return Forbid("Você não tem permissão para adicionar imagens a esta ocorrência");
 
+                // Se tem arquivo (multipart/form-data)
+                if (file != null && file.Length > 0)
+                {
+                    return await ProcessFileUpload(id, file, connectionString, ct);
+                }
+
+                // Se não tem arquivo, tenta processar como URL (JSON)
+                if (HttpContext.Request.ContentType?.Contains("application/json") == true)
+                {
+                    HttpContext.Request.Body.Position = 0;
+                    using var reader = new StreamReader(HttpContext.Request.Body);
+                    var json = await reader.ReadToEndAsync();
+                    using var jsonDoc = System.Text.Json.JsonDocument.Parse(json);
+                    var fileUrl = jsonDoc.RootElement.GetProperty("file").GetString();
+
+                    if (string.IsNullOrWhiteSpace(fileUrl))
+                        return BadRequest("URL da imagem é obrigatória");
+
+                    return await ProcessUrlUpload(id, fileUrl, connectionString, ct);
+                }
+
+                return BadRequest("Envie um arquivo ou uma URL no formato JSON com propriedade 'file'");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro ao fazer upload da imagem: {ex.Message}");
+            }
+        }
+
+        private async Task<ActionResult<OccurrenceImage>> ProcessFileUpload(int id, IFormFile file, string connectionString, CancellationToken ct)
+        {
+            if (file.Length == 0)
+                return BadRequest("Arquivo não foi enviado");
+
+            // Validar tipo de arquivo
+            var allowedTypes = new[] { "image/jpeg", "image/png", "image/gif", "image/webp" };
+            if (!allowedTypes.Contains(file.ContentType))
+                return BadRequest("Tipo de arquivo não permitido. Use: JPEG, PNG, GIF ou WebP");
+
+            // Validar tamanho (máx 5MB)
+            if (file.Length > 5 * 1024 * 1024)
+                return BadRequest("Arquivo deve ter no máximo 5MB");
+
+            try
+            {
                 // Criar diretório se não existir
                 var uploadsDir = Path.Combine(_environment.ContentRootPath, "uploads", "occurrences");
                 Directory.CreateDirectory(uploadsDir);
@@ -221,6 +253,86 @@ namespace backend.Controllers
 
                 var result = MapOccurrenceImage(reader);
                 return CreatedAtAction(nameof(GetImageById), new { id = result.Id }, result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro ao fazer upload da imagem: {ex.Message}");
+            }
+        }
+
+        private async Task<ActionResult<OccurrenceImage>> ProcessUrlUpload(int id, string imageUrl, string connectionString, CancellationToken ct)
+        {
+            if (!Uri.TryCreate(imageUrl, UriKind.Absolute, out var uri))
+                return BadRequest("URL inválida");
+
+            try
+            {
+                // Baixar imagem da URL
+                using var httpClient = new HttpClient();
+                httpClient.Timeout = TimeSpan.FromSeconds(30);
+                var response = await httpClient.GetAsync(imageUrl, HttpCompletionOption.ResponseHeadersRead, ct);
+                response.EnsureSuccessStatusCode();
+
+                // Validar tipo de arquivo
+                var contentType = response.Content.Headers.ContentType?.MediaType ?? "";
+                var allowedTypes = new[] { "image/jpeg", "image/png", "image/gif", "image/webp" };
+                if (!allowedTypes.Contains(contentType))
+                    return BadRequest("Tipo de arquivo não permitido. Use: JPEG, PNG, GIF ou WebP");
+
+                // Validar tamanho (máx 5MB)
+                var contentLength = response.Content.Headers.ContentLength ?? 0;
+                if (contentLength > 5 * 1024 * 1024 || contentLength == 0)
+                    return BadRequest("Arquivo deve ter entre 1B e 5MB");
+
+                // Criar diretório se não existir
+                var uploadsDir = Path.Combine(_environment.ContentRootPath, "uploads", "occurrences");
+                Directory.CreateDirectory(uploadsDir);
+
+                // Gerar nome único para o arquivo
+                var ext = contentType switch
+                {
+                    "image/jpeg" => ".jpg",
+                    "image/png" => ".png",
+                    "image/gif" => ".gif",
+                    "image/webp" => ".webp",
+                    _ => ".jpg"
+                };
+                var fileName = $"{id}_{DateTime.UtcNow.Ticks}{ext}";
+                var filePath = Path.Combine(uploadsDir, fileName);
+
+                // Salvar arquivo
+                await using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await response.Content.CopyToAsync(stream, ct);
+                }
+
+                // Obter tamanho do arquivo
+                var fileInfo = new FileInfo(filePath);
+                var fileSize = fileInfo.Length;
+
+                // Inserir registro no banco
+                await using var connection = new NpgsqlConnection(connectionString);
+                await connection.OpenAsync(ct);
+                const string sql = @"
+                    INSERT INTO public.occurrence_images (occurrence_id, file_path, file_name, mime_type, file_size, created_at)
+                    VALUES (@o, @p, @n, @m, @s, CURRENT_TIMESTAMP)
+                    RETURNING *;";
+                await using var command = new NpgsqlCommand(sql, connection);
+                command.Parameters.AddWithValue("o", id);
+                command.Parameters.AddWithValue("p", $"/uploads/occurrences/{fileName}");
+                command.Parameters.AddWithValue("n", imageUrl);
+                command.Parameters.AddWithValue("m", contentType);
+                command.Parameters.AddWithValue("s", (int)fileSize);
+
+                await using var reader = await command.ExecuteReaderAsync(ct);
+                await reader.ReadAsync(ct);
+
+                var result = MapOccurrenceImage(reader);
+                return CreatedAtAction(nameof(GetImageById), new { id = result.Id }, result);
+            }
+            catch (HttpRequestException ex)
+            {
+                return BadRequest($"Erro ao baixar imagem: {ex.Message}");
             }
             catch (Exception ex)
             {
