@@ -4,7 +4,8 @@ O planejamento de uma aplicação de APIS Web é uma etapa fundamental para o su
 
 Aqui estão algumas etapas importantes que devem ser consideradas no planejamento de uma aplicação de APIS Web.
 
-[Inclua uma breve descrição do projeto.]
+Este projeto consiste no desenvolvimento de uma API Web para gestão de condomínios, voltada ao controle centralizado das operações administrativas e do dia a dia dos moradores. A solução contempla funcionalidades como cadastro e autenticação de usuários, gestão de áreas comuns, reservas de espaços e envio de notificações, promovendo organização e transparência na comunicação entre administração e condôminos.
+A aplicação foi planejada com foco em segurança, escalabilidade e eficiência, utilizando autenticação por token, controle de acesso por perfil e integração com banco de dados relacional. Dessa forma, a API serve como base para futuras integrações com interfaces web e mobile, garantindo evolução contínua e manutenção simplificada do sistema
 
 ## Objetivos da API
 
