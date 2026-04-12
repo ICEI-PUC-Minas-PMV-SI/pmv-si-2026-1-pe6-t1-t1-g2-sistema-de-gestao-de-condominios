@@ -134,7 +134,7 @@ namespace backend.Controllers
                 command.Parameters.AddWithValue("u", userId);
                 command.Parameters.AddWithValue("t", request.Title);
                 command.Parameters.AddWithValue("d", request.Description);
-                command.Parameters.AddWithValue("s", "Open");
+                command.Parameters.AddWithValue("s", "Aberto");
 
                 await using var reader = await command.ExecuteReaderAsync(ct);
                 await reader.ReadAsync(ct);
@@ -256,11 +256,14 @@ namespace backend.Controllers
             }
         }
 
-        // ADMINISTRADOR: atualizar status
+        // ADMINISTRADOR: atualizar ocorrência
         [Authorize(Roles = "Administrador")]
         [HttpPut("{id:int}")]
         public async Task<ActionResult<Occurrence>> Update(int id, [FromBody] Occurrence model, CancellationToken ct)
         {
+            if (string.IsNullOrWhiteSpace(model.Title) || string.IsNullOrWhiteSpace(model.Description))
+                return BadRequest("Título e descrição são obrigatórios");
+
             var (connectionString, error) = GetConnectionString();
             if (error != null) return error;
 
@@ -270,12 +273,14 @@ namespace backend.Controllers
                 await connection.OpenAsync(ct);
                 const string sql = @"
                     UPDATE public.occurrences 
-                    SET status = @s::occurrence_status, updated_at = CURRENT_TIMESTAMP
+                    SET title = @t, description = @d, status = @s::occurrence_status, updated_at = CURRENT_TIMESTAMP
                     WHERE id = @id
                     RETURNING *;";
                 await using var command = new NpgsqlCommand(sql, connection);
                 command.Parameters.AddWithValue("id", id);
-                command.Parameters.AddWithValue("s", (object?)model.Status ?? "Open");
+                command.Parameters.AddWithValue("t", model.Title);
+                command.Parameters.AddWithValue("d", model.Description);
+                command.Parameters.AddWithValue("s", (object?)model.Status ?? "Aberto");
 
                 await using var reader = await command.ExecuteReaderAsync(ct);
                 if (!await reader.ReadAsync(ct)) return NotFound();
