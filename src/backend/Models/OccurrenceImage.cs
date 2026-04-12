@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace backend.Models
 {
+    [JsonConverter(typeof(IgnoreIdConverter<OccurrenceImage>))]
     public class OccurrenceImage
     {
         [JsonPropertyName("id")]
@@ -23,6 +24,7 @@ namespace backend.Models
         public int? FileSize { get; set; }
 
         [JsonPropertyName("created_at")]
+        [JsonIgnore]
         public DateTime? CreatedAt { get; set; }
     }
 }

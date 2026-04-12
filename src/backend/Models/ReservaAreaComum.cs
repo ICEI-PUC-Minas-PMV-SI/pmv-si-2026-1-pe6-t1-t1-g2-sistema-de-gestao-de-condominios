@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace backend.Models
 {
+    [JsonConverter(typeof(IgnoreIdConverter<ReservaAreaComum>))]
     public class ReservaAreaComum
     {
         [JsonPropertyName("id")]
@@ -33,9 +34,11 @@ namespace backend.Models
         public string? Observacao { get; set; }
 
         [JsonPropertyName("created_at")]
+        [JsonIgnore]
         public DateTime? CreatedAt { get; set; }
 
         [JsonPropertyName("updated_at")]
+        [JsonIgnore]
         public DateTime? UpdatedAt { get; set; }
     }
 }

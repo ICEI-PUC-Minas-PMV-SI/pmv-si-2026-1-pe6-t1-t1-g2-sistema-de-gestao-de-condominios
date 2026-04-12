@@ -55,7 +55,7 @@ namespace backend.Controllers
 
         private async Task<bool> HasAnyReservation(int areaId, NpgsqlConnection connection, CancellationToken ct)
         {
-            const string sql = @"SELECT 1 FROM public.reservas WHERE area_comum_id = @id LIMIT 1;";
+            const string sql = @"SELECT 1 FROM public.reservations WHERE common_area_id = @id LIMIT 1;";
 
             await using var cmd = new NpgsqlCommand(sql, connection);
             cmd.Parameters.AddWithValue("id", areaId);
@@ -68,9 +68,9 @@ namespace backend.Controllers
         {
             const string sql = @"
                 SELECT 1 
-                FROM public.reservas
-                WHERE area_comum_id = @id
-                  AND data_hora_inicio > NOW()
+                FROM public.reservations
+                WHERE common_area_id = @id
+                  AND start_time > NOW()
                 LIMIT 1;";
 
             await using var cmd = new NpgsqlCommand(sql, connection);
