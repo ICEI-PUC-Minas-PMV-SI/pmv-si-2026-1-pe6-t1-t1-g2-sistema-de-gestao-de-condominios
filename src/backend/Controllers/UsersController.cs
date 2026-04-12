@@ -3,14 +3,17 @@ using backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
-using System.Security.Cryptography;
 
 namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = "Administrador")]
     public class UsersController : ControllerBase
     {
+        private const string RoleAdministrador = "Administrador";
+        private const string RoleMorador = "Morador";
+
         private readonly IConfiguration _configuration;
 
         public UsersController(IConfiguration configuration)
@@ -88,21 +91,29 @@ namespace backend.Controllers
                 return StatusCode(500, $"Erro ao consultar usuario: {ex.Message}");
             }
         }
-        
-         [AllowAnonymous]
-         [HttpPost("auth")]
-        public async Task<IActionResult> Authenticate(AuthDto model)
+
+        [AllowAnonymous]
+        [HttpPost("auth")]
+        public async Task<IActionResult> Authenticate([FromBody] AuthDto model, CancellationToken cancellationToken)
         {
-            var(connectionString,errorResult) = GetConnectionString();
-            if(errorResult is not null)
+            if (!ModelState.IsValid)
+            {
+                return ValidationProblem(ModelState);
+            }
+
+            var (connectionString, errorResult) = GetConnectionString();
+            if (errorResult is not null)
             {
                 return errorResult;
             }
-           
+
+            try
+            {
                 await using var connection = new NpgsqlConnection(connectionString);
-                await connection.OpenAsync();
+                await connection.OpenAsync(cancellationToken);
+
                 const string sql = @"
-                    SELECT id,password_hash,profile
+                    SELECT id, password_hash, profile
                     FROM public.users
                     WHERE id = @id
                     LIMIT 1;";
@@ -110,28 +121,50 @@ namespace backend.Controllers
                 await using var command = new NpgsqlCommand(sql, connection);
                 command.Parameters.AddWithValue("id", model.Id);
 
-                await using var reader = await command.ExecuteReaderAsync();
+                await using var reader = await command.ExecuteReaderAsync(cancellationToken);
 
-                await reader.ReadAsync();
+                if (!await reader.ReadAsync(cancellationToken))
+                {
+                    return Unauthorized("Usuário ou senha inválidos.");
+                }
+
                 var userId = reader.GetInt32(reader.GetOrdinal("id"));
                 var storedHash = reader.GetString(reader.GetOrdinal("password_hash"));
                 var profile = reader.GetString(reader.GetOrdinal("profile"));
 
-                if (string.IsNullOrEmpty(userId.ToString()) || !BCrypt.Net.BCrypt.Verify(model.Password, storedHash))
+                if (!BCrypt.Net.BCrypt.Verify(model.Password, storedHash))
                 {
                     return Unauthorized("Usuário ou senha inválidos.");
                 }
-             
-               return Ok(new {Token = JwtGen.CreateToken(userId, profile) });
-            
+
+                return Ok(new { Token = JwtGen.CreateToken(userId, profile) });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro ao autenticar usuario: {ex.Message}");
+            }
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult<User>> Create([FromBody] User requestBody, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
             {
                 return ValidationProblem(ModelState);
+            }
+
+            var normalizedProfile = NormalizeProfile(requestBody.Profile);
+            if (normalizedProfile is null)
+            {
+                return BadRequest("Perfil inválido. Valores aceitos: 'Administrador' ou 'Morador'.");
+            }
+
+            // Auto-cadastro anônimo só pode criar Morador.
+            if (string.Equals(normalizedProfile, RoleAdministrador, StringComparison.OrdinalIgnoreCase)
+                && !User.IsInRole(RoleAdministrador))
+            {
+                return Forbid();
             }
 
             var (connectionString, errorResult) = GetConnectionString();
@@ -158,7 +191,7 @@ namespace backend.Controllers
                 command.Parameters.AddWithValue("username", requestBody.Username is null ? DBNull.Value : requestBody.Username);
                 command.Parameters.AddWithValue("password_hash", passwordHash is null ? DBNull.Value : passwordHash);
                 command.Parameters.AddWithValue("email", requestBody.Email is null ? DBNull.Value : requestBody.Email);
-                command.Parameters.AddWithValue("profile", requestBody.Profile is null ? DBNull.Value : requestBody.Profile);
+                command.Parameters.AddWithValue("profile", normalizedProfile);
 
                 await using var reader = await command.ExecuteReaderAsync(cancellationToken);
                 if (!await reader.ReadAsync(cancellationToken))
@@ -185,6 +218,12 @@ namespace backend.Controllers
             if (!ModelState.IsValid)
             {
                 return ValidationProblem(ModelState);
+            }
+
+            var normalizedProfile = NormalizeProfile(requestBody.Profile);
+            if (normalizedProfile is null)
+            {
+                return BadRequest("Perfil inválido. Valores aceitos: 'Administrador' ou 'Morador'.");
             }
 
             var (connectionString, errorResult) = GetConnectionString();
@@ -216,7 +255,7 @@ namespace backend.Controllers
                 command.Parameters.AddWithValue("username", requestBody.Username is null ? DBNull.Value : requestBody.Username);
                 command.Parameters.AddWithValue("password_hash", passwordHash is null ? DBNull.Value : passwordHash);
                 command.Parameters.AddWithValue("email", requestBody.Email is null ? DBNull.Value : requestBody.Email);
-                command.Parameters.AddWithValue("profile", requestBody.Profile is null ? DBNull.Value : requestBody.Profile);
+                command.Parameters.AddWithValue("profile", normalizedProfile);
 
                 await using var reader = await command.ExecuteReaderAsync(cancellationToken);
                 if (!await reader.ReadAsync(cancellationToken))
@@ -306,6 +345,26 @@ namespace backend.Controllers
         private static string HashPassword(string rawPassword)
         {
             return BCrypt.Net.BCrypt.HashPassword(rawPassword);
+        }
+
+        private static string? NormalizeProfile(string? profile)
+        {
+            if (string.IsNullOrWhiteSpace(profile))
+            {
+                return null;
+            }
+
+            if (string.Equals(profile, RoleAdministrador, StringComparison.OrdinalIgnoreCase))
+            {
+                return RoleAdministrador;
+            }
+
+            if (string.Equals(profile, RoleMorador, StringComparison.OrdinalIgnoreCase))
+            {
+                return RoleMorador;
+            }
+
+            return null;
         }
     }
 }

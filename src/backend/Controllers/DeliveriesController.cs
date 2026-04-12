@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using backend.Models;
 using backend.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -13,9 +14,13 @@ namespace backend.Controllers
     {
         private readonly IConfiguration _configuration;
 
-        public DeliveriesController(IConfiguration configuration)
+        private readonly EmailService _emailService;
+
+        public DeliveriesController(IConfiguration configuration, EmailService emailService)
         {
             _configuration = configuration;
+            _emailService = emailService;
+
         }
 
         [HttpGet]
@@ -122,13 +127,23 @@ namespace backend.Controllers
                 command.Parameters.AddWithValue("pickup_date", requestBody.PickupDate is null ? DBNull.Value : requestBody.PickupDate);
                 command.Parameters.AddWithValue("status", requestBody.Status is null ? DBNull.Value : requestBody.Status);
 
-                await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-                if (!await reader.ReadAsync(cancellationToken))
+                Delivery delivery;
+                await using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                 {
-                    return StatusCode(502, "Banco retornou resposta vazia para a criação de entrega.");
+                    if (!await reader.ReadAsync(cancellationToken))
+                    {
+                        return StatusCode(502, "Banco retornou resposta vazia para a criação de entrega.");
+                    }
+
+                    delivery = MapDelivery(reader);
                 }
 
-                var delivery = MapDelivery(reader);
+                if (IsReadyForPickupStatus(delivery.Status))
+                {
+                    var notificationId = await CreateDeliveryNotificationAsync(connection, delivery, cancellationToken);
+                    await SendEmailNotificationForDelivery(_emailService, notificationId);
+                }
+
                 return CreatedAtAction(nameof(GetById), new { id = delivery.Id }, delivery);
             }
             catch (Exception ex)
@@ -155,6 +170,29 @@ namespace backend.Controllers
             {
                 await using var connection = new NpgsqlConnection(connectionString);
                 await connection.OpenAsync(cancellationToken);
+
+                const string previousStatusSql = @"
+                    SELECT status::text, recipient_user_id
+                    FROM public.deliveries
+                    WHERE id = @id
+                    LIMIT 1;";
+
+                await using var previousStatusCommand = new NpgsqlCommand(previousStatusSql, connection);
+                previousStatusCommand.Parameters.AddWithValue("id", id);
+
+                string previousStatus;
+                int? previousRecipientUserId;
+                await using (var previousStatusReader = await previousStatusCommand.ExecuteReaderAsync(cancellationToken))
+                {
+                    if (!await previousStatusReader.ReadAsync(cancellationToken))
+                    {
+                        return NotFound();
+                    }
+
+                    previousStatus = previousStatusReader.IsDBNull(0) ? string.Empty : previousStatusReader.GetString(0);
+                    previousRecipientUserId = previousStatusReader.IsDBNull(1) ? null : previousStatusReader.GetInt32(1);
+                }
+
                 const string sql = @"
                     UPDATE public.deliveries
                     SET recipient_user_id = @recipient_user_id,
@@ -176,13 +214,25 @@ namespace backend.Controllers
                 command.Parameters.AddWithValue("pickup_date", requestBody.PickupDate is null ? DBNull.Value : requestBody.PickupDate);
                 command.Parameters.AddWithValue("status", requestBody.Status is null ? DBNull.Value : requestBody.Status);
 
-                await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-                if (!await reader.ReadAsync(cancellationToken))
+                Delivery delivery;
+                await using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                 {
-                    return NotFound();
+                    if (!await reader.ReadAsync(cancellationToken))
+                    {
+                        return NotFound();
+                    }
+
+                    delivery = MapDelivery(reader);
                 }
 
-                return Ok(MapDelivery(reader));
+                if (!IsReadyForPickupStatus(previousStatus) && IsReadyForPickupStatus(delivery.Status))
+                {
+                    delivery.RecipientUserId ??= previousRecipientUserId;
+                    var notificationId = await CreateDeliveryNotificationAsync(connection, delivery, cancellationToken);
+                    await SendEmailNotificationForDelivery(_emailService, notificationId);
+                }
+                
+                return Ok(delivery);
             }
             catch (Exception ex)
             {
@@ -251,6 +301,46 @@ namespace backend.Controllers
                 CreatedAt = reader.IsDBNull(reader.GetOrdinal("created_at")) ? null : reader.GetDateTime(reader.GetOrdinal("created_at")),
                 UpdatedAt = reader.IsDBNull(reader.GetOrdinal("updated_at")) ? null : reader.GetDateTime(reader.GetOrdinal("updated_at"))
             };
+        }
+
+        private static bool IsReadyForPickupStatus(string? status)
+        {
+            return string.Equals(status, "Disponível para Retirada", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(status, "Disponivel para Retirada", StringComparison.OrdinalIgnoreCase);
+        }
+        private static async Task SendEmailNotificationForDelivery(EmailService emailService, int notificationId)
+        {
+            await emailService.SendMail(notificationId);
+        }
+
+        private static async Task<int> CreateDeliveryNotificationAsync(
+            NpgsqlConnection connection,
+            Delivery delivery,
+            CancellationToken cancellationToken)
+        {
+            if (!delivery.RecipientUserId.HasValue)
+            {
+                return -1;
+            }
+
+            const string sql = @"
+                INSERT INTO public.notifications
+                    (user_id, type, message, is_read, reservation_id, occurrence_id, delivery_id)
+                VALUES
+                    (@user_id, @type::notification_type, @message, @is_read, @reservation_id, @occurrence_id, @delivery_id)
+                RETURNING id;";
+
+            await using var command = new NpgsqlCommand(sql, connection);
+            command.Parameters.AddWithValue("user_id", delivery.RecipientUserId.Value);
+            command.Parameters.AddWithValue("type", "Encomenda Chegou");
+            command.Parameters.AddWithValue("message", $"Sua encomenda (ID: {delivery.Id}) está disponível para retirada.");
+            command.Parameters.AddWithValue("is_read", false);
+            command.Parameters.AddWithValue("reservation_id", DBNull.Value);
+            command.Parameters.AddWithValue("occurrence_id", DBNull.Value);
+            command.Parameters.AddWithValue("delivery_id", delivery.Id);
+
+            var result = await command.ExecuteScalarAsync(cancellationToken);
+            return result != null ? (int)result : -1;
         }
     }
 }

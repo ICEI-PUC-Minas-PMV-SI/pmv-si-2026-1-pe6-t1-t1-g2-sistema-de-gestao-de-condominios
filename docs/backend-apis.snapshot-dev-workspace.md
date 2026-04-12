@@ -1,3 +1,9 @@
+<!--
+  Snapshot salvo antes de integrar origin/main na branch dev/workspace.
+  Conteúdo = cópia integral de docs/backend-apis.md com os acrescentos do módulo Reservas.
+  Use para reaplicar manualmente se o merge em backend-apis.md gerar conflito no GitHub.
+-->
+
 # APIs e Web Services
 
 O planejamento de uma aplicação de APIS Web é uma etapa fundamental para o sucesso do projeto. Ao planejar adequadamente, você pode evitar muitos problemas e garantir que a sua API seja segura, escalável e eficiente.
@@ -68,212 +74,30 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
 
 **Respostas de erro (visão geral):** além dos códigos acima, mensagens de falha costumam ser **texto plano** na resposta (string), exceto quando o ASP.NET Core retorna **400** com corpo de validação (`ValidationProblem`) para o corpo JSON malformado em relação ao modelo.
 
-### CommonAreas
+### Endpoint 1
 - Método: GET
-- URL: /api/areas-comuns
-- Headers: Authorization -> Bearer 'token_aqui'
+- URL: /endpoint1
+- Parâmetros:
+  - param1: [descrição]
 - Resposta:
   - Sucesso (200 OK)
     ```
-    [
-      {
-        "id": 4,
-        "name": "Piscina",
-        "capacity": 20,
-        "rules": "string"
+    {
+      "message": "Success",
+      "data": {
+        ...
       }
-    ]
-    ```
-  - Erro (401)
-    ```
-    status: 401 Not Authorized
-    ```
-- Método: GET
-- URL: /api/areas-comuns
-- Headers: Authorization -> Bearer 'token_aqui'
-- Parâmetros:
-  - id: [id da area comum]
-- Resposta:
-  - Sucesso (200 OK)
-    ```
-    {
-      "id": 11,
-      "name": "Salao",
-      "capacity": 10,
-      "rules": "string",
-      "created_at": "2026-04-12T18:19:41.694662",
-      "updated_at": "2026-04-12T18:19:41.694662"
     }
     ```
-  - Erro (401)
-    ```
-    status: 401 Not Authorized
-    ```
-- Método: POST
-- URL: /api/areas-comuns
-- Headers: Authorization -> Bearer 'token_aqui'
-- Corpo da Requisição:
-  ```
-  {
-    "name": "Churrasqueira",
-    "capacity": 10,
-    "rules": "string",
-    "created_at": "2026-04-12T17:38:28.531Z",
-    "updated_at": "2026-04-12T17:38:28.531Z"
-  }
-  ```
-- Resposta:
-  - Sucesso (201 Created)
-  ```
-  {
-    "id": 12,
-    "name": "Churrasqueira",
-    "capacity": 10,
-    "rules": "string",
-    "created_at": "2026-04-12T18:21:57.590449",
-    "updated_at": "2026-04-12T18:21:57.590449"
-  }
-  ```
-  - Erro (400)
-  ```
-    {
-      message: "Já existe uma área comum com este nome"
-    }
-  ```
-  - Erro (401)
-    ```
-    status: 401 Not Authorized
-    ```
-  - Erro (403)
-    ```
-    status: 403 Forbidden
-    ```
-- Método: PUT
-- URL: /api/areas-comuns
-- Headers: Authorization -> Bearer 'token_aqui'
-- Corpo da Requisição:
-  ```
-  {
-    "name": "Churrasqueira",
-    "capacity": 20,
-    "rules": "string",
-    "created_at": "2026-04-12T17:38:28.531Z",
-    "updated_at": "2026-04-12T17:38:28.531Z"
-  }
-  ```
-- Parâmetros:
-  - id: [id da area comum]
-- Resposta:
-  - Sucesso (200 OK)
+  - Erro (4XX, 5XX)
     ```
     {
-      "id": 12,
-      "name": "Churrasqueira",
-      "capacity": 20,
-      "rules": "string",
-      "created_at": "2026-04-12T18:21:57.590449",
-      "updated_at": "2026-04-12T18:23:07.549357"
+      "message": "Error",
+      "error": {
+        ...
+      }
     }
     ```
-  - Erro (400)
-    ```
-    status: 400 Bad Request
-    Não é possível editar esta área comum pois existe reserva futura associada.
-    ```
-  - Erro (401)
-    ```
-    status: 401 Not Authorized
-    ```
-  - Erro (403)
-    ```
-    status: 403 Forbidden
-    ```
-- Método: DELETE
-- URL: /api/areas-comuns
-- Headers: Authorization -> Bearer 'token_aqui'
-- Parâmetros:
-  - id: [id da area comum]
-- Resposta:
-  - Sucesso (204 No Content)
-  - Erro (400)
-    ```
-    status: 400 Bad Request
-    Não é possível editar esta área comum pois existe reserva futura associada.
-    ```
-  - Erro (401)
-    ```
-    status: 401 Not Authorized
-    ```
-  - Erro (403)
-    ```
-    status: 403 Forbidden
-    ```
-  
-### Consultar Disponibilidade de Reservas (RF 03)
-- **Método:** GET
-- **URL:** `/api/reservas/disponibilidade`
-- **Parâmetros:**
-  - `areaId` (int): ID da área comum (obrigatório).
-  - `data` (DateTime): Data para consulta (obrigatório, formato ISO 8601).
-- **Resposta:**
-  - **Sucesso (200 OK):** Retorna a lista de horários ocupados.
-    ```json
-    [
-      { "inicio": "2026-03-22T10:00:00Z", "fim": "2026-03-22T12:00:00Z" }
-    ]
-    ```
-  - **Erro (400 Bad Request):** Parâmetros inválidos ou ausentes (ex: `areaId` não é um número ou `data` em formato incorreto).
-    ```json
-    {
-      "type": "[https://tools.ietf.org/html/rfc7231#section-6.5.1](https://tools.ietf.org/html/rfc7231#section-6.5.1)",
-      "title": "One or more validation errors occurred.",
-      "status": 400,
-      "errors": { "data": ["The value 'data-invalida' is not valid."] }
-    }
-    ```
-  - **Erro (500 Internal Server Error):** Erro interno ao processar a consulta ou falha na conexão com o banco de dados.
-
- 
-## API Endpoints - Gestão de Ocorrências
-
-### Listar Ocorrências
-- **Método:** GET
-- **URL:** `/api/occurrences`
-- **Resposta de Sucesso (200 OK):** Retorna a lista completa de ocorrências registradas.
-
-### Consultar Ocorrência por ID
-- **Método:** GET
-- **URL:** `/api/occurrences/{id}`
-- **Parâmetros:** `id` (int) - Identificador único da ocorrência.
-- **Resposta de Sucesso (200 OK):** Retorna os detalhes da ocorrência solicitada.
-- **Resposta de Erro (404 Not Found):** Caso o ID não exista no banco de dados.
-
-### Criar Ocorrência
-- **Método:** POST
-- **URL:** `/api/occurrences`
-- **Corpo da Requisição (JSON):**
-    ```json
-    {
-      "description": "Descrição do problema",
-      "userId": 1,
-      "status": "Pendente"
-    }
-    ```
-- **Resposta de Sucesso (201 Created):** Retorna a ocorrência criada com seu novo ID.
-- **Resposta de Erro (400 Bad Request):** Caso os dados enviados sejam inválidos.
-
-### Atualizar Ocorrência
-- **Método:** PUT
-- **URL:** `/api/occurrences/{id}`
-- **Parâmetros:** `id` (int) - ID da ocorrência a ser editada.
-- **Resposta de Sucesso (204 No Content):** Indica que a atualização foi realizada com sucesso.
-- **Resposta de Erro (400 Bad Request):** Caso o ID da URL não coincida com o ID no corpo da requisição.
-
-### Excluir Ocorrência
-- **Método:** DELETE
-- **URL:** `/api/occurrences/{id}`
-- **Resposta de Sucesso (204 No Content):** Ocorrência removida com sucesso.
-- **Resposta de Erro (404 Not Found):** Caso a ocorrência não seja encontrada.
 
 ## Considerações de Segurança
 
@@ -293,26 +117,11 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
 
 [Descreva a estratégia de teste, incluindo os tipos de teste a serem realizados (unitários, integração, carga, etc.) e as ferramentas a serem utilizadas.]
 
-O projeto utiliza uma suíte de testes automatizados e verificações manuais para garantir a estabilidade de todos os módulos.
-
-### 1. Testes Unitários (xUnit)
-Cobre a lógica de negócio de todo o backend:
-
-- **Autenticação e Segurança:** - `UsersControllerTests` e `JwtGenTests` validam o registro, login e a geração correta de tokens JWT com as devidas permissões (Roles).
-- **Gestão de Reservas:** - `ReservaConflitoTests` e `ReservasControllerTests` garantem que não ocorram sobreposições de horários e que os inputs (datas e IDs) sejam válidos.
-  - `ReservationStatusJsonConverterTests` assegura que os status das reservas sejam convertidos corretamente entre o banco e a aplicação.
-- **Gestão de Ocorrências:** - `OccurrencesControllerTests` valida o ciclo de vida das ocorrências e as restrições de acesso por perfil.
-- **Serviços de Infraestrutura:** - `EmailServiceTests` confirma o funcionamento do envio de e-mails para notificações do sistema.
-
-### 2. Testes de Integração e Carga
-- **Resiliência (`BackendIntegrationLoadTests`)**: Simula o comportamento do sistema sob alta carga de requisições e valida a persistência real dos dados no PostgreSQL.
-
-### 3. Verificação Funcional
-Validado via Swagger UI e Postman:
-- **Fluxo de Disponibilidade:** Verificado que reservas canceladas liberam o horário imediatamente no endpoint de consulta.
-- **Fluxo de Ocorrências:** Confirmado que moradores não conseguem listar ocorrências de outros usuários nem anexar fotos a registros que não lhes pertencem.
-
-**Status Final:** A suíte de testes atual cobre os requisitos críticos de segurança e integridade de dados definidos para o projeto.
+1. Crie casos de teste para cobrir todos os requisitos funcionais e não funcionais da aplicação.
+2. Implemente testes unitários para testar unidades individuais de código, como funções e classes.
+3. Realize testes de integração para verificar a interação correta entre os componentes da aplicação.
+4. Execute testes de carga para avaliar o desempenho da aplicação sob carga significativa.
+5. Utilize ferramentas de teste adequadas, como frameworks de teste e ferramentas de automação de teste, para agilizar o processo de teste.
 
 # Referências
 

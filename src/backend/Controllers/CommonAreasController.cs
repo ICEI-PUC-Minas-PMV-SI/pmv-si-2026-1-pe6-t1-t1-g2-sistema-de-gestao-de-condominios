@@ -55,7 +55,7 @@ namespace backend.Controllers
 
         private async Task<bool> HasAnyReservation(int areaId, NpgsqlConnection connection, CancellationToken ct)
         {
-            const string sql = @"SELECT 1 FROM public.reservas WHERE area_comum_id = @id LIMIT 1;";
+            const string sql = @"SELECT 1 FROM public.reservations WHERE common_area_id = @id LIMIT 1;";
 
             await using var cmd = new NpgsqlCommand(sql, connection);
             cmd.Parameters.AddWithValue("id", areaId);
@@ -68,9 +68,9 @@ namespace backend.Controllers
         {
             const string sql = @"
                 SELECT 1 
-                FROM public.reservas
-                WHERE area_comum_id = @id
-                  AND data_hora_inicio > NOW()
+                FROM public.reservations
+                WHERE common_area_id = @id
+                  AND start_time > NOW()
                 LIMIT 1;";
 
             await using var cmd = new NpgsqlCommand(sql, connection);
@@ -111,6 +111,7 @@ namespace backend.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador, Morador")]
         [HttpGet("{id:int}")]
         public async Task<ActionResult<CommonArea>> GetById(int id, CancellationToken ct)
         {
@@ -137,12 +138,13 @@ namespace backend.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         public async Task<ActionResult<CommonArea>> Create([FromBody] CommonArea body, CancellationToken ct)
         {
             var validation = Validate(body);
             if (validation != null)
-                return BadRequest(validation);
+                return BadRequest(new ApiError(validation));
 
             var (connString, error) = GetConnectionString();
             if (error != null) return error;
@@ -151,6 +153,16 @@ namespace backend.Controllers
             {
                 await using var conn = new NpgsqlConnection(connString);
                 await conn.OpenAsync(ct);
+
+                // Verificar se já existe área comum com o mesmo nome
+                const string checkSql = @"SELECT 1 FROM public.common_areas WHERE LOWER(name) = LOWER(@name) LIMIT 1;";
+                await using (var checkCmd = new NpgsqlCommand(checkSql, conn))
+                {
+                    checkCmd.Parameters.AddWithValue("name", body.Name);
+                    var exists = await checkCmd.ExecuteScalarAsync(ct);
+                    if (exists != null)
+                        return BadRequest(new ApiError("Já existe uma área comum com este nome."));
+                }
 
                 const string sql = @"
                     INSERT INTO public.common_areas (name, capacity, rules)
@@ -169,12 +181,17 @@ namespace backend.Controllers
 
                 return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
             }
+            catch (PostgresException pgEx) when (pgEx.SqlState == "23505")  // UNIQUE violation
+            {
+                return BadRequest(new ApiError("Já existe uma área comum com este nome."));
+            }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro ao criar área comum: {ex.Message}");
+                return StatusCode(500, new ApiError($"Erro ao criar área comum: {ex.Message}"));
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPut("{id:int}")]
         public async Task<ActionResult<CommonArea>> Update(int id, [FromBody] CommonArea body, CancellationToken ct)
         {
@@ -193,7 +210,18 @@ namespace backend.Controllers
                 // ❗ Regra: Não permitir edição se houver reserva futura
                 if (await HasFutureReservation(id, conn, ct))
                 {
-                    return BadRequest("Não é possível editar esta área comum pois existe reserva futura associada.");
+                    return BadRequest(new ApiError("Não é possível editar esta área comum pois existe reserva futura associada."));
+                }
+
+                // Verificar se outro registro já possui este nome
+                const string checkSql = @"SELECT 1 FROM public.common_areas WHERE LOWER(name) = LOWER(@name) AND id != @id LIMIT 1;";
+                await using (var checkCmd = new NpgsqlCommand(checkSql, conn))
+                {
+                    checkCmd.Parameters.AddWithValue("name", body.Name);
+                    checkCmd.Parameters.AddWithValue("id", id);
+                    var exists = await checkCmd.ExecuteScalarAsync(ct);
+                    if (exists != null)
+                        return BadRequest(new ApiError("Já existe outra área comum com este nome."));
                 }
 
                 const string sql = @"
@@ -216,12 +244,17 @@ namespace backend.Controllers
 
                 return Ok(MapArea(reader));
             }
+            catch (PostgresException pgEx) when (pgEx.SqlState == "23505")  // UNIQUE violation
+            {
+                return BadRequest(new ApiError("Já existe uma área comum com este nome."));
+            }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro ao atualizar área comum: {ex.Message}");
+                return StatusCode(500, new ApiError($"Erro ao atualizar área comum: {ex.Message}"));
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id, CancellationToken ct)
         {
@@ -236,7 +269,7 @@ namespace backend.Controllers
                 // ❗ Regra: Não pode excluir se houver QUALQUER reserva
                 if (await HasAnyReservation(id, conn, ct))
                 {
-                    return BadRequest("Não é possível excluir esta área comum pois existem reservas vinculadas.");
+                    return BadRequest(new ApiError("Não é possível excluir esta área comum pois existem reservas vinculadas."));
                 }
 
                 const string sql = @"DELETE FROM public.common_areas WHERE id = @id RETURNING id;";
@@ -251,7 +284,7 @@ namespace backend.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro ao remover área comum: {ex.Message}");
+                return StatusCode(500, new ApiError($"Erro ao remover área comum: {ex.Message}"));
             }
         }
     }

@@ -2,6 +2,7 @@
 
 namespace backend.Models
 {
+    [JsonConverter(typeof(IgnoreIdConverter<Notification>))]
     public class Notification
     {
         [JsonPropertyName("id")]
@@ -29,9 +30,11 @@ namespace backend.Models
         public int? DeliveryId { get; set; }
 
         [JsonPropertyName("created_at")]
+        [JsonIgnore]
         public DateTime? CreatedAt { get; set; }
 
         [JsonPropertyName("updated_at")]
+        [JsonIgnore]
         public DateTime? UpdatedAt { get; set; }
     }
 }

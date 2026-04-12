@@ -2,6 +2,7 @@
 
 namespace backend.Models
 {
+    [JsonConverter(typeof(IgnoreIdConverter<Occurrence>))]
     public class Occurrence
     {
         [JsonPropertyName("id")]
@@ -20,9 +21,11 @@ namespace backend.Models
         public string? Status { get; set; }
 
         [JsonPropertyName("created_at")]
+        [JsonIgnore]
         public DateTime? CreatedAt { get; set; }
 
         [JsonPropertyName("updated_at")]
+        [JsonIgnore]
         public DateTime? UpdatedAt { get; set; }
     }
 }
