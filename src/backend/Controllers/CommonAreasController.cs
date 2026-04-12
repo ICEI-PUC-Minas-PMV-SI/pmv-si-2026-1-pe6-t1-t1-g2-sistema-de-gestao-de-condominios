@@ -111,6 +111,7 @@ namespace backend.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador, Morador")]
         [HttpGet("{id:int}")]
         public async Task<ActionResult<CommonArea>> GetById(int id, CancellationToken ct)
         {
@@ -137,6 +138,7 @@ namespace backend.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         public async Task<ActionResult<CommonArea>> Create([FromBody] CommonArea body, CancellationToken ct)
         {
@@ -175,6 +177,7 @@ namespace backend.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPut("{id:int}")]
         public async Task<ActionResult<CommonArea>> Update(int id, [FromBody] CommonArea body, CancellationToken ct)
         {
@@ -222,6 +225,7 @@ namespace backend.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id, CancellationToken ct)
         {

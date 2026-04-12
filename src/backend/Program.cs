@@ -8,6 +8,7 @@ using System.Text;
 using backend.Services;
 using Microsoft.OpenApi;
 using Resend;
+using Microsoft.AspNetCore.Http.Features;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -80,6 +81,23 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 
+// Configurar CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
+// Configurar upload de arquivos
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 104857600; // 100 MB
+});
+
 
 
 // Enum nativo PostgreSQL (coluna status em public.reservations). Nome do tipo deve coincidir com o Supabase.
@@ -129,6 +147,9 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+// Usar static files para servir uploads
+app.UseStaticFiles();
+app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
 app.UseRouting();
