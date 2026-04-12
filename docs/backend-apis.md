@@ -21,7 +21,17 @@ O primeiro passo é definir os objetivos da sua API. O que você espera alcança
 
 Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs Web. A tecnologia certa para o seu projeto dependerá dos seus objetivos, dos seus clientes e dos recursos que a API deve fornecer.
 
-[Lista das tecnologias principais que serão utilizadas no projeto.]
+### Tecnologias em uso no backend (projeto)
+
+| Área | Tecnologia / componente |
+|------|-------------------------|
+| Runtime e hospedagem da API | **.NET 10** (`net10.0`), **ASP.NET Core** (aplicação web com controllers) |
+| Banco de dados | **PostgreSQL** (ex.: instância **Supabase** em nuvem) |
+| Acesso a dados | **Npgsql** (driver ADO.NET); **Entity Framework Core** + **Npgsql.EntityFrameworkCore.PostgreSQL** (contexto `ApplicationDbContext` e uso de `GetDbConnection()` para SQL parametrizado nas operações de reservas) |
+| Contrato e documentação HTTP | **Swagger / OpenAPI** via **Swashbuckle.AspNetCore** |
+| Autenticação e tokens | **JWT Bearer** (`Microsoft.AspNetCore.Authentication.JwtBearer`) |
+| Segurança de credenciais (ex.: usuários) | **BCrypt.Net-Next** para hash de senhas |
+
 
 ## API Endpoints
 
@@ -1122,9 +1132,56 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     status: 403 Forbidden
     ```
 
+
+### Consultar Disponibilidade de Reservas (RF 03)
+- **Método:** GET
+- **URL:** `/api/reservas/disponibilidade`
+- **Parâmetros:**
+  - `areaId` (int): ID da área comum (obrigatório).
+  - `data` (DateTime): Data para consulta (obrigatório, formato ISO 8601).
+- **Resposta:**
+  - **Sucesso (200 OK):** Retorna a lista de horários ocupados.
+    ```json
+    [
+      { "inicio": "2026-03-22T10:00:00Z", "fim": "2026-03-22T12:00:00Z" }
+    ]
+    ```
+  - **Erro (400 Bad Request):** Parâmetros inválidos ou ausentes (ex: `areaId` não é um número ou `data` em formato incorreto).
+    ```json
+    {
+      "type": "[https://tools.ietf.org/html/rfc7231#section-6.5.1](https://tools.ietf.org/html/rfc7231#section-6.5.1)",
+      "title": "One or more validation errors occurred.",
+      "status": 400,
+      "errors": { "data": ["The value 'data-invalida' is not valid."] }
+    }
+    ```
+  - **Erro (500 Internal Server Error):** Erro interno ao processar a consulta ou falha na conexão com o banco de dados.
 ## Considerações de Segurança
 
-[Discuta as considerações de segurança relevantes para a aplicação distribuída, como autenticação, autorização, proteção contra ataques, etc.]
+Esta seção detalha os mecanismos de proteção implementados na API e apresenta uma análise crítica sobre os riscos e vulnerabilidades remanescentes no código.
+
+### 1. Mecanismos Implementados
+
+* **Autenticação e Autorização (JWT):** O acesso a endpoints sensíveis é controlado via JSON Web Tokens. O sistema utiliza perfis de acesso (*Roles*) para restringir funcionalidades:
+    * **Administrador:** Possui permissões para gerir todas as ocorrências e áreas comuns.
+    * **Morador:** Restrito a funcionalidades de consulta e criação de registros próprios.
+* **Proteção contra SQL Injection:** A utilização do **Entity Framework Core** como ORM garante a parametrização das consultas, mitigando ataques de injeção de SQL.
+* **Segurança na Camada de Transporte:** A conexão com a base de dados PostgreSQL está configurada para exigir SSL (`SslMode = SslMode.Require`), protegendo os dados em trânsito.
+* **Validação de Uploads (Ocorrências):**
+    * **Tipo de Arquivo:** O sistema verifica o tipo MIME, aceitando apenas formatos de imagem específicos (JPEG, PNG, GIF, WebP).
+    * **Tamanho do Arquivo:** Existe uma verificação lógica que limita o upload a **5MB** por arquivo no controlador de ocorrências.
+* **Proteção contra Acesso Indevido (IDOR):** No módulo de ocorrências, o sistema valida se o usuário que tenta anexar uma imagem é de fato o proprietário do registro.
+
+### 2. Análise de Riscos e Incoerências (Sinceridade Técnica)
+
+Como solicitado pela coordenação do projeto, abaixo são listados os pontos de falha e incoerências que representam riscos à segurança da aplicação:
+
+* **Incoerência nos Limites de Upload:** Existe uma contradição técnica no código. Enquanto o controlador de ocorrências limita o arquivo a **5MB**, a configuração global do servidor no arquivo `Program.cs` permite corpos de requisição de até **100MB** (`MultipartBodyLengthLimit`). Isso pode permitir que ataques de negação de serviço (DoS) ocupem recursos do servidor antes mesmo da lógica do controlador barrar o arquivo.
+* **CORS Excessivamente Permissivo:** A API está configurada com `AllowAnyOrigin()`, `AllowAnyMethod()` e `AllowAnyHeader()`. Isso significa que qualquer site malicioso pode tentar realizar requisições contra a API, representando um risco grave de segurança em ambiente de produção.
+* **Configuração Insegura de Metadados HTTPS:** No `Program.cs`, a opção `RequireHttpsMetadata` está definida como `false`. O próprio comentário no código admite que isso é inseguro e deveria ser `true` para garantir que o token JWT nunca viaje por conexões não criptografadas.
+* **Vulnerabilidade a Ataques de Força Bruta:** Não foi implementado nenhum mecanismo de *Rate Limiting*. Um atacante pode realizar milhares de tentativas de login ou consultas aos endpoints sem ser bloqueado automaticamente pelo sistema.
+* **Risco de Exposição de IDs Sequenciais:** O uso de IDs numéricos simples (1, 2, 3...) facilita a enumeração de recursos por atacantes. A ausência de identificadores únicos complexos (GUIDs) torna o sistema mais vulnerável a tentativas de adivinhação de registros.
+* **Ausência de Revogação de Tokens:** O sistema não possui uma "lista negra" para tokens. Se um token for comprometido, ele permanecerá válido até sua expiração natural, mesmo que o usuário saia do sistema ou mude a senha.
 
 ## Implantação
 
@@ -1138,13 +1195,26 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
 
 ## Testes
 
-[Descreva a estratégia de teste, incluindo os tipos de teste a serem realizados (unitários, integração, carga, etc.) e as ferramentas a serem utilizadas.]
+O projeto utiliza uma suíte de testes automatizados e verificações manuais para garantir a estabilidade de todos os módulos.
 
-1. Crie casos de teste para cobrir todos os requisitos funcionais e não funcionais da aplicação.
-2. Implemente testes unitários para testar unidades individuais de código, como funções e classes.
-3. Realize testes de integração para verificar a interação correta entre os componentes da aplicação.
-4. Execute testes de carga para avaliar o desempenho da aplicação sob carga significativa.
-5. Utilize ferramentas de teste adequadas, como frameworks de teste e ferramentas de automação de teste, para agilizar o processo de teste.
+### 1. Testes Unitários (xUnit)
+Cobre a lógica de negócio de todo o backend:
+
+- **Autenticação e Segurança:** - `UsersControllerTests` e `JwtGenTests` validam o registro, login e a geração correta de tokens JWT com as devidas permissões (Roles).
+- **Gestão de Reservas:** - `ReservaConflitoTests` e `ReservasControllerTests` garantem que não ocorram sobreposições de horários e que os inputs (datas e IDs) sejam válidos.
+  - `ReservationStatusJsonConverterTests` assegura que os status das reservas sejam convertidos corretamente entre o banco e a aplicação.
+- **Gestão de Ocorrências:** - `OccurrencesControllerTests` valida o ciclo de vida das ocorrências e as restrições de acesso por perfil.
+- **Serviços de Infraestrutura:** - `EmailServiceTests` confirma o funcionamento do envio de e-mails para notificações do sistema.
+
+### 2. Testes de Integração e Carga
+- **Resiliência (`BackendIntegrationLoadTests`)**: Simula o comportamento do sistema sob alta carga de requisições e valida a persistência real dos dados no PostgreSQL.
+
+### 3. Verificação Funcional
+Validado via Swagger UI e Postman:
+- **Fluxo de Disponibilidade:** Verificado que reservas canceladas liberam o horário imediatamente no endpoint de consulta.
+- **Fluxo de Ocorrências:** Confirmado que moradores não conseguem listar ocorrências de outros usuários nem anexar fotos a registros que não lhes pertencem.
+
+**Status Final:** A suíte de testes atual cobre os requisitos críticos de segurança e integridade de dados definidos para o projeto.
 
 # Referências
 
