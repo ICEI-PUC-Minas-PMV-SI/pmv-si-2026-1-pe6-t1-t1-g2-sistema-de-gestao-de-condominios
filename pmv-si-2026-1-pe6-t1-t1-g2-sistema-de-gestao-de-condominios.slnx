@@ -1,3 +1,4 @@
 <Solution>
-  <Project Path="src/backend/backend.csproj" />
+  <Project Path='src/backend/backend.csproj' />
+  <Project Path='src/backend.tests/backend.tests.csproj' />
 </Solution>
