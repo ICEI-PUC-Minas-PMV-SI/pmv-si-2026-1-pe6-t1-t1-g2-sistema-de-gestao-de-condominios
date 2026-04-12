@@ -252,11 +252,26 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
 
 [Descreva a estratégia de teste, incluindo os tipos de teste a serem realizados (unitários, integração, carga, etc.) e as ferramentas a serem utilizadas.]
 
-1. Crie casos de teste para cobrir todos os requisitos funcionais e não funcionais da aplicação.
-2. Implemente testes unitários para testar unidades individuais de código, como funções e classes.
-3. Realize testes de integração para verificar a interação correta entre os componentes da aplicação.
-4. Execute testes de carga para avaliar o desempenho da aplicação sob carga significativa.
-5. Utilize ferramentas de teste adequadas, como frameworks de teste e ferramentas de automação de teste, para agilizar o processo de teste.
+O projeto utiliza uma suíte de testes automatizados e verificações manuais para garantir a estabilidade de todos os módulos.
+
+### 1. Testes Unitários (xUnit)
+Cobre a lógica de negócio de todo o backend:
+
+- **Autenticação e Segurança:** - `UsersControllerTests` e `JwtGenTests` validam o registro, login e a geração correta de tokens JWT com as devidas permissões (Roles).
+- **Gestão de Reservas:** - `ReservaConflitoTests` e `ReservasControllerTests` garantem que não ocorram sobreposições de horários e que os inputs (datas e IDs) sejam válidos.
+  - `ReservationStatusJsonConverterTests` assegura que os status das reservas sejam convertidos corretamente entre o banco e a aplicação.
+- **Gestão de Ocorrências:** - `OccurrencesControllerTests` valida o ciclo de vida das ocorrências e as restrições de acesso por perfil.
+- **Serviços de Infraestrutura:** - `EmailServiceTests` confirma o funcionamento do envio de e-mails para notificações do sistema.
+
+### 2. Testes de Integração e Carga
+- **Resiliência (`BackendIntegrationLoadTests`)**: Simula o comportamento do sistema sob alta carga de requisições e valida a persistência real dos dados no PostgreSQL.
+
+### 3. Verificação Funcional
+Validado via Swagger UI e Postman:
+- **Fluxo de Disponibilidade:** Verificado que reservas canceladas liberam o horário imediatamente no endpoint de consulta.
+- **Fluxo de Ocorrências:** Confirmado que moradores não conseguem listar ocorrências de outros usuários nem anexar fotos a registros que não lhes pertencem.
+
+**Status Final:** A suíte de testes atual cobre os requisitos críticos de segurança e integridade de dados definidos para o projeto.
 
 # Referências
 
