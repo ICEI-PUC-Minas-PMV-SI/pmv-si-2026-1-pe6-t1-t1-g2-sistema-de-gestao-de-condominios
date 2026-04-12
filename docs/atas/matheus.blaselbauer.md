@@ -12,7 +12,7 @@
 | 16/03 - 25/03 | APIs e Web Services - Unidade 2 | ✅ | Autenticação aos recursos da API  | Autenticação e Autorização de acesso aos recursos da API |
 | 23/03 - 29/03 | APIs e Web Services - Unidade 2 | ✅ | Autorização aos recursos da API | Autorização de acesso aos recursos de acordo com o cargo do usuário |
 | 30/03 - 05/04 | Recuperação de Informação na Web e Redes Sociais - Unidade 1 | ✅ | Implementação do envio de notificações de email por push ao cancelar ou aprovar reservas do morador | Envio de email ao usuário ao confirmar ou cancelar reservas |
-| 06/04 - 12/04 | Recuperação de Informação na Web e Redes Sociais - Unidade 2 | ⬜ |  |  |
+| 06/04 - 12/04 | Recuperação de Informação na Web e Redes Sociais - Unidade 2 | ✅ | Documentação das rotas de API | Documentação das rotas da API |
 | 13/04 - 19/04 | Computação Ubíqua e Pervasiva e IoT - Unidade 1 | ⬜ |  |  |
 | 20/04 - 26/04 | Computação Ubíqua e Pervasiva e IoT - Unidade 2 | ⬜ |  |  |
 | 27/04 - 03/05 | Desenvolvimento de Aplicações Móveis - Unidade 1 | ⬜ |  |  |
