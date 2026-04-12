@@ -168,7 +168,71 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     status: 403 Forbidden
     ```
   
+### Consultar Disponibilidade de Reservas (RF 03)
+- **Método:** GET
+- **URL:** `/api/reservas/disponibilidade`
+- **Parâmetros:**
+  - `areaId` (int): ID da área comum (obrigatório).
+  - `data` (DateTime): Data para consulta (obrigatório, formato ISO 8601).
+- **Resposta:**
+  - **Sucesso (200 OK):** Retorna a lista de horários ocupados.
+    ```json
+    [
+      { "inicio": "2026-03-22T10:00:00Z", "fim": "2026-03-22T12:00:00Z" }
+    ]
+    ```
+  - **Erro (400 Bad Request):** Parâmetros inválidos ou ausentes (ex: `areaId` não é um número ou `data` em formato incorreto).
+    ```json
+    {
+      "type": "[https://tools.ietf.org/html/rfc7231#section-6.5.1](https://tools.ietf.org/html/rfc7231#section-6.5.1)",
+      "title": "One or more validation errors occurred.",
+      "status": 400,
+      "errors": { "data": ["The value 'data-invalida' is not valid."] }
+    }
+    ```
+  - **Erro (500 Internal Server Error):** Erro interno ao processar a consulta ou falha na conexão com o banco de dados.
 
+ 
+## API Endpoints - Gestão de Ocorrências
+
+### Listar Ocorrências
+- **Método:** GET
+- **URL:** `/api/occurrences`
+- **Resposta de Sucesso (200 OK):** Retorna a lista completa de ocorrências registradas.
+
+### Consultar Ocorrência por ID
+- **Método:** GET
+- **URL:** `/api/occurrences/{id}`
+- **Parâmetros:** `id` (int) - Identificador único da ocorrência.
+- **Resposta de Sucesso (200 OK):** Retorna os detalhes da ocorrência solicitada.
+- **Resposta de Erro (404 Not Found):** Caso o ID não exista no banco de dados.
+
+### Criar Ocorrência
+- **Método:** POST
+- **URL:** `/api/occurrences`
+- **Corpo da Requisição (JSON):**
+    ```json
+    {
+      "description": "Descrição do problema",
+      "userId": 1,
+      "status": "Pendente"
+    }
+    ```
+- **Resposta de Sucesso (201 Created):** Retorna a ocorrência criada com seu novo ID.
+- **Resposta de Erro (400 Bad Request):** Caso os dados enviados sejam inválidos.
+
+### Atualizar Ocorrência
+- **Método:** PUT
+- **URL:** `/api/occurrences/{id}`
+- **Parâmetros:** `id` (int) - ID da ocorrência a ser editada.
+- **Resposta de Sucesso (204 No Content):** Indica que a atualização foi realizada com sucesso.
+- **Resposta de Erro (400 Bad Request):** Caso o ID da URL não coincida com o ID no corpo da requisição.
+
+### Excluir Ocorrência
+- **Método:** DELETE
+- **URL:** `/api/occurrences/{id}`
+- **Resposta de Sucesso (204 No Content):** Ocorrência removida com sucesso.
+- **Resposta de Erro (404 Not Found):** Caso a ocorrência não seja encontrada.
 
 ## Considerações de Segurança
 
