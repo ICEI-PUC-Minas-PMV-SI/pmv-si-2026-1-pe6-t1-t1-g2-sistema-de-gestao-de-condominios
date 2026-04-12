@@ -135,40 +135,6 @@ namespace backend.Controllers
             }
         }
 
-        [HttpPatch("{id:int}/read")]
-        public async Task<ActionResult<Notification>> MarkAsRead(int id, CancellationToken cancellationToken)
-        {
-            var (connectionString, errorResult) = GetConnectionString();
-            if (errorResult is not null) return errorResult;
-
-            try
-            {
-                await using var connection = new NpgsqlConnection(connectionString);
-                await connection.OpenAsync(cancellationToken);
-                const string sql = @"
-                    UPDATE public.notifications
-                    SET is_read = true,
-                        updated_at = CURRENT_TIMESTAMP
-                    WHERE id = @id
-                    RETURNING id, user_id, type, message, is_read,
-                              reservation_id, occurrence_id, delivery_id,
-                              created_at, updated_at;";
-
-                await using var command = new NpgsqlCommand(sql, connection);
-                command.Parameters.AddWithValue("id", id);
-
-                await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-                if (!await reader.ReadAsync(cancellationToken))
-                    return NotFound();
-
-                return Ok(MapNotification(reader));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Erro ao marcar notificação como lida: {ex.Message}");
-            }
-        }
-
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {
