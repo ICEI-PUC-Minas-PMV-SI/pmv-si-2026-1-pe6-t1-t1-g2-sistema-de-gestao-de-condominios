@@ -1,6 +1,6 @@
 # 📊 Relatório de Contribuições do Projeto
 
-**Última atualização:** 12/04/2026 22:02
+**Última atualização:** 12/04/2026 22:12
 
 ---
 
@@ -8,7 +8,7 @@
 
 | Aluno                 |   Commits |   Linhas+ |   Linhas- |   Arquivos |   Docs Commits |   Docs Arquivos |
 |-----------------------|-----------|-----------|-----------|------------|----------------|-----------------|
-| Bruno Alfeu           |        19 |       447 |        53 |         11 |             12 |               5 |
+| Bruno Alfeu           |        20 |       452 |        58 |         11 |             13 |               5 |
 | Gabriel               |        10 |     97732 |       107 |        102 |              0 |               0 |
 | Gabriel Oliveira      |        20 |        72 |        50 |          6 |             17 |               4 |
 | Guilherme Mendonca    |        10 |      1075 |       358 |         19 |              8 |               2 |
@@ -17,14 +17,14 @@
 | Mathbkj               |        15 |      1098 |       170 |         27 |              0 |               0 |
 | Mukimiw4a             |        18 |       163 |        40 |          8 |             14 |               7 |
 | YanGuimaraesMartins   |        10 |       300 |        16 |          8 |              7 |               4 |
-| github-actions[bot]   |        40 |       280 |       272 |          3 |             40 |               1 |
+| github-actions[bot]   |        41 |       286 |       278 |          3 |             41 |               1 |
 | github-classroom[bot] |         1 |      2152 |         0 |         45 |              1 |              13 |
 | guigsmendonca         |        19 |       178 |       150 |          9 |             16 |               4 |
 
 
 ## 📅 Contribuições Semanais (Todo o Semestre)
 
-**2026-04-05**: Bruno Alfeu: 8, Gabriel: 5, Gabriel Oliveira: 3, Guilherme Mendonca: 3, Mathbkj: 5, Mukimiw4a: 5, github-actions[bot]: 16
+**2026-04-05**: Bruno Alfeu: 9, Gabriel: 5, Gabriel Oliveira: 3, Guilherme Mendonca: 3, Mathbkj: 5, Mukimiw4a: 5, github-actions[bot]: 17
 
 **2026-03-29**: github-actions[bot]: 1
 
