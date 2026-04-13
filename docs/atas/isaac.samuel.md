@@ -10,9 +10,9 @@
 | 02/03 - 08/03 | Arquitetura de Software Distribuído - Unidade 3 | ✅ | Consolidação da Etapa 1 | Finalização do documento e definição da stack tecnológica do projeto |
 | 09/03 - 15/03 | APIs e Web Services - Unidade 1 | ✅ | Arquitetura estratégica com a equipe | Arquitetura do backend e distribuição dos CRUDS |
 | 16/03 - 22/03 | APIs e Web Services - Unidade 2 | ✅ | CRUD notifications | CRUD notifications |
-| 23/03 - 29/03 | APIs e Web Services - Unidade 2 | ⬜ |  |  |
-| 30/03 - 05/04 | Recuperação de Informação na Web e Redes Sociais - Unidade 1 | ⬜ |  |  |
-| 06/04 - 12/04 | Recuperação de Informação na Web e Redes Sociais - Unidade 2 | ⬜ |  |  |
+| 23/03 - 29/03 | APIs e Web Services - Unidade 2 | ✅ | CRUD notifications | Crud e estudos  |
+| 30/03 - 05/04 | Recuperação de Informação na Web e Redes Sociais - Unidade 1 | ✅ | CRUD notifications | Crud e estudos |
+| 06/04 - 12/04 | Recuperação de Informação na Web e Redes Sociais - Unidade 2 | ✅ | CRUD notifications | Crud e estudos |
 | 13/04 - 19/04 | Computação Ubíqua e Pervasiva e IoT - Unidade 1 | ⬜ |  |  |
 | 20/04 - 26/04 | Computação Ubíqua e Pervasiva e IoT - Unidade 2 | ⬜ |  |  |
 | 27/04 - 03/05 | Desenvolvimento de Aplicações Móveis - Unidade 1 | ⬜ |  |  |
