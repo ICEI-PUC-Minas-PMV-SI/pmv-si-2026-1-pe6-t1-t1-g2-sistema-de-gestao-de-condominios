@@ -1197,13 +1197,101 @@ Como solicitado pela coordenação do projeto, abaixo são listados os pontos de
 
 ## Implantação
 
-[Instruções para implantar a aplicação distribuída em um ambiente de produção.]
+### 1. Requisitos de Hardware e Software
 
-1. Defina os requisitos de hardware e software necessários para implantar a aplicação em um ambiente de produção.
-2. Escolha uma plataforma de hospedagem adequada, como um provedor de nuvem ou um servidor dedicado.
-3. Configure o ambiente de implantação, incluindo a instalação de dependências e configuração de variáveis de ambiente.
-4. Faça o deploy da aplicação no ambiente escolhido, seguindo as instruções específicas da plataforma de hospedagem.
-5. Realize testes para garantir que a aplicação esteja funcionando corretamente no ambiente de produção.
+Para que a aplicação funcione de forma eficiente, o ambiente de produção deve atender às seguintes especificações:
+
+### **Hardware (Mínimo Recomendado)**
+* **Processador (CPU):** 2 vCPUs (unidades de processamento virtual).
+* **Memória RAM:** 4 GB (mínimo de 2 GB livres exclusivamente para o processo da API).
+* **Armazenamento:** 20 GB de SSD (espaço para SO, imagens Docker, binários e logs).
+* **Rede:** Conectividade de baixa latência com largura de banda de pelo menos 100 Mbps.
+
+### **Software**
+* **Sistema Operacional:** Distribuições Linux (Ubuntu 22.04 LTS ou Debian 11) são preferíveis pela leveza e segurança.
+* **Runtime:** ASP.NET Core Runtime 8.0 (instalar via pacote oficial da Microsoft se não usar Docker).
+* **Gerenciamento de Containers:** Docker Engine v24+ e Docker Compose v2+.
+* **Segurança:** Firewall ativo (UFW ou IPtables) permitindo apenas as portas 80 (HTTP), 443 (HTTPS) e 22 (SSH).
+
+---
+
+### 2. Escolha da Plataforma de Hospedagem
+
+A plataforma deve ser escolhida com base na escalabilidade necessária para o sistema distribuído:
+
+* **Opção em Nuvem (PaaS/IaaS):**
+    * **Microsoft Azure:** Recomendado por possuir integração nativa com o ecossistema .NET. O *Azure App Service for Containers* simplifica o deploy.
+    * **AWS:** Utilizar o *Amazon ECS* (Elastic Container Service) para orquestração de containers.
+* **Servidores Privados (VPS):**
+    * **DigitalOcean / Linode:** Excelente custo-benefício para hospedar instâncias individuais (Droplets) com Docker pré-instalado.
+
+---
+
+### 3. Configuração do Ambiente de Implantação
+
+
+
+Antes de subir a aplicação, prepare o servidor:
+
+1.  **Atualização do Sistema:**
+    ```bash
+    sudo apt update && sudo apt upgrade -y
+    ```
+2.  **Instalação do Docker:**
+    ```bash
+    sudo apt install docker.io docker-compose -y
+    sudo systemctl enable --now docker
+    ```
+3.  **Configuração das Variáveis de Ambiente:**
+    Crie um arquivo chamado `.env` no diretório de deploy. Este arquivo **não deve ser enviado ao GitHub**:
+    ```env
+    ASPNETCORE_ENVIRONMENT=Production
+    ConnectionStrings__DefaultConnection="Host=db;Database=condominio;Username=admin;Password=sua_senha_segura"
+    JWT_SECRET="SuaChaveSecretaDePeloMenos32Caracteres"
+    DB_PASSWORD="sua_senha_segura"
+    ```
+
+---
+
+### 4. Deploy da Aplicação
+
+O deploy deve seguir o fluxo de integração contínua ou manual via Docker:
+
+1.  **Geração da Imagem (Build):**
+    No diretório `src/backend`, execute o build da imagem Docker:
+    ```bash
+    docker build -t gestao-condominio-api:1.0 .
+    ```
+2.  **Subida dos Serviços (Up):**
+    Configure um arquivo `docker-compose.yml` para orquestrar a API e o Banco de Dados:
+    ```yaml
+    version: '3.8'
+    services:
+      api:
+        image: gestao-condominio-api:1.0
+        env_file: .env
+        ports:
+          - "80:80"
+        restart: always
+        depends_on:
+          - db
+      db:
+        image: postgres:15
+        environment:
+          POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ```
+    Inicie o sistema: `docker-compose up -d`
+
+---
+
+### 5. Testes de Produção e Validação
+
+Após o deploy, realize as validações finais para garantir a disponibilidade:
+
+* **Teste de Conectividade:** Tente acessar a URL pública da API. O esperado é um retorno JSON ou a página do Swagger (se configurada para produção).
+* **Monitoramento de Logs:** Execute `docker logs -f [id-do-container]` para verificar se há exceções de conexão com o banco de dados.
+* **Teste de Carga Simples:** Utilize ferramentas como `ab` (Apache Benchmark) ou `k6` para validar se a aplicação responde sob múltiplas requisições simultâneas.
+* **Certificado SSL:** Verifique se o cadeado de segurança aparece no navegador (configuração via Nginx + Certbot).
 
 ## Testes
 
