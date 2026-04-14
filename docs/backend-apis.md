@@ -1038,6 +1038,8 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 403 Forbidden
     ```
+![Listar Usuários](img/imgs-testes-rotas/users/rota-listar-users.png)
+
 - Método: GET
 - URL: /api/Users
 - Headers: Authorization -> Bearer 'token_aqui'
@@ -1064,6 +1066,7 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 403 Forbidden
     ```
+![Buscar Usuário](img/imgs-testes-rotas/users/rota-buscar-user.png)
 
 - Método: DELETE
 - URL: /api/Users
@@ -1080,6 +1083,7 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 403 Forbidden
     ```
+![Deletar Usuário](img/imgs-testes-rotas/users/rota-deletar-user.png)
 
 - Método: POST
 - URL: /api/Users/auth
@@ -1106,6 +1110,8 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 403 Forbidden
     ```
+![Rota de Autenticação](img/imgs-testes-rotas/users/rota-autenticacao.png)
+
 - Método: PUT
 - URL: /api/Users
 - Parâmetros:
@@ -1147,7 +1153,7 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 403 Forbidden
     ```
-
+![Editar Usuário](img/imgs-testes-rotas/users/rota-editar-user.png)
 
 ### Consultar Disponibilidade de Reservas (RF 03)
 - **Método:** GET
@@ -1319,18 +1325,6 @@ Validado via Swagger UI e Postman:
 - **Fluxo de Ocorrências:** Confirmado que moradores não conseguem listar ocorrências de outros usuários nem anexar fotos a registros que não lhes pertencem.
 
 **Status Final:** A suíte de testes atual cobre os requisitos críticos de segurança e integridade de dados definidos para o projeto.
-### Testes das Rotas
-## users: 
-Autenticação:
-![Rota de Autenticação](img/imgs-testes-rotas/users/rota-autenticacao.png)
-Buscar Usuário
-![Buscar Usuário](img/imgs-testes-rotas/users/rota-buscar-user.png)
-Deletar Usuário:
-![Deletar Usuário](img/imgs-testes-rotas/users/rota-deletar-user.png)
-Editar Usuário:
-![Editar Usuário](img/imgs-testes-rotas/users/rota-editar-user.png)
-Listar Usuários:
-![Listar Usuários](img/imgs-testes-rotas/users/rota-listar-users.png)
 ---
 # Referências
 
