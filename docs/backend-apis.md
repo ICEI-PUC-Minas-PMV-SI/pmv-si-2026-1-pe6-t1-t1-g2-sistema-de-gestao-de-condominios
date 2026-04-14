@@ -193,7 +193,7 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
   
 ### Deliveries
-
+![rota-get](img/imgs-testes-rotas/deliveries/rota-get.png)
 - Método: GET
 - URL: /api/Deliveries
 - Headers: Authorization -> Bearer 'token_aqui'
@@ -218,6 +218,7 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 401 Not Authorized
     ```
+![rota-get](img/imgs-testes-rotas/deliveries/rota-get-by-id.png)
 - Método: GET
 - URL: /api/Deliveries
 - Headers: Authorization -> Bearer 'token_aqui'
@@ -242,6 +243,7 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 401 Not Authorized
     ```
+![rota-get](img/imgs-testes-rotas/deliveries/rota-post.png)
 - Método: POST
 - URL: /api/Deliveries
 - Headers: Authorization -> Bearer 'token_aqui'
@@ -285,6 +287,7 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 500 Erro ao criar entrega: 22P02: invalid input value for enum delivery_status: "Em Andamento"
     ```
+![rota-get](img/imgs-testes-rotas/deliveries/rota-put.png)
 - Método: PUT
 - URL: /api/Deliveries
 - Parâmetros:
@@ -330,6 +333,7 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 500 Erro ao criar entrega: 22P02: invalid input value for enum delivery_status: "Em Andamento"
     ```
+![rota-get](img/imgs-testes-rotas/deliveries/rota-delete.png)
 - Método: DELETE
 - URL: /api/Deliveries
 - Headers: Authorization -> Bearer 'token_aqui'
