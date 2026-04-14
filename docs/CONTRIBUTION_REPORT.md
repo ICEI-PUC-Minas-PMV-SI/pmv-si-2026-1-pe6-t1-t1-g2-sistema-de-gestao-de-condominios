@@ -1,6 +1,6 @@
 # 📊 Relatório de Contribuições do Projeto
 
-**Última atualização:** 14/04/2026 22:47
+**Última atualização:** 14/04/2026 22:53
 
 ---
 
@@ -15,16 +15,16 @@
 | Isaac                 |         2 |       424 |       224 |          6 |              0 |               0 |
 | Isaac Samuel          |        11 |        77 |        72 |          5 |             10 |               4 |
 | Mathbkj               |        20 |      1354 |       355 |         30 |              0 |               0 |
-| Mukimiw4a             |        21 |      1131 |       199 |          8 |             16 |               7 |
+| Mukimiw4a             |        22 |      1131 |       199 |         13 |             17 |               7 |
 | YanGuimaraesMartins   |        10 |       300 |        16 |          8 |              7 |               4 |
-| github-actions[bot]   |        53 |       357 |       347 |          3 |             53 |               1 |
+| github-actions[bot]   |        54 |       369 |       359 |          3 |             54 |               1 |
 | github-classroom[bot] |         1 |      2152 |         0 |         45 |              1 |              13 |
 | guigsmendonca         |        20 |       178 |       150 |          9 |             16 |               4 |
 
 
 ## 📅 Contribuições Semanais (Todo o Semestre)
 
-**2026-04-07**: Bruno Alfeu: 9, Gabriel: 5, Gabriel Oliveira: 8, Guilherme Mendonca: 4, Isaac Samuel: 1, Mathbkj: 10, Mukimiw4a: 8, github-actions[bot]: 27, guigsmendonca: 1
+**2026-04-07**: Bruno Alfeu: 9, Gabriel: 5, Gabriel Oliveira: 8, Guilherme Mendonca: 4, Isaac Samuel: 1, Mathbkj: 10, Mukimiw4a: 9, github-actions[bot]: 28, guigsmendonca: 1
 
 **2026-03-31**: Bruno Alfeu: 1, github-actions[bot]: 2
 
