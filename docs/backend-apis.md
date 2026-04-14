@@ -1315,7 +1315,19 @@ Validado via Swagger UI e Postman:
 - **Fluxo de Ocorrências:** Confirmado que moradores não conseguem listar ocorrências de outros usuários nem anexar fotos a registros que não lhes pertencem.
 
 **Status Final:** A suíte de testes atual cobre os requisitos críticos de segurança e integridade de dados definidos para o projeto.
-
+### Testes das Rotas
+## users: 
+Autenticação:
+![Rota de Autenticação](img/imgs-testes-rotas/users/rota-autenticacao.png)
+Buscar Usuário
+![Buscar Usuário](img/imgs-testes-rotas/users/rota-buscar-user.png)
+Deletar Usuário:
+![Deletar Usuário](img/imgs-testes-rotas/users/rota-deletar-user.png)
+Editar Usuário:
+![Editar Usuário](img/imgs-testes-rotas/users/rota-editar-user.png)
+Listar Usuários:
+![Listar Usuários](img/imgs-testes-rotas/users/rota-listar-users.png)
+---
 # Referências
 
 Inclua todas as referências (livros, artigos, sites, etc) utilizados no desenvolvimento do trabalho.
