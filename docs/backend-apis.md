@@ -1114,7 +1114,7 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 401 Conflict | Email já cadastrado
     ```
-![Rota de Autenticação](img/imgs-testes-rotas/users/rota-autenticacao.png)
+![Criar Usuários](img/imgs-testes-rotas/users/rota-criar-users.png)
 
 - Método: POST
 - URL: /api/Users/auth
@@ -1141,7 +1141,7 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 403 Forbidden
     ```
-
+![Rota de Autenticação](img/imgs-testes-rotas/users/rota-autenticacao.png)
 - Método: PUT
 - URL: /api/Users
 - Parâmetros:
