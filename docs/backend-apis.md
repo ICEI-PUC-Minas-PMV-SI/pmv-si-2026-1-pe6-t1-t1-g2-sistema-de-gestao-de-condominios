@@ -1086,6 +1086,37 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
 ![Deletar Usuário](img/imgs-testes-rotas/users/rota-deletar-user.png)
 
 - Método: POST
+- URL: /api/Users
+- Headers: Authorization -> Bearer 'token_aqui'
+- Corpo Da Requisição:
+  ```
+  {
+    "username": "Goku",
+    "password_hash": "aizedamanga",
+    "email": "goku@hotmail.com",
+    "profile": "Morador"
+  }
+  ```
+- Resposta:
+  - Sucesso (201 Created)
+    ```
+    {
+     "id": 7,
+    "username": "Goku",
+    "password_hash": null,
+    "email": "gok@hotmail.com",
+    "profile": "Morador",
+    "created_at": "2026-04-14T23:23:01.640667",
+    "updated_at": "2026-04-14T23:23:01.640667"
+    }
+    ```
+  - Erro (409)
+    ```
+    status: 401 Conflict | Email já cadastrado
+    ```
+![Rota de Autenticação](img/imgs-testes-rotas/users/rota-autenticacao.png)
+
+- Método: POST
 - URL: /api/Users/auth
 - Headers: Authorization -> Bearer 'token_aqui'
 - Corpo Da Requisição:
@@ -1110,7 +1141,6 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 403 Forbidden
     ```
-![Rota de Autenticação](img/imgs-testes-rotas/users/rota-autenticacao.png)
 
 - Método: PUT
 - URL: /api/Users
