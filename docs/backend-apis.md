@@ -357,6 +357,8 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     status: 500 Erro ao criar entrega: 22P02: invalid input value for enum delivery_status: "Em Andamento"
     ```
 ### Notifications
+<img width="1529" height="894" alt="{E9E5B9F7-AD76-49CD-8781-E6E42C6EE957}" src="https://github.com/user-attachments/assets/fae47fa2-3747-4332-b783-d6722ed7e5c0" />
+
 
 - Método: GET
 - URL: /api/Notifications
@@ -395,6 +397,8 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 401 Not Authorized
     ```
+<img width="1493" height="666" alt="{3D187238-5675-47A3-BB23-3CB6D0661872}" src="https://github.com/user-attachments/assets/0f80212a-322a-460d-b99a-646809b0f10f" />
+
 - Método: GET
 - URL: /api/Notifications
 - Headers: Authorization -> Bearer 'token_aqui'
@@ -420,6 +424,8 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 401 Not Authorized
     ```
+<img width="1497" height="489" alt="{C6006DBE-E9B3-4C6B-94C9-6B940C15DAF0}" src="https://github.com/user-attachments/assets/aec47546-e304-4ef2-ad15-d0c22b2092bf" />
+
 - Método: DELETE
 - URL: /api/Notifications
 - Headers: Authorization -> Bearer 'token_aqui'
@@ -430,6 +436,8 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 401 Not Authorized
     ```
+<img width="1496" height="892" alt="{8B468A1D-F790-42A0-81C9-01EBCC5058D7}" src="https://github.com/user-attachments/assets/7cb75930-2eb8-4eed-8e81-d6745e1839e1" />
+
 - Método: POST
 - URL: /api/Notifications
 - Headers: Authorization -> Bearer 'token_aqui'
