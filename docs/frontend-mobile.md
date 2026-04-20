@@ -19,7 +19,11 @@
 
 ## Tecnologias Utilizadas
 
-[Lista das tecnologias principais que serão utilizadas no projeto.]
+Para o desenvolvimento da interface do aplicativo para dispositivo móvel, tanto em sistemas IOS como Android, e de acordo com a proposta do projeto, foram selecionadas as seguintes tecnologias:
+
+### 🏗️ Expo
+Framework baseado na tecnologia React Native para desenvolvimento de aplicações mobile. Essa ferramenta é considerada "cross-platform", o que significa que é possível desenvolver tanto para sistemas IOS como Android. Um diferencial do Expo é que ele possui integração para disponibilizar a aplicação na Play Store e na App Store, o que otimiza o processo. 
+
 
 ## Considerações de Segurança
 
