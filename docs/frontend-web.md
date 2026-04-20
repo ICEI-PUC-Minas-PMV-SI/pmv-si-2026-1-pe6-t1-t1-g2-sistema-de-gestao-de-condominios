@@ -19,12 +19,14 @@
 [Diagrama ou descrição do fluxo de dados na aplicação.]
 
 ## Tecnologias Utilizadas
-[Lista das tecnologias principais que serão utilizadas no projeto.]
 
 Para o desenvolvimento da interface da aplicação web, de acordo com a proposta do projeto, foram selecionadas as seguintes tecnologias:
 
-- React: Ferramenta que integra código HTML com a linguagem de programação Javascript e permite integrar funcionalidade baseada em estado com interface.
-- TailwindCSS: Ferramenta de estilização baseada em classes predefinidas de HTML.
+### ⚛️ React
+Biblioteca que permite a construção de interfaces de usuário de forma declarativa, integrando HTML (JSX) com JavaScript. Possibilita o gerenciamento de estado e a criação de componentes reutilizáveis, tornando a aplicação mais dinâmica e escalável.
+
+### 🎨 Tailwind CSS
+Framework de estilização CSS baseado em classes utilitárias predefinidas. Permite a construção rápida de interfaces modernas diretamente no HTML, promovendo consistência visual e alta produtividade no desenvolvimento.
 
 
 ## Considerações de Segurança
