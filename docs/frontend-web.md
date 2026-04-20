@@ -21,6 +21,12 @@
 ## Tecnologias Utilizadas
 [Lista das tecnologias principais que serão utilizadas no projeto.]
 
+Para o desenvolvimento da interface da aplicação web, de acordo com a proposta do projeto, foram selecionadas as seguintes tecnologias:
+
+- React: Ferramenta que integra código HTML com a linguagem de programação Javascript e permite integrar funcionalidade baseada em estado com interface.
+- TailwindCSS: Ferramenta de estilização baseada em classes predefinidas de HTML.
+
+
 ## Considerações de Segurança
 
 [Discuta as considerações de segurança relevantes para a aplicação distribuída, como autenticação, autorização, proteção contra ataques, etc.]
