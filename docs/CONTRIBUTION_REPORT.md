@@ -15,16 +15,16 @@
 | Isaac                 |         2 |       424 |       224 |          6 |              0 |               0 |
 | Isaac Samuel          |        12 |        85 |        72 |          6 |             11 |               5 |
 | Mathbkj               |        20 |      1354 |       355 |         30 |              0 |               0 |
-| Mukimiw4a             |        28 |      1186 |       206 |         15 |             23 |               9 |
+| Mukimiw4a             |        29 |      1187 |       207 |         15 |             24 |               9 |
 | YanGuimaraesMartins   |        10 |       300 |        16 |          8 |              7 |               4 |
-| github-actions[bot]   |        68 |       454 |       442 |          3 |             68 |               1 |
+| github-actions[bot]   |        69 |       458 |       446 |          3 |             69 |               1 |
 | github-classroom[bot] |         1 |      2152 |         0 |         45 |              1 |              13 |
 | guigsmendonca         |        20 |       178 |       150 |          9 |             16 |               4 |
 
 
 ## 📅 Contribuições Semanais (Todo o Semestre)
 
-**2026-04-13**: Bruno Alfeu: 5, Gabriel Oliveira: 7, Isaac Samuel: 2, Mukimiw4a: 8, github-actions[bot]: 16
+**2026-04-13**: Bruno Alfeu: 5, Gabriel Oliveira: 7, Isaac Samuel: 2, Mukimiw4a: 9, github-actions[bot]: 17
 
 **2026-04-06**: Bruno Alfeu: 9, Gabriel: 5, Gabriel Oliveira: 7, Guilherme Mendonca: 4, Mathbkj: 10, Mukimiw4a: 7, github-actions[bot]: 26, guigsmendonca: 1
 
