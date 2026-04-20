@@ -22,8 +22,10 @@
 Para o desenvolvimento da interface do aplicativo para dispositivo móvel, tanto em sistemas IOS como Android, e de acordo com a proposta do projeto, foram selecionadas as seguintes tecnologias:
 
 ### 🏗️ Expo
-Framework baseado na tecnologia React Native para desenvolvimento de aplicações mobile. Essa ferramenta é considerada "cross-platform", o que significa que é possível desenvolver tanto para sistemas IOS como Android. Um diferencial do Expo é que ele possui integração para disponibilizar a aplicação na Play Store e na App Store, o que otimiza o processo. 
+Framework baseado na tecnologia React Native para desenvolvimento de aplicações mobile. Essa ferramenta é considerada "cross-platform", o que significa que é possível desenvolver tanto para sistemas IOS como Android. Um diferencial do Expo é que ele possui integração para fazer o bundle(versão funcional do código-fonte) e disponibilizar a aplicação na Play Store e na App Store, o que otimiza o processo de construção do app. 
 
+### NativeWind
+Biblioteca baseada em TailwindCSS para estilização de interfaces mobile. Possui integração com o ambiente Expo. As classes utilizadas são as mesmas que em TailwindCSS.
 
 ## Considerações de Segurança
 
