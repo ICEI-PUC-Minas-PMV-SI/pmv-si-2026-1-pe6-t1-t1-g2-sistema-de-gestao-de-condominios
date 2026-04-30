@@ -1,0 +1,118 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --color-surface: #f9f9ff;
+  --color-surface-dim: #cfdaf2;
+  --color-surface-bright: #f9f9ff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f0f3ff;
+  --color-surface-container: #e7eeff;
+  --color-surface-container-high: #dee8ff;
+  --color-surface-container-highest: #d8e3fb;
+  --color-on-surface: #111c2d;
+  --color-on-surface-variant: #44474e;
+  --color-inverse-surface: #263143;
+  --color-inverse-on-surface: #ecf1ff;
+  --color-outline: #74777f;
+  --color-outline-variant: #c4c6cf;
+  --color-surface-tint: #4a5f86;
+  --color-primary: #40557b;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #586d95;
+  --color-on-primary-container: #ebefff;
+  --color-inverse-primary: #b1c7f4;
+  --color-secondary: #5a5f63;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #dce0e5;
+  --color-on-secondary-container: #5e6367;
+  --color-tertiary: #525557;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #6a6d6f;
+  --color-on-tertiary-container: #eef0f2;
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+  --color-primary-fixed: #d7e3ff;
+  --color-primary-fixed-dim: #b1c7f4;
+  --color-on-primary-fixed: #001b3f;
+  --color-on-primary-fixed-variant: #31476c;
+  --color-secondary-fixed: #dfe3e8;
+  --color-secondary-fixed-dim: #c3c7cc;
+  --color-on-secondary-fixed: #171c20;
+  --color-on-secondary-fixed-variant: #42474b;
+  --color-tertiary-fixed: #e0e3e5;
+  --color-tertiary-fixed-dim: #c4c7c9;
+  --color-on-tertiary-fixed: #191c1e;
+  --color-on-tertiary-fixed-variant: #444749;
+  --color-background: #f9f9ff;
+  --color-on-background: #111c2d;
+  --color-surface-variant: #d8e3fb;
+
+  --font-headline-xl: 800 48px/1.1 "Manrope", sans-serif;
+  --font-headline-md: 700 24px/1.2 "Manrope", sans-serif;
+  --font-body-md: 400 16px/1.6 "Manrope", sans-serif;
+  --font-label-sm: 600 14px/1.4 "Manrope", sans-serif;
+  --font-caption: 500 12px/1.4 "Manrope", sans-serif;
+
+  --rounded-card: 2rem;
+  --shadow-card: 0 20px 50px rgba(0, 0, 0, 0.05);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
+html {
+  background: var(--color-background);
+  color: var(--color-on-background);
+  font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button,
+a {
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+.soft-shadow {
+  box-shadow:
+    0 18px 34px rgba(30, 90, 72, 0.1),
+    0 4px 14px rgba(23, 58, 64, 0.06);
+}
+
+.animate-fade-in {
+  animation: fade-in 160ms ease-out both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
