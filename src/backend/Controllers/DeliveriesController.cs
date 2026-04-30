@@ -37,10 +37,7 @@ namespace backend.Controllers
             {
                 await using var connection = new NpgsqlConnection(connectionString);
                 await connection.OpenAsync(cancellationToken);
-                const string sql = @"
-                    SELECT id, recipient_user_id, registered_by_user_id, description, arrival_date, pickup_date, status, created_at, updated_at
-                    FROM public.deliveries
-                    ORDER BY id;";
+                const string sql = DeliverySelectSql + " ORDER BY d.id;";
 
                 await using var command = new NpgsqlCommand(sql, connection);
                 await using var reader = await command.ExecuteReaderAsync(cancellationToken);
@@ -73,11 +70,7 @@ namespace backend.Controllers
             {
                 await using var connection = new NpgsqlConnection(connectionString);
                 await connection.OpenAsync(cancellationToken);
-                const string sql = @"
-                    SELECT id, recipient_user_id, registered_by_user_id, description, arrival_date, pickup_date, status, created_at, updated_at
-                    FROM public.deliveries
-                    WHERE id = @id
-                    LIMIT 1;";
+                const string sql = DeliverySelectSql + " WHERE d.id = @id LIMIT 1;";
 
                 await using var command = new NpgsqlCommand(sql, connection);
                 command.Parameters.AddWithValue("id", id);
@@ -311,13 +304,35 @@ namespace backend.Controllers
             return (connectionString, null);
         }
 
+        private const string DeliverySelectSql = @"
+                    SELECT d.id,
+                           d.recipient_user_id,
+                           recipient.username AS recipient_username,
+                           recipient.email AS recipient_email,
+                           d.registered_by_user_id,
+                           registered_by.username AS registered_by_username,
+                           registered_by.email AS registered_by_email,
+                           d.description,
+                           d.arrival_date,
+                           d.pickup_date,
+                           d.status,
+                           d.created_at,
+                           d.updated_at
+                    FROM public.deliveries d
+                    LEFT JOIN public.users recipient ON recipient.id = d.recipient_user_id
+                    LEFT JOIN public.users registered_by ON registered_by.id = d.registered_by_user_id";
+
         private static Delivery MapDelivery(NpgsqlDataReader reader)
         {
             return new Delivery
             {
                 Id = reader.GetInt32(reader.GetOrdinal("id")),
                 RecipientUserId = reader.IsDBNull(reader.GetOrdinal("recipient_user_id")) ? null : reader.GetInt32(reader.GetOrdinal("recipient_user_id")),
+                RecipientUsername = ReadNullableString(reader, "recipient_username"),
+                RecipientEmail = ReadNullableString(reader, "recipient_email"),
                 RegisteredByUserId = reader.IsDBNull(reader.GetOrdinal("registered_by_user_id")) ? null : reader.GetInt32(reader.GetOrdinal("registered_by_user_id")),
+                RegisteredByUsername = ReadNullableString(reader, "registered_by_username"),
+                RegisteredByEmail = ReadNullableString(reader, "registered_by_email"),
                 Description = reader.IsDBNull(reader.GetOrdinal("description")) ? null : reader.GetString(reader.GetOrdinal("description")),
                 ArrivalDate = reader.GetDateTime(reader.GetOrdinal("arrival_date")),
                 PickupDate = reader.IsDBNull(reader.GetOrdinal("pickup_date")) ? null : reader.GetDateTime(reader.GetOrdinal("pickup_date")),
@@ -325,6 +340,19 @@ namespace backend.Controllers
                 CreatedAt = reader.IsDBNull(reader.GetOrdinal("created_at")) ? null : reader.GetDateTime(reader.GetOrdinal("created_at")),
                 UpdatedAt = reader.IsDBNull(reader.GetOrdinal("updated_at")) ? null : reader.GetDateTime(reader.GetOrdinal("updated_at"))
             };
+        }
+
+        private static string? ReadNullableString(NpgsqlDataReader reader, string columnName)
+        {
+            try
+            {
+                var ordinal = reader.GetOrdinal(columnName);
+                return reader.IsDBNull(ordinal) ? null : reader.GetString(ordinal);
+            }
+            catch (IndexOutOfRangeException)
+            {
+                return null;
+            }
         }
 
         private static bool IsReadyForPickupStatus(string? status)

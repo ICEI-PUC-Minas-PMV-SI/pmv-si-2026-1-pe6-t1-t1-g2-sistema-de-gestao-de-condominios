@@ -3,12 +3,13 @@ using backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
+using System.Security.Claims;
 
 namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Administrador")]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private const string RoleAdministrador = "Administrador";
@@ -21,7 +22,50 @@ namespace backend.Controllers
             _configuration = configuration;
         }
 
+        [HttpGet("me")]
+        public async Task<ActionResult<User>> GetCurrentUser(CancellationToken cancellationToken)
+        {
+            var rawUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(rawUserId, out var userId))
+            {
+                return Unauthorized("Token de autenticação inválido.");
+            }
+
+            var (connectionString, errorResult) = GetConnectionString();
+            if (errorResult is not null)
+            {
+                return errorResult;
+            }
+
+            try
+            {
+                await using var connection = new NpgsqlConnection(connectionString);
+                await connection.OpenAsync(cancellationToken);
+                const string sql = @"
+                    SELECT id, username, password_hash, email, profile, created_at, updated_at
+                    FROM public.users
+                    WHERE id = @id
+                    LIMIT 1;";
+
+                await using var command = new NpgsqlCommand(sql, connection);
+                command.Parameters.AddWithValue("id", userId);
+
+                await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+                if (!await reader.ReadAsync(cancellationToken))
+                {
+                    return NotFound();
+                }
+
+                return Ok(ToSafeUser(MapUser(reader)));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro ao consultar usuario autenticado: {ex.Message}");
+            }
+        }
+
         [HttpGet]
+        [Authorize(Roles = RoleAdministrador)]
         public async Task<ActionResult<IEnumerable<User>>> GetAll(CancellationToken cancellationToken)
         {
             var (connectionString, errorResult) = GetConnectionString();
@@ -57,6 +101,7 @@ namespace backend.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize(Roles = RoleAdministrador)]
         public async Task<ActionResult<User>> GetById(int id, CancellationToken cancellationToken)
         {
             var (connectionString, errorResult) = GetConnectionString();
@@ -113,7 +158,7 @@ namespace backend.Controllers
                 await connection.OpenAsync(cancellationToken);
 
                 const string sql = @"
-                    SELECT id, password_hash, profile
+                    SELECT id, username, password_hash, email, profile, created_at, updated_at
                     FROM public.users
                     WHERE id = @id
                     LIMIT 1;";
@@ -131,13 +176,18 @@ namespace backend.Controllers
                 var userId = reader.GetInt32(reader.GetOrdinal("id"));
                 var storedHash = reader.GetString(reader.GetOrdinal("password_hash"));
                 var profile = reader.GetString(reader.GetOrdinal("profile"));
+                var user = ToSafeUser(MapUser(reader));
 
                 if (!BCrypt.Net.BCrypt.Verify(model.Password, storedHash))
                 {
                     return Unauthorized("Usuário ou senha inválidos.");
                 }
 
-                return Ok(new { Token = JwtGen.CreateToken(userId, profile) });
+                return Ok(new
+                {
+                    Token = JwtGen.CreateToken(userId, profile, user.Username, user.Email),
+                    User = user
+                });
             }
             catch (Exception ex)
             {
@@ -213,6 +263,7 @@ namespace backend.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Roles = RoleAdministrador)]
         public async Task<ActionResult<User>> Update(int id, [FromBody] User requestBody, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
@@ -276,6 +327,7 @@ namespace backend.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = RoleAdministrador)]
         public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {
             var (connectionString, errorResult) = GetConnectionString();

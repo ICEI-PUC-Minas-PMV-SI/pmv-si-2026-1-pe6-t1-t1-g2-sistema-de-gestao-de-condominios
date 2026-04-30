@@ -11,8 +11,20 @@ namespace backend.Models
         [JsonPropertyName("recipient_user_id")]
         public int? RecipientUserId { get; set; }
 
+        [JsonPropertyName("recipient_username")]
+        public string? RecipientUsername { get; set; }
+
+        [JsonPropertyName("recipient_email")]
+        public string? RecipientEmail { get; set; }
+
         [JsonPropertyName("registered_by_user_id")]
         public int? RegisteredByUserId { get; set; }
+
+        [JsonPropertyName("registered_by_username")]
+        public string? RegisteredByUsername { get; set; }
+
+        [JsonPropertyName("registered_by_email")]
+        public string? RegisteredByEmail { get; set; }
 
         [JsonPropertyName("description")]
         public string? Description { get; set; }

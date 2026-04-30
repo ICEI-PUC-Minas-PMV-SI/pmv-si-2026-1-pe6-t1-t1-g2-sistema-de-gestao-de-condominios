@@ -8,6 +8,7 @@ backend/.vs/
 backend/*.user
 backend/*.rsuser
 backend/*.suo
+frontend-web/.vscode/
 
 # Logs e arquivos temporários
 backend/*.log
@@ -17,9 +18,13 @@ backend/TestResults/
 # Publicação local
 backend/publish/
 backend/artifacts/
+frontend-web/node_modules
 
 # Segredos locais (User Secrets)
 backend/secrets.json
 
 # Configurações de ambiente
 backend/appsettings.Development.json
+frontend-web/.env
+
+
