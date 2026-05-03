@@ -1,6 +1,6 @@
+import { Button, Input } from "#/components/ui";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Lock, Settings, User } from "lucide-react";
-import { Button, Input } from "#/components/ui";
 import { AuthFeedbackMessage } from "./components/AuthFeedbackMessage";
 import { PasswordVisibilityButton } from "./components/PasswordVisibilityButton";
 import { SocialAuthButton } from "./components/SocialAuthButton";
@@ -43,8 +43,8 @@ export function LoginPage() {
 					</div>
 
 					<h1 className="mb-8 text-5xl font-bold leading-tight text-[#1f2937] lg:text-7xl">
-						Bem-vindo <br />
-						<span className="text-[#2e4a7d]">ao Modernidade.</span>
+						Bem-vindo ao<br />
+						<span className="text-[#2e4a7d]">Gestão de Condomínios</span>
 					</h1>
 
 					<p className="mb-12 w-[min(100%,28rem)] text-lg leading-relaxed text-[#6b7280]">

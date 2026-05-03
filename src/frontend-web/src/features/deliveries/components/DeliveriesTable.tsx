@@ -1,12 +1,11 @@
+import { Button, MaterialIcon } from "#/components/ui";
 import { X } from "lucide-react";
-import { Button } from "#/components/ui";
 import type { ActiveFilter, Delivery } from "../types/delivery";
 import {
 	formatDateTime,
 	getStatusClasses,
 	getUserLabel,
 } from "../utils/delivery-formatters";
-import { MaterialIcon } from "./MaterialIcon";
 
 type DeliveriesTableProps = {
 	activeFilters: ActiveFilter[];
