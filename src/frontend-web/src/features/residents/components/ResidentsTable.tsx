@@ -68,8 +68,8 @@ export function ResidentsTable({
 										<button
 											key={option.value}
 											className={`w-full px-4 py-2 text-left text-sm transition-colors ${isSelected
-													? "bg-slate-100 text-slate-900 font-semibold"
-													: "text-slate-600 hover:bg-slate-50"
+												? "bg-slate-100 text-slate-900 font-semibold"
+												: "text-slate-600 hover:bg-slate-50"
 												}`}
 											onClick={() => {
 												onFilterChange(option.value);
@@ -244,7 +244,7 @@ export function ResidentsTable({
 					</span>{" "}
 					de{" "}
 					<span className="font-bold text-slate-800">
-						{formatNumber(totalResidents)}
+						{formatNumber(filteredResidents.length)}
 					</span>{" "}
 					residentes
 				</p>
