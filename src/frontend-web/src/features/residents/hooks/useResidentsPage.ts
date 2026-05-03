@@ -15,7 +15,13 @@ import {
 	fetchResidents,
 	updateResident,
 } from "../services/residents-service";
-import type { EditResidentForm, Resident, ResidentFilter, ResidentForm } from "../types/resident";
+import type {
+	EditResidentForm,
+	Resident,
+	ResidentFilter,
+	ResidentForm,
+	ResidentStatus,
+} from "../types/resident";
 import { calculateResidentStats } from "../utils/resident-stats";
 
 export function useResidentsPage() {
@@ -31,17 +37,27 @@ export function useResidentsPage() {
 	const [editModalOpen, setEditModalOpen] = useState(false);
 	const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 	const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
+	const [hydrated, setHydrated] = useState(false);
+	const [statusById, setStatusById] = useState<Record<number, ResidentStatus>>(
+		{},
+	);
 	const [editForm, setEditForm] = useState<EditResidentForm>({
 		username: "",
 		email: "",
 		profile: "Morador",
+		status: "Ativo",
 	});
 	const [form, setForm] = useState<ResidentForm>(EMPTY_RESIDENT_FORM);
 	const authToken = getAuthToken();
 	const reportCounterKey = "residents-report-count";
+	const statusStorageKey = "residents-status-map";
 
 	useEffect(() => {
 		setAuthUser(getAuthUser());
+	}, []);
+ 
+	useEffect(() => {
+		setHydrated(true);
 	}, []);
 
 	useEffect(() => {
@@ -50,6 +66,30 @@ export function useResidentsPage() {
 		const parsed = saved ? Number.parseInt(saved, 10) : 0;
 		setReportCount(Number.isNaN(parsed) ? 0 : parsed);
 	}, [reportCounterKey]);
+
+	useEffect(() => {
+		if (typeof window === "undefined") return;
+		const raw = window.localStorage.getItem(statusStorageKey);
+		if (!raw) return;
+		try {
+			const parsed = JSON.parse(raw) as Record<string, ResidentStatus>;
+			const next: Record<number, ResidentStatus> = {};
+			for (const [key, value] of Object.entries(parsed)) {
+				const id = Number.parseInt(key, 10);
+				if (!Number.isNaN(id) && (value === "Ativo" || value === "Inativo")) {
+					next[id] = value;
+				}
+			}
+			setStatusById(next);
+		} catch {
+			setStatusById({});
+		}
+	}, [statusStorageKey]);
+
+	function persistStatusMap(next: Record<number, ResidentStatus>) {
+		if (typeof window === "undefined") return;
+		window.localStorage.setItem(statusStorageKey, JSON.stringify(next));
+	}
 
 	const displayName = authUser?.username || authUser?.email || "Usuário";
 	const profileLabel = getProfileLabel(authUser?.profile);
@@ -61,7 +101,7 @@ export function useResidentsPage() {
 	const residentsQuery = useQuery({
 		queryKey: ["residents"],
 		queryFn: fetchResidents,
-		enabled: Boolean(authToken),
+		enabled: hydrated && Boolean(authToken),
 		retry: false,
 	});
 
@@ -72,9 +112,17 @@ export function useResidentsPage() {
 				email: form.email.trim(),
 				password: form.password,
 			}),
-		onSuccess: () => {
+		onSuccess: (created) => {
 			setModalOpen(false);
 			setForm(EMPTY_RESIDENT_FORM);
+			if (created?.id) {
+				setStatusById((current) => {
+					const next: Record<number, ResidentStatus> = { ...current };
+					next[created.id] = "Ativo";
+					persistStatusMap(next);
+					return next;
+				});
+			}
 			queryClient.invalidateQueries({ queryKey: ["residents"] });
 		},
 	});
@@ -82,6 +130,14 @@ export function useResidentsPage() {
 	const updateResidentMutation = useMutation({
 		mutationFn: (id: number) => updateResident(id, editForm),
 		onSuccess: () => {
+			if (editingResident) {
+				setStatusById((current) => {
+					const next: Record<number, ResidentStatus> = { ...current };
+					next[editingResident.id] = editForm.status;
+					persistStatusMap(next);
+					return next;
+				});
+			}
 			setEditModalOpen(false);
 			setEditingResident(null);
 			queryClient.invalidateQueries({ queryKey: ["residents"] });
@@ -91,6 +147,14 @@ export function useResidentsPage() {
 	const deleteResidentMutation = useMutation({
 		mutationFn: (id: number) => deleteResident(id),
 		onSuccess: () => {
+			if (deleteTargetId !== null) {
+				setStatusById((current) => {
+					const next: Record<number, ResidentStatus> = { ...current };
+					delete next[deleteTargetId];
+					persistStatusMap(next);
+					return next;
+				});
+			}
 			setDeleteConfirmOpen(false);
 			setDeleteTargetId(null);
 			queryClient.invalidateQueries({ queryKey: ["residents"] });
@@ -114,10 +178,10 @@ export function useResidentsPage() {
 				unit: "-",
 				phone: "-",
 				email: user.email ?? "-",
-				status: "Ativo",
+				status: statusById[user.id] ?? "Ativo",
 				profile: user.profile ?? undefined,
 			}));
-	}, [residentsQuery.data, canSeeAdmins]);
+	}, [residentsQuery.data, canSeeAdmins, statusById]);
 
 	const filteredResidents = useMemo(() => {
 		let filtered = residents;
@@ -203,6 +267,7 @@ export function useResidentsPage() {
 			username: resident.name,
 			email: resident.email,
 			profile: resident.profile ?? "Morador",
+			status: resident.status,
 		});
 		setEditModalOpen(true);
 	}
@@ -273,6 +338,7 @@ export function useResidentsPage() {
 		setSelectedFilter,
 		stats,
 		createResidentMutation,
+		hydrated,
 		residentsQuery,
 		updateResidentMutation,
 	};

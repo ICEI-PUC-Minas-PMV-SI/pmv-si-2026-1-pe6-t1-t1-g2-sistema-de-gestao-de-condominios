@@ -17,6 +17,7 @@ export type EditResidentForm = {
 	username: string;
 	email: string;
 	profile: string;
+	status: ResidentStatus;
 };
 
 export type Resident = {

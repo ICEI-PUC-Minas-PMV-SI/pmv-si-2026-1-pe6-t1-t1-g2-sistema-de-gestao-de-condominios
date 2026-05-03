@@ -61,6 +61,21 @@ export function EditResidentModal({
 							<option value="Administrador">Administrador</option>
 						</select>
 					</div>
+					<div>
+						<label className="block text-sm font-medium text-slate-700 mb-2">
+							Status
+						</label>
+						<select
+							disabled={isLoading}
+							name="status"
+							onChange={onChange}
+							value={form.status}
+							className="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
+						>
+							<option value="Ativo">Ativo</option>
+							<option value="Inativo">Inativo</option>
+						</select>
+					</div>
 				</div>
 
 				<div className="flex gap-3 justify-end">
