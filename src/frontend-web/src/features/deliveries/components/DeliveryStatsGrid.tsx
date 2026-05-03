@@ -1,5 +1,5 @@
+import { MaterialIcon } from "#/components/ui";
 import type { DeliveryStats } from "../types/delivery";
-import { MaterialIcon } from "./MaterialIcon";
 
 type DeliveryStatsGridProps = {
 	totalDeliveries: number;
