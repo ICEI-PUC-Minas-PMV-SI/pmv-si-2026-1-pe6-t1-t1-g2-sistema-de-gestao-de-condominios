@@ -26,6 +26,10 @@ export function ResidentsPage() {
 				profileLabel={page.profileLabel}
 			/>
 			<AdminTopbar
+				authUser={page.authUser}
+				avatarUrl={page.avatarUrl}
+				displayName={page.displayName}
+				profileLabel={page.profileLabel}
 				onSearchTermChange={page.setSearchTerm}
 				placeholder="Filtrar por nome, unidade ou email..."
 				searchTerm={page.searchTerm}
@@ -41,9 +45,11 @@ export function ResidentsPage() {
 						onReportClick={() => page.setReportModalOpen(true)}
 					/>
 					<ResidentsTable
-						errorMessage={page.residentsQuery.error?.message}
+						errorMessage={
+							page.hydrated ? page.residentsQuery.error?.message : undefined
+						}
 						filteredResidents={page.filteredResidents}
-						isLoading={page.residentsQuery.isLoading}
+						isLoading={page.hydrated ? page.residentsQuery.isLoading : false}
 						pagination={page.pagination}
 						residents={page.residents}
 						selectedFilter={page.selectedFilter}

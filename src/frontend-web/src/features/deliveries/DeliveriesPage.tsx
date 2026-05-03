@@ -21,6 +21,10 @@ export function DeliveriesPage() {
 				profileLabel={page.profileLabel}
 			/>
 			<AdminTopbar
+				authUser={page.authUser}
+				avatarUrl={page.avatarUrl}
+				displayName={page.displayName}
+				profileLabel={page.profileLabel}
 				onSearchTermChange={page.setSearchTerm}
 				searchTerm={page.searchTerm}
 			/>
