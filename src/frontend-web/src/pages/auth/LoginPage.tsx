@@ -61,21 +61,10 @@ export function LoginPage() {
             </span>
           </div>
 
-<<<<<<< HEAD
-          <h1
-            className="mb-8 text-5xl font-bold leading-tight"
-            style={{ color: "var(--color-on-surface)" }}
-          >
-            Bem-vindo <br />
-            <span style={{ color: "var(--color-primary)" }}>
-              ao Modernidade.
-            </span>
-=======
           <h1 className="mb-8 text-5xl font-bold leading-tight text-[#1f2937] lg:text-7xl">
             Bem-vindo ao
             <br />
             <span className="text-[#2e4a7d]">Gestão de Condomínios</span>
->>>>>>> 723e620 (.)
           </h1>
 
           <p
