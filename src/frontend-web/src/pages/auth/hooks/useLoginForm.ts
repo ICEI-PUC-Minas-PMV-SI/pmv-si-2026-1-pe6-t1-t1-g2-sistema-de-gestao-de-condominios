@@ -1,58 +1,46 @@
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { type ChangeEvent, type FormEvent, useEffect, useState } from "react";
+import { type ChangeEvent, type FormEvent, useState } from "react";
 import {
-	clearLastRegisteredUserId,
-	getLastRegisteredUserId,
 	loginUser,
 	saveAuthToken,
 	saveAuthUser,
 } from "#/services/auth-service";
 
 type LoginForm = {
-	userId: string;
+	email: string;
 	password: string;
 };
+
+function isValidEmail(email: string): boolean {
+	return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
 
 export function useLoginForm() {
 	const navigate = useNavigate();
 	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 	const [form, setForm] = useState<LoginForm>({
-		userId: "",
+		email: "",
 		password: "",
 	});
 
 	const mutation = useMutation({
 		mutationFn: () => {
-			const id = Number(form.userId);
-
-			if (!Number.isInteger(id) || id <= 0) {
-				throw new Error("Informe um ID de usuário válido.");
+			if (!isValidEmail(form.email)) {
+				throw new Error("Informe um e-mail válido.");
 			}
 
 			return loginUser({
-				id,
+				email: form.email,
 				password: form.password,
 			});
 		},
 		onSuccess: (auth) => {
 			saveAuthToken(auth.token);
 			saveAuthUser(auth.user);
-			clearLastRegisteredUserId();
 			navigate({ to: "/deliveries" });
 		},
 	});
-
-	useEffect(() => {
-		const lastRegisteredUserId = getLastRegisteredUserId();
-
-		if (lastRegisteredUserId) {
-			setForm((currentForm) => ({
-				...currentForm,
-				userId: lastRegisteredUserId,
-			}));
-		}
-	}, []);
 
 	function updateField(field: keyof LoginForm) {
 		return (event: ChangeEvent<HTMLInputElement>) => {

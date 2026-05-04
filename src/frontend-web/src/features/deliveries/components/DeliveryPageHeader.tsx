@@ -2,9 +2,10 @@ import { Button } from "#/components/ui";
 
 type DeliveryPageHeaderProps = {
 	onCreateClick: () => void;
+	canCreate?: boolean;
 };
 
-export function DeliveryPageHeader({ onCreateClick }: DeliveryPageHeaderProps) {
+export function DeliveryPageHeader({ onCreateClick, canCreate = true }: DeliveryPageHeaderProps) {
 	return (
 		<div className="flex justify-between items-end">
 			<div>
@@ -18,9 +19,11 @@ export function DeliveryPageHeader({ onCreateClick }: DeliveryPageHeaderProps) {
 					Monitore e gerencie o fluxo de pacotes do condomínio.
 				</p>
 			</div>
-			<Button color="primary" size="md" onClick={onCreateClick}>
-				Nova Encomenda
-			</Button>
+			{canCreate && (
+				<Button color="primary" size="md" onClick={onCreateClick}>
+					Nova Encomenda
+				</Button>
+			)}
 		</div>
 	);
 }

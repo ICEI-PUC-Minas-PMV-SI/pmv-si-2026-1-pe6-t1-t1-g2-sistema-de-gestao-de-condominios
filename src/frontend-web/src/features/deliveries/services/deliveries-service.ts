@@ -40,3 +40,15 @@ export function deleteDelivery(id: number) {
 		headers: getAuthHeaders(),
 	});
 }
+
+export function updateDelivery(id: number, payload: {
+	recipient_user_id: number | null;
+	description: string;
+	status: string;
+}) {
+	return apiRequest<Delivery>(`/api/Deliveries/${id}`, {
+		method: "PUT",
+		headers: getAuthHeaders(),
+		body: JSON.stringify(payload),
+	});
+}

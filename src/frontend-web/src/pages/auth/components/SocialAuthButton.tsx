@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 type SocialAuthButtonProps = {
 	children?: ReactNode;
@@ -6,6 +6,7 @@ type SocialAuthButtonProps = {
 	imageSrc?: string;
 	icon?: ReactNode;
 	className?: string;
+	style?: CSSProperties;
 };
 
 export function SocialAuthButton({
@@ -14,6 +15,7 @@ export function SocialAuthButton({
 	imageSrc,
 	icon,
 	className = "",
+	style,
 }: SocialAuthButtonProps) {
 	return (
 		<button
@@ -23,6 +25,7 @@ export function SocialAuthButton({
 			]
 				.filter(Boolean)
 				.join(" ")}
+			style={style}
 			type="button"
 		>
 			{imageSrc && imageAlt && (

@@ -160,11 +160,11 @@ namespace backend.Controllers
                 const string sql = @"
                     SELECT id, username, password_hash, email, profile, created_at, updated_at
                     FROM public.users
-                    WHERE id = @id
+                    WHERE LOWER(email) = LOWER(@email)
                     LIMIT 1;";
 
                 await using var command = new NpgsqlCommand(sql, connection);
-                command.Parameters.AddWithValue("id", model.Id);
+                command.Parameters.AddWithValue("email", model.Email);
 
                 await using var reader = await command.ExecuteReaderAsync(cancellationToken);
 

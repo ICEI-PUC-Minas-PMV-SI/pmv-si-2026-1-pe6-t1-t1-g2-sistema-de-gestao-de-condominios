@@ -8,6 +8,7 @@ type DeliverySidebarProps = {
 	avatarUrl: string;
 	displayName: string;
 	onLogout: () => void;
+	onProfileClick: () => void;
 	profileLabel: string;
 };
 
@@ -16,7 +17,6 @@ const navItems = [
 	{ icon: "group", label: "Residents", active: false },
 	{ icon: "package_2", label: "Deliveries", active: true },
 	{ icon: "build", label: "Maintenance", active: false },
-	{ icon: "settings", label: "Settings", active: false },
 ];
 
 export function DeliverySidebar({
@@ -24,6 +24,7 @@ export function DeliverySidebar({
 	avatarUrl,
 	displayName,
 	onLogout,
+	onProfileClick,
 	profileLabel,
 }: DeliverySidebarProps) {
 	return (
@@ -61,7 +62,11 @@ export function DeliverySidebar({
 					))}
 				</nav>
 				<div className="mt-auto pt-6 border-t border-outline-variant">
-					<div className="flex items-center gap-3 px-2">
+					<button
+						className="flex items-center gap-3 px-2 w-full rounded-lg hover:bg-surface-container-low transition-colors text-left"
+						onClick={onProfileClick}
+						type="button"
+					>
 						<img
 							alt={`Perfil de ${displayName}`}
 							className="w-8 h-8 rounded-full object-cover"
@@ -92,7 +97,7 @@ export function DeliverySidebar({
 						>
 							<LogOut className="h-4 w-4" />
 						</Button>
-					</div>
+					</button>
 				</div>
 			</div>
 		</aside>

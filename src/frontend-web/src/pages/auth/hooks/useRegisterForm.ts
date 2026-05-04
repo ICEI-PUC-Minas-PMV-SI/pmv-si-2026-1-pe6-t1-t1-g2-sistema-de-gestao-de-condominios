@@ -1,10 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { type ChangeEvent, type FormEvent, useState } from "react";
-import {
-	registerUser,
-	saveLastRegisteredUserId,
-} from "#/services/auth-service";
+import { registerUser } from "#/services/auth-service";
 
 type RegisterForm = {
 	username: string;
@@ -23,8 +20,7 @@ export function useRegisterForm() {
 
 	const mutation = useMutation({
 		mutationFn: () => registerUser(form),
-		onSuccess: (user) => {
-			saveLastRegisteredUserId(user.id);
+		onSuccess: () => {
 			navigate({ to: "/login" });
 		},
 	});
