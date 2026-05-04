@@ -15,7 +15,7 @@ const navItems = [
 	{ icon: "dashboard", label: "Dashboard" },
 	{ icon: "group", label: "Residentes", to: "/residents" },
 	{ icon: "package_2", label: "Encomendas", to: "/deliveries" },
-	{ icon: "build", label: "Manutenção" },
+	{ icon: "build", label: "Manutenção", to: "/occurrences" },
 	{ icon: "settings", label: "Configurações" },
 ];
 
