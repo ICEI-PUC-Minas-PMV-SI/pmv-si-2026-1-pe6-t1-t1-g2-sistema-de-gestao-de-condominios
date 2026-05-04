@@ -17,22 +17,17 @@
 ## Fluxo de Dados
 
 ### Login
-![Tela Login](img/tela-login.jpeg)
+![Tela Login](img/tela-login.png)
 
-Ao acessar a tela de login, o usuário deverá inserir suas credenciais de email e senha e pressionar o botão "Acessar Conta" para efetuar o login na aplicação. Quando o usuário estiver logado, será redirecionado para a tela de dashboard da aplicação. Há uma botão para o usuário criar sua conta caso ainda não tenha uma. Ao clicar para criar uma conta, será redirecionado para a tela de cadastro.
+Ao acessar a tela de login, o usuário deverá inserir suas credenciais de email e senha e pressionar o botão "Acessar Conta" para efetuar o login na aplicação. Quando o usuário estiver logado, será redirecionado para a tela de dashboard da aplicação. Há um botão para o usuário criar sua conta caso ainda não tenha uma. Ao clicar para criar uma conta, será redirecionado para a tela de cadastro.
 
 
 ### Cadastro
 ![Tela Cadastro](img/tela-cadastro.png)
 
-Ao acessar a tela de cdastro, o usuário deverá registar suas credenciais de nome, email e senha. Ao clicar em "Criar Conta", o usuário será redirecionado para uma tela informando que o seu perfil foi enviado para análise para aprovação. Há as opções para cadastrar-se pelos provedores da Google ou Apple. Ao clicar para se cadastrar com o Google será enviada uma notificação para aprovação do perfil. Ao clicar para se cadastrar com a Apple, o usuário será redirecionado para o site da Apple e por fim será enviada a notificação para aprovação do perfil pelo síndico
+Ao acessar a tela de cadastro, o usuário deverá registar suas credenciais de nome, email e senha. Ao clicar em "Criar Conta", o usuário será redirecionado para a tela de login. Há as opções para cadastrar-se pelos provedores da Google ou Apple. Ao clicar para se cadastrar com o Google o usuário será encaminhado para a página de autenticação da Google. Ao clicar para se cadastrar com a Apple, o usuário será redirecionado para o site da Apple.
 
-É possível ao usuário clicar na parte "Entrar" para voltar à página de login.
-
-### Aprovação
-![Tela de Aprovação](img/tela-aprovacao.png)
-
-Trata-se da tela de aprovação. Por meio dessa tela o usuário é informado que seu perfil foi enviado para ser analisado e posteriormente recusado ou aprovado. Ao clicar em "Voltar ao Início", o usuário será redirecionado à página de cadastro.
+É possível ao usuário clicar na parte "Entrar" para ser redirecionado diretamente à página de Login.
 
 
 ### Dashboard
@@ -43,8 +38,30 @@ Quando o usuário tiver acessado a plataforma, cairá na tela de dashboard. Nest
 
 Na parte inferior esquerda, o usuário pode checar as notificações mais recentes. Na parte inferior direita, o usuário pode checar pelas reservas mais próximas feitas por ele. No final da parte inferior direita é possível verificar o gerenciamento do consumo de recursor e compará-lo com a média.
 
-Para acessar a tela do menu de notificações é possível clicar no ícone de notificação na barra superior, ao lado da barra de pesquisa. Para acessar ao menu de configurações principal, o usuário precisará clicar no ícone de engrenagem, sendo redirecionado para a tela de configurações.
+Para acessar a tela do menu de notificações é possível clicar no ícone de notificação na barra superior, ao lado da barra de pesquisa. Para acessar ao menu de configurações principal, o usuário precisará clicar no ícone de engrenagem, sendo 
+redirecionado para a tela de configurações.
 
+### Encomendas
+
+![Tela Encomendas](img/tela-encomenda.png)
+
+Na tela de encomendas, o usuário pode verificar informações sobre as entregas que chegaram no condomínio.
+
+#### Criação de Encomendas
+![Modal Criar Encomenda](img/modal-criar-encomenda.png)
+
+Um administrador pode criar uma encomenda clicando no botão de nova encomenda. Ao fazer isso será mostrada uma modal com os campos para criar uma encomenda com as informações preenchidas. Para cancelar a operação, basta o usuário clicar no ícone de "X" ou pressionar o botão de cancelar. Após o usuário pressionar o botão de registrar encomenda, a modal será fechada e o usuário retornará à tela anterior com os dados já atualizados.
+
+#### Filtro de Encomendas
+
+![Modal Filtro Encomendas](img/modal-filtro-encomendas.png)
+
+Ao clicar no botão de filtrar na tela de encomendas, será aberta uma modal contendo campos para filtrar as encomendas. Para fechar a modal e retornar ao estado anterior da tela basta clicar no ícone "X" ou no botão de cancelar. Para aplicar os filtros de acordo com os campos da modal basta clicar no botão de salvar alterações, o que fechará a modal e retornará para a aplicação normalmente.
+
+
+#### Relatório de Encomendas
+![Modal Relatório Encomendas](img/modal-relatorio-encomendas.png)
+Ao clicar no botão de relatório na tela de encomendas, aparecerá uma modal com as informações resumidas da encomenda. Para fechar esta modal e retornar à tela anterior, basta clicar no botão de fechar ou no ícone "X".
 
 ### Configuração
 ![Tela Configuração](img/tela-config.png)
@@ -57,7 +74,12 @@ Na tela de configuração, o usuário pode alterar a foto de perfil, o nome comp
 
 Uma vez que o usuário clique em avisos, na tela de dashboard, aparecerá uma modal contendo os avisos mais importantes por ordem de proximidade. O usuário pode pressionar no botão "Fechar Painel" para fechar a modal.
 
-### Gestão
+### Configurações de Perfil
+![Config Perfil](img/modal-config-perfil.png)
+
+Ao clicar sobre a parte na sidebar que contém o nome e o perfil do usuário, aparecerá a modal de configurações do perfil. Nela é possível que o usuário altere seu nome e email através dos inputs. Um usuário que seja morador não pode alterar seu cargo, sendo que apenas administradores podem modificar esse campo. Uma vez que o usuário tenha terminado a edição, basta pressionar o botão de salvar alterações. Quando as alterações forem salvas, a modal se fecha e o usuário é encaminhado de volta para a tela onde estava antes de clicar para modificar seus dados de perfil.
+
+### Residentes
 
 ![Tela Gestão](img/tela-gestao.jpeg)
 
