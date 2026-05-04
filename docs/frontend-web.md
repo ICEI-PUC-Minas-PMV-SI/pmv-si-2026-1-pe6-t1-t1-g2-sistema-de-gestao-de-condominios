@@ -64,7 +64,7 @@ Ao clicar no botão de filtrar na tela de encomendas, será aberta uma modal con
 Ao clicar no botão de relatório na tela de encomendas, aparecerá uma modal com as informações resumidas da encomenda. Para fechar esta modal e retornar à tela anterior, basta clicar no botão de fechar ou no ícone "X".
 
 ### Configuração
-![Tela Configuração](img/tela-config.png)
+![Tela Configuração](img/modal-config-perfil.png)
 
 Na tela de configuração, o usuário pode alterar a foto de perfil, o nome completo, o nome corporativo e o cargo escolhido. Após as alterações, basta clicar em "Salvar Alterações". Ao salvar as alterações o usuário é redirecionado para a página anterior e as alterações são efetivadas. Para simplesmente voltar à tela anterior e não alterar nada, basta clicar em "Cancelar".
 
