@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ResidentsRouteImport } from './routes/residents'
+import { Route as OccurrencesRouteImport } from './routes/occurrences'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DeliveriesRouteImport } from './routes/deliveries'
 import { Route as IndexRouteImport } from './routes/index'
@@ -17,6 +18,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const ResidentsRoute = ResidentsRouteImport.update({
   id: '/residents',
   path: '/residents',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OccurrencesRoute = OccurrencesRouteImport.update({
+  id: '/occurrences',
+  path: '/occurrences',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -39,12 +45,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/deliveries': typeof DeliveriesRoute
   '/login': typeof LoginRoute
+  '/occurrences': typeof OccurrencesRoute
   '/residents': typeof ResidentsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/deliveries': typeof DeliveriesRoute
   '/login': typeof LoginRoute
+  '/occurrences': typeof OccurrencesRoute
   '/residents': typeof ResidentsRoute
 }
 export interface FileRoutesById {
@@ -52,20 +60,28 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/deliveries': typeof DeliveriesRoute
   '/login': typeof LoginRoute
+  '/occurrences': typeof OccurrencesRoute
   '/residents': typeof ResidentsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/deliveries' | '/login' | '/residents'
+  fullPaths: '/' | '/deliveries' | '/login' | '/occurrences' | '/residents'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/deliveries' | '/login' | '/residents'
-  id: '__root__' | '/' | '/deliveries' | '/login' | '/residents'
+  to: '/' | '/deliveries' | '/login' | '/occurrences' | '/residents'
+  id:
+    | '__root__'
+    | '/'
+    | '/deliveries'
+    | '/login'
+    | '/occurrences'
+    | '/residents'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DeliveriesRoute: typeof DeliveriesRoute
   LoginRoute: typeof LoginRoute
+  OccurrencesRoute: typeof OccurrencesRoute
   ResidentsRoute: typeof ResidentsRoute
 }
 
@@ -76,6 +92,13 @@ declare module '@tanstack/react-router' {
       path: '/residents'
       fullPath: '/residents'
       preLoaderRoute: typeof ResidentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/occurrences': {
+      id: '/occurrences'
+      path: '/occurrences'
+      fullPath: '/occurrences'
+      preLoaderRoute: typeof OccurrencesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -106,6 +129,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DeliveriesRoute: DeliveriesRoute,
   LoginRoute: LoginRoute,
+  OccurrencesRoute: OccurrencesRoute,
   ResidentsRoute: ResidentsRoute,
 }
 export const routeTree = rootRouteImport
