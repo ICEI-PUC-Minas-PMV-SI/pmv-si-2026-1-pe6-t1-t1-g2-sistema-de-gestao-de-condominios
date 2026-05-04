@@ -1,10 +1,10 @@
+import { AdminSidebar } from "#/components/layout/AdminSidebar";
+import { AdminTopbar } from "#/components/layout/AdminTopbar";
 import { ConfiguracoesModal } from "./components/ConfiguracoesModal";
 import { CreateDeliveryModal } from "./components/CreateDeliveryModal";
 import { DeliveriesTable } from "./components/DeliveriesTable";
 import { DeliveryPageHeader } from "./components/DeliveryPageHeader";
-import { DeliverySidebar } from "./components/DeliverySidebar";
 import { DeliveryStatsGrid } from "./components/DeliveryStatsGrid";
-import { DeliveryTopbar } from "./components/DeliveryTopbar";
 import { EditDeliveryModal } from "./components/EditDeliveryModal";
 import { FilterModal } from "./components/FilterModal";
 import { ReportModal } from "./components/ReportModal";
@@ -20,7 +20,7 @@ export function DeliveriesPage() {
 
 	return (
 		<div className="bg-background text-on-background min-h-screen font-sans">
-			<DeliverySidebar
+			<AdminSidebar
 				authUser={page.authUser}
 				avatarUrl={page.avatarUrl}
 				displayName={page.displayName}
@@ -28,7 +28,11 @@ export function DeliveriesPage() {
 				onProfileClick={page.handleProfileClick}
 				profileLabel={page.profileLabel}
 			/>
-			<DeliveryTopbar
+			<AdminTopbar
+				authUser={page.authUser}
+				avatarUrl={page.avatarUrl}
+				displayName={page.displayName}
+				profileLabel={page.profileLabel}
 				onSearchTermChange={page.setSearchTerm}
 				searchTerm={page.searchTerm}
 			/>

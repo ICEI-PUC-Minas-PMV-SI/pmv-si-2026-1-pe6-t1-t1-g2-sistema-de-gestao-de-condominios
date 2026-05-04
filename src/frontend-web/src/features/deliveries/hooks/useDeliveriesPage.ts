@@ -1,12 +1,13 @@
+import {
+    clearAuthSession,
+    getAuthToken,
+    getAuthUser,
+} from "#/services/auth-service";
+import type { AuthUser } from "#/types/auth";
+import { getAvatarUrl, getProfileLabel } from "#/utils/user-formatters";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { type ChangeEvent, useEffect, useMemo, useState } from "react";
-import {
-	clearAuthSession,
-	getAuthToken,
-	getAuthUser,
-} from "#/services/auth-service";
-import type { AuthUser } from "#/types/auth";
 import { EMPTY_DELIVERY_FORM, EMPTY_FILTER_FORM } from "../constants";
 import {
 	createDelivery,
@@ -17,11 +18,10 @@ import {
 } from "../services/deliveries-service";
 import type { ActiveFilter, Delivery, DeliveryForm, FilterForm } from "../types/delivery";
 import {
-	buildActiveFilters,
-	filterDeliveries,
-	getFilterFormFromActiveFilters,
+    buildActiveFilters,
+    filterDeliveries,
+    getFilterFormFromActiveFilters,
 } from "../utils/delivery-filters";
-import { getAvatarUrl, getProfileLabel } from "../utils/delivery-formatters";
 import { calculateDeliveryStats } from "../utils/delivery-stats";
 
 export function useDeliveriesPage() {

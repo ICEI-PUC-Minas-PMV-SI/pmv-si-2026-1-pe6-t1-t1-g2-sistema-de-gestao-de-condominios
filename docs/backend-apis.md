@@ -193,7 +193,7 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
   
 ### Deliveries
-
+![rota-get](img/imgs-testes-rotas/deliveries/rota-get.png)
 - Método: GET
 - URL: /api/Deliveries
 - Headers: Authorization -> Bearer 'token_aqui'
@@ -218,6 +218,7 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 401 Not Authorized
     ```
+![rota-get](img/imgs-testes-rotas/deliveries/rota-get-by-id.png)
 - Método: GET
 - URL: /api/Deliveries
 - Headers: Authorization -> Bearer 'token_aqui'
@@ -242,6 +243,7 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 401 Not Authorized
     ```
+![rota-get](img/imgs-testes-rotas/deliveries/rota-post.png)
 - Método: POST
 - URL: /api/Deliveries
 - Headers: Authorization -> Bearer 'token_aqui'
@@ -285,6 +287,7 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 500 Erro ao criar entrega: 22P02: invalid input value for enum delivery_status: "Em Andamento"
     ```
+![rota-get](img/imgs-testes-rotas/deliveries/rota-put.png)
 - Método: PUT
 - URL: /api/Deliveries
 - Parâmetros:
@@ -330,6 +333,7 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 500 Erro ao criar entrega: 22P02: invalid input value for enum delivery_status: "Em Andamento"
     ```
+![rota-get](img/imgs-testes-rotas/deliveries/rota-delete.png)
 - Método: DELETE
 - URL: /api/Deliveries
 - Headers: Authorization -> Bearer 'token_aqui'
@@ -353,6 +357,8 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     status: 500 Erro ao criar entrega: 22P02: invalid input value for enum delivery_status: "Em Andamento"
     ```
 ### Notifications
+<img width="1529" height="894" alt="{E9E5B9F7-AD76-49CD-8781-E6E42C6EE957}" src="https://github.com/user-attachments/assets/fae47fa2-3747-4332-b783-d6722ed7e5c0" />
+
 
 - Método: GET
 - URL: /api/Notifications
@@ -391,6 +397,8 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 401 Not Authorized
     ```
+<img width="1493" height="666" alt="{3D187238-5675-47A3-BB23-3CB6D0661872}" src="https://github.com/user-attachments/assets/0f80212a-322a-460d-b99a-646809b0f10f" />
+
 - Método: GET
 - URL: /api/Notifications
 - Headers: Authorization -> Bearer 'token_aqui'
@@ -416,6 +424,8 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 401 Not Authorized
     ```
+<img width="1497" height="489" alt="{C6006DBE-E9B3-4C6B-94C9-6B940C15DAF0}" src="https://github.com/user-attachments/assets/aec47546-e304-4ef2-ad15-d0c22b2092bf" />
+
 - Método: DELETE
 - URL: /api/Notifications
 - Headers: Authorization -> Bearer 'token_aqui'
@@ -426,6 +436,8 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 401 Not Authorized
     ```
+<img width="1496" height="892" alt="{8B468A1D-F790-42A0-81C9-01EBCC5058D7}" src="https://github.com/user-attachments/assets/7cb75930-2eb8-4eed-8e81-d6745e1839e1" />
+
 - Método: POST
 - URL: /api/Notifications
 - Headers: Authorization -> Bearer 'token_aqui'
@@ -1034,6 +1046,8 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 403 Forbidden
     ```
+![Listar Usuários](img/imgs-testes-rotas/users/rota-listar-users.png)
+
 - Método: GET
 - URL: /api/Users
 - Headers: Authorization -> Bearer 'token_aqui'
@@ -1060,6 +1074,7 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 403 Forbidden
     ```
+![Buscar Usuário](img/imgs-testes-rotas/users/rota-buscar-user.png)
 
 - Método: DELETE
 - URL: /api/Users
@@ -1076,6 +1091,38 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 403 Forbidden
     ```
+![Deletar Usuário](img/imgs-testes-rotas/users/rota-deletar-user.png)
+
+- Método: POST
+- URL: /api/Users
+- Headers: Authorization -> Bearer 'token_aqui'
+- Corpo Da Requisição:
+  ```
+  {
+    "username": "Goku",
+    "password_hash": "aizedamanga",
+    "email": "goku@hotmail.com",
+    "profile": "Morador"
+  }
+  ```
+- Resposta:
+  - Sucesso (201 Created)
+    ```
+    {
+     "id": 7,
+    "username": "Goku",
+    "password_hash": null,
+    "email": "gok@hotmail.com",
+    "profile": "Morador",
+    "created_at": "2026-04-14T23:23:01.640667",
+    "updated_at": "2026-04-14T23:23:01.640667"
+    }
+    ```
+  - Erro (409)
+    ```
+    status: 401 Conflict | Email já cadastrado
+    ```
+![Criar Usuários](img/imgs-testes-rotas/users/rota-criar-users.png)
 
 - Método: POST
 - URL: /api/Users/auth
@@ -1102,6 +1149,7 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 403 Forbidden
     ```
+![Rota de Autenticação](img/imgs-testes-rotas/users/rota-autenticacao.png)
 - Método: PUT
 - URL: /api/Users
 - Parâmetros:
@@ -1143,7 +1191,7 @@ Existem muitas tecnologias diferentes que podem ser usadas para desenvolver APIs
     ```
     status: 403 Forbidden
     ```
-
+![Editar Usuário](img/imgs-testes-rotas/users/rota-editar-user.png)
 
 ### Consultar Disponibilidade de Reservas (RF 03)
 - **Método:** GET
@@ -1315,7 +1363,7 @@ Validado via Swagger UI e Postman:
 - **Fluxo de Ocorrências:** Confirmado que moradores não conseguem listar ocorrências de outros usuários nem anexar fotos a registros que não lhes pertencem.
 
 **Status Final:** A suíte de testes atual cobre os requisitos críticos de segurança e integridade de dados definidos para o projeto.
-
+---
 # Referências
 
 Inclua todas as referências (livros, artigos, sites, etc) utilizados no desenvolvimento do trabalho.

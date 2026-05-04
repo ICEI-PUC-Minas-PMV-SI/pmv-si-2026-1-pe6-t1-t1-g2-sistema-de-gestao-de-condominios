@@ -1,6 +1,6 @@
+import { Button, Input } from "#/components/ui";
 import { Link } from "@tanstack/react-router";
 import { Building2, Cloud, Lock, Mail, ShieldCheck, User } from "lucide-react";
-import { Button, Input } from "#/components/ui";
 import { AuthDivider } from "./components/AuthDivider";
 import { AuthFeedbackMessage } from "./components/AuthFeedbackMessage";
 import { PasswordVisibilityButton } from "./components/PasswordVisibilityButton";
@@ -22,7 +22,7 @@ export function RegisterPage() {
 			<section className="relative flex min-h-screen w-full min-w-0 flex-col justify-start overflow-hidden bg-[#eaf4fe] p-8 md:min-h-0 md:basis-1/2 md:p-16 lg:p-24">
 				<div className="z-10" style={{ minHeight: "60px" }}>
 					<h1 className="text-[20px] font-bold tracking-tight text-[#1e293b] mb-12">
-						Modernidade
+						Gestão de Condomínios
 					</h1>
 				</div>
 				<div className="z-10 mx-auto flex w-[min(100%,32rem)] min-w-0 flex-1 flex-col justify-center pt-8">
@@ -32,7 +32,7 @@ export function RegisterPage() {
 					<h2 className="text-5xl md:text-6xl font-extrabold leading-[1.1] text-[#111827] mb-6">
 						Bem-vindo ao
 						<br />
-						Modernidade
+						<span className="text-[#2e4a7d]">Gestão de Condomínios</span>
 					</h2>
 					<p className="text-base text-[#334155] leading-relaxed mb-10 max-w-[28rem] w-full">
 						A plataforma definitiva para elevar a gestão condominial a um novo

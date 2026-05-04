@@ -1,6 +1,6 @@
+import { Button, Input } from "#/components/ui";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Lock, Settings, User } from "lucide-react";
-import { Button, Input } from "#/components/ui";
 import { AuthFeedbackMessage } from "./components/AuthFeedbackMessage";
 import { PasswordVisibilityButton } from "./components/PasswordVisibilityButton";
 import { SocialAuthButton } from "./components/SocialAuthButton";

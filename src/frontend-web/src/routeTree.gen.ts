@@ -9,10 +9,22 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ResidentsRouteImport } from './routes/residents'
+import { Route as OccurrencesRouteImport } from './routes/occurrences'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DeliveriesRouteImport } from './routes/deliveries'
 import { Route as IndexRouteImport } from './routes/index'
 
+const ResidentsRoute = ResidentsRouteImport.update({
+  id: '/residents',
+  path: '/residents',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OccurrencesRoute = OccurrencesRouteImport.update({
+  id: '/occurrences',
+  path: '/occurrences',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -33,34 +45,62 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/deliveries': typeof DeliveriesRoute
   '/login': typeof LoginRoute
+  '/occurrences': typeof OccurrencesRoute
+  '/residents': typeof ResidentsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/deliveries': typeof DeliveriesRoute
   '/login': typeof LoginRoute
+  '/occurrences': typeof OccurrencesRoute
+  '/residents': typeof ResidentsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/deliveries': typeof DeliveriesRoute
   '/login': typeof LoginRoute
+  '/occurrences': typeof OccurrencesRoute
+  '/residents': typeof ResidentsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/deliveries' | '/login'
+  fullPaths: '/' | '/deliveries' | '/login' | '/occurrences' | '/residents'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/deliveries' | '/login'
-  id: '__root__' | '/' | '/deliveries' | '/login'
+  to: '/' | '/deliveries' | '/login' | '/occurrences' | '/residents'
+  id:
+    | '__root__'
+    | '/'
+    | '/deliveries'
+    | '/login'
+    | '/occurrences'
+    | '/residents'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DeliveriesRoute: typeof DeliveriesRoute
   LoginRoute: typeof LoginRoute
+  OccurrencesRoute: typeof OccurrencesRoute
+  ResidentsRoute: typeof ResidentsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/residents': {
+      id: '/residents'
+      path: '/residents'
+      fullPath: '/residents'
+      preLoaderRoute: typeof ResidentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/occurrences': {
+      id: '/occurrences'
+      path: '/occurrences'
+      fullPath: '/occurrences'
+      preLoaderRoute: typeof OccurrencesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -89,6 +129,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DeliveriesRoute: DeliveriesRoute,
   LoginRoute: LoginRoute,
+  OccurrencesRoute: OccurrencesRoute,
+  ResidentsRoute: ResidentsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
