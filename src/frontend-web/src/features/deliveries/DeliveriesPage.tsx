@@ -1,12 +1,19 @@
 import { AdminSidebar } from "#/components/layout/AdminSidebar";
 import { AdminTopbar } from "#/components/layout/AdminTopbar";
+import { ConfiguracoesModal } from "./components/ConfiguracoesModal";
 import { CreateDeliveryModal } from "./components/CreateDeliveryModal";
 import { DeliveriesTable } from "./components/DeliveriesTable";
 import { DeliveryPageHeader } from "./components/DeliveryPageHeader";
 import { DeliveryStatsGrid } from "./components/DeliveryStatsGrid";
+import { EditDeliveryModal } from "./components/EditDeliveryModal";
 import { FilterModal } from "./components/FilterModal";
 import { ReportModal } from "./components/ReportModal";
 import { useDeliveriesPage } from "./hooks/useDeliveriesPage";
+
+function canCreateDeliveries(profile: string | null | undefined): boolean {
+	const normalizedProfile = profile?.toLowerCase();
+	return normalizedProfile === "administrador" || normalizedProfile === "porteiro";
+}
 
 export function DeliveriesPage() {
 	const page = useDeliveriesPage();
@@ -18,6 +25,7 @@ export function DeliveriesPage() {
 				avatarUrl={page.avatarUrl}
 				displayName={page.displayName}
 				onLogout={page.handleLogout}
+				onProfileClick={page.handleProfileClick}
 				profileLabel={page.profileLabel}
 			/>
 			<AdminTopbar
@@ -30,9 +38,19 @@ export function DeliveriesPage() {
 			/>
 
 			<main className="ml-64 p-8 min-h-screen">
+				{page.profileModalOpen && (
+					<ConfiguracoesModal
+						authUser={page.authUser}
+						onClose={() => page.setProfileModalOpen(false)}
+					/>
+				)}
 				<div className="max-w-7xl mx-auto space-y-8">
-					<DeliveryPageHeader onCreateClick={() => page.setModalOpen(true)} />
+					<DeliveryPageHeader
+						onCreateClick={() => page.setModalOpen(true)}
+						canCreate={canCreateDeliveries(page.authUser?.profile)}
+					/>
 
+					{canCreateDeliveries(page.authUser?.profile) && (
 					<CreateDeliveryModal
 						errorMessage={page.createDeliveryMutation.error?.message}
 						form={page.form}
@@ -43,6 +61,7 @@ export function DeliveriesPage() {
 						open={page.modalOpen}
 						users={page.usersQuery.data ?? []}
 					/>
+				)}
 
 					<ReportModal
 						deliveries={page.deliveries}
@@ -66,6 +85,7 @@ export function DeliveriesPage() {
 
 					<DeliveriesTable
 						activeFilters={page.activeFilters}
+						authUser={page.authUser}
 						deletePending={page.deleteDeliveryMutation.isPending}
 						deliveries={page.deliveries}
 						errorMessage={page.deliveriesQuery.error?.message}
@@ -73,11 +93,41 @@ export function DeliveriesPage() {
 						isLoading={page.deliveriesQuery.isLoading}
 						onClearFilters={() => page.setActiveFilters([])}
 						onDeleteDelivery={page.handleDeleteDelivery}
+						onEditDelivery={page.handleEditDelivery}
 						onOpenFilterModal={page.openFilterModal}
 						onOpenReportModal={() => page.setReportModalOpen(true)}
 						onRemoveFilter={page.removeFilter}
 						showUsersWarning={Boolean(page.usersQuery.error)}
 					/>
+
+					{page.editModalOpen && page.editingDelivery && (
+						<EditDeliveryModal
+							delivery={page.editingDelivery}
+							errorMessage={page.updateDeliveryMutation.error?.message}
+							isPending={page.updateDeliveryMutation.isPending}
+							onChange={(e) =>
+								e.target.name &&
+								page.setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+							}
+							onClose={() => page.setEditModalOpen(false)}
+							onSubmit={(e) => {
+								e.preventDefault();
+								const form = e.currentTarget;
+								const formData = new FormData(form);
+								const recipientUserId = formData.get("recipient_user_id");
+								page.updateDeliveryMutation.mutate({
+									id: page.editingDelivery!.id,
+									data: {
+										recipient_user_id: recipientUserId ? Number(recipientUserId) : null,
+										description: String(formData.get("description") ?? ""),
+										status: String(formData.get("status") ?? ""),
+									},
+								});
+							}}
+							open={page.editModalOpen}
+							users={page.usersQuery.data ?? []}
+						/>
+					)}
 
 					<div className="fixed bottom-0 right-0 -z-10 w-96 h-96 opacity-30">
 						<div className="absolute inset-0 bg-gradient-to-tr from-primary-fixed to-surface-dim blur-3xl rounded-full translate-x-1/2 translate-y-1/2" />

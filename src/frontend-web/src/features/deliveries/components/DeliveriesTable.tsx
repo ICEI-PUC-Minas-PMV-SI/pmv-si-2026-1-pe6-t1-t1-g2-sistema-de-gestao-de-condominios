@@ -1,6 +1,7 @@
 import { Button, MaterialIcon } from "#/components/ui";
-import { X } from "lucide-react";
+import { Pencil, X } from "lucide-react";
 import type { ActiveFilter, Delivery } from "../types/delivery";
+import type { AuthUser } from "#/types/auth";
 import {
 	formatDateTime,
 	getStatusClasses,
@@ -9,6 +10,7 @@ import {
 
 type DeliveriesTableProps = {
 	activeFilters: ActiveFilter[];
+	authUser: AuthUser | null;
 	deletePending: boolean;
 	deliveries: Delivery[];
 	errorMessage?: string;
@@ -16,14 +18,20 @@ type DeliveriesTableProps = {
 	isLoading: boolean;
 	onClearFilters: () => void;
 	onDeleteDelivery: (id: number) => void;
+	onEditDelivery: (delivery: Delivery) => void;
 	onOpenFilterModal: () => void;
 	onOpenReportModal: () => void;
 	onRemoveFilter: (id: string) => void;
 	showUsersWarning: boolean;
 };
 
+function isAdmin(profile: string | null | undefined): boolean {
+	return profile?.toLowerCase() === "administrador";
+}
+
 export function DeliveriesTable({
 	activeFilters,
+	authUser,
 	deletePending,
 	deliveries,
 	errorMessage,
@@ -31,11 +39,14 @@ export function DeliveriesTable({
 	isLoading,
 	onClearFilters,
 	onDeleteDelivery,
+	onEditDelivery,
 	onOpenFilterModal,
 	onOpenReportModal,
 	onRemoveFilter,
 	showUsersWarning,
 }: DeliveriesTableProps) {
+	const userIsAdmin = isAdmin(authUser?.profile);
+
 	return (
 		<div className="bg-white rounded-[2.5rem] soft-shadow border border-slate-50 overflow-hidden">
 			<div className="p-8 border-b border-slate-50 flex items-center justify-between">
@@ -57,7 +68,7 @@ export function DeliveriesTable({
 
 			{activeFilters.length > 0 && (
 				<div className="px-8 py-3 border-b border-slate-50 flex flex-wrap gap-2 items-center">
-					<span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mr-1">
+					<span className="text-[11px] font-semibold uppercase tracking-widest text-slate-400 mr-1">
 						Filtros ativos:
 					</span>
 					{activeFilters.map((filter) => (
@@ -171,16 +182,31 @@ export function DeliveriesTable({
 										{formatDateTime(delivery.pickup_date)}
 									</td>
 									<td className="px-8 py-5 text-right">
-										<div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-											<button
-												className="p-2 text-slate-400 hover:text-error transition-colors disabled:opacity-50"
-												disabled={deletePending}
-												onClick={() => onDeleteDelivery(delivery.id)}
-												type="button"
-											>
-												<MaterialIcon name="delete" className="text-xl" />
-											</button>
-										</div>
+										{userIsAdmin ? (
+											<div className="flex items-center justify-end gap-2">
+												<button
+													className="p-2 text-slate-400 hover:text-blue-600 transition-colors disabled:opacity-50"
+													onClick={() => onEditDelivery(delivery)}
+													type="button"
+												>
+													<Pencil className="text-xl" />
+												</button>
+												<button
+													className="p-2 text-slate-400 hover:text-error transition-colors disabled:opacity-50"
+													disabled={deletePending}
+													onClick={() => onDeleteDelivery(delivery.id)}
+													type="button"
+												>
+													<MaterialIcon name="delete" className="text-xl" />
+												</button>
+											</div>
+										) : (
+											<div className="flex items-center justify-end">
+												<span className="text-xs text-slate-400 italic">
+													Apenas leitura
+												</span>
+											</div>
+										)}
 									</td>
 								</tr>
 							))

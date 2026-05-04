@@ -1,7 +1,6 @@
 import {
 	AUTH_TOKEN_KEY,
 	AUTH_USER_KEY,
-	LAST_REGISTERED_USER_ID_KEY,
 } from "#/constants/storage";
 import type {
 	AuthResult,
@@ -94,7 +93,7 @@ export async function loginUser(payload: LoginPayload): Promise<AuthResult> {
 
 	return {
 		token,
-		user: normalizeAuthUser(rawUser, token, payload.id),
+		user: normalizeAuthUser(rawUser, token, 0),
 	};
 }
 
@@ -113,7 +112,6 @@ export function clearAuthSession() {
 
 	window.localStorage.removeItem(AUTH_TOKEN_KEY);
 	window.localStorage.removeItem(AUTH_USER_KEY);
-	window.sessionStorage.removeItem(LAST_REGISTERED_USER_ID_KEY);
 }
 
 export function saveAuthUser(user: AuthUser | null) {
@@ -155,17 +153,20 @@ export function getAuthUser(): AuthUser | null {
 	};
 }
 
-export function saveLastRegisteredUserId(userId: number) {
-	if (typeof window === "undefined") return;
-	window.sessionStorage.setItem(LAST_REGISTERED_USER_ID_KEY, String(userId));
-}
+export async function updateUserProfile(payload: {
+	username?: string;
+	email?: string;
+	profile?: string;
+}) {
+	const token = getAuthToken();
+	if (!token) throw new Error("Usuário não autenticado");
 
-export function getLastRegisteredUserId() {
-	if (typeof window === "undefined") return null;
-	return window.sessionStorage.getItem(LAST_REGISTERED_USER_ID_KEY);
-}
+	const response = await apiRequest<AuthUser>("/api/Users/profile", {
+		method: "PUT",
+		headers: { Authorization: `Bearer ${token}` },
+		body: JSON.stringify(payload),
+	});
 
-export function clearLastRegisteredUserId() {
-	if (typeof window === "undefined") return;
-	window.sessionStorage.removeItem(LAST_REGISTERED_USER_ID_KEY);
+	saveAuthUser(response);
+	return response;
 }

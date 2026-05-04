@@ -12,7 +12,7 @@ export type RegisterPayload = {
 };
 
 export type LoginPayload = {
-	id: number;
+	email: string;
 	password: string;
 };
 

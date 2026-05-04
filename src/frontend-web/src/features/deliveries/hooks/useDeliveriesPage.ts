@@ -10,12 +10,13 @@ import { useNavigate } from "@tanstack/react-router";
 import { type ChangeEvent, useEffect, useMemo, useState } from "react";
 import { EMPTY_DELIVERY_FORM, EMPTY_FILTER_FORM } from "../constants";
 import {
-    createDelivery,
-    deleteDelivery,
-    fetchDeliveries,
-    fetchDeliveryUsers,
+	createDelivery,
+	deleteDelivery,
+	fetchDeliveries,
+	fetchDeliveryUsers,
+	updateDelivery,
 } from "../services/deliveries-service";
-import type { ActiveFilter, DeliveryForm, FilterForm } from "../types/delivery";
+import type { ActiveFilter, Delivery, DeliveryForm, FilterForm } from "../types/delivery";
 import {
     buildActiveFilters,
     filterDeliveries,
@@ -31,10 +32,14 @@ export function useDeliveriesPage() {
 	const [modalOpen, setModalOpen] = useState(false);
 	const [reportModalOpen, setReportModalOpen] = useState(false);
 	const [filterModalOpen, setFilterModalOpen] = useState(false);
+	const [profileModalOpen, setProfileModalOpen] = useState(false);
 	const [filterForm, setFilterForm] = useState<FilterForm>(EMPTY_FILTER_FORM);
 	const [activeFilters, setActiveFilters] = useState<ActiveFilter[]>([]);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [form, setForm] = useState<DeliveryForm>(EMPTY_DELIVERY_FORM);
+	const [editModalOpen, setEditModalOpen] = useState(false);
+	const [editingDelivery, setEditingDelivery] = useState<Delivery | null>(null);
+	const [formData, setFormData] = useState<Record<string, string>>({});
 
 	useEffect(() => {
 		setAuthUser(getAuthUser());
@@ -90,9 +95,23 @@ export function useDeliveriesPage() {
 		},
 	});
 
+	const updateDeliveryMutation = useMutation({
+		mutationFn: (payload: { id: number; data: Parameters<typeof updateDelivery>[1] }) =>
+			updateDelivery(payload.id, payload.data),
+		onSuccess: () => {
+			setEditModalOpen(false);
+			setEditingDelivery(null);
+			queryClient.invalidateQueries({ queryKey: ["deliveries"] });
+		},
+	});
+
 	function handleLogout() {
 		clearAuthSession();
 		navigate({ to: "/login", replace: true });
+	}
+
+	function handleProfileClick() {
+		setProfileModalOpen(true);
 	}
 
 	function handleFormChange(
@@ -134,6 +153,11 @@ export function useDeliveriesPage() {
 		}
 	}
 
+	function handleEditDelivery(delivery: Delivery) {
+		setEditingDelivery(delivery);
+		setEditModalOpen(true);
+	}
+
 	return {
 		activeFilters,
 		applyFilters,
@@ -144,27 +168,38 @@ export function useDeliveriesPage() {
 		deliveries,
 		deliveriesQuery,
 		displayName,
+		editModalOpen,
+		editingDelivery,
 		filterForm,
 		filterModalOpen,
 		filteredDeliveries,
 		form,
+		formData,
+		setFormData,
 		handleDeleteDelivery,
+		handleEditDelivery,
 		handleFormChange,
 		handleLogout,
+		handleProfileClick,
 		handleSubmitDelivery,
 		modalOpen,
 		openFilterModal,
 		profileLabel,
+		profileModalOpen,
 		removeFilter,
 		reportModalOpen,
 		searchTerm,
 		setActiveFilters,
+		setEditModalOpen,
+		setEditingDelivery,
 		setFilterForm,
 		setFilterModalOpen,
 		setModalOpen,
+		setProfileModalOpen,
 		setReportModalOpen,
 		setSearchTerm,
 		stats,
+		updateDeliveryMutation,
 		usersQuery,
 	};
 }
