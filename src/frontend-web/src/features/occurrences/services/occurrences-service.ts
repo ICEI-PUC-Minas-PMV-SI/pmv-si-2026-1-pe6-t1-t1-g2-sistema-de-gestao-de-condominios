@@ -25,3 +25,14 @@ export function createOccurrence(payload: CreateOccurrenceForm) {
         }),
     });
 }
+
+export function uploadOccurrenceImage(occurrenceId: number, file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return apiRequest<any>(`/api/Occurrences/${occurrenceId}/images`, {
+        method: "POST",
+        headers: getAuthHeaders(), // O api-client deve lidar com o Content-Type automaticamente para FormData
+        body: formData,
+    });
+}

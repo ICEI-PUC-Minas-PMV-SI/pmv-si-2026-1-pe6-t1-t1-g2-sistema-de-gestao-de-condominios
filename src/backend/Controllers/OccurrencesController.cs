@@ -210,7 +210,7 @@ namespace backend.Controllers
                 return BadRequest("Arquivo não foi enviado");
 
             // Validar tipo de arquivo
-            var allowedTypes = new[] { "image/jpeg", "image/png", "image/gif", "image/webp" };
+            var allowedTypes = new[] { "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "video/quicktime" };
             if (!allowedTypes.Contains(file.ContentType))
                 return BadRequest("Tipo de arquivo não permitido. Use: JPEG, PNG, GIF ou WebP");
 
