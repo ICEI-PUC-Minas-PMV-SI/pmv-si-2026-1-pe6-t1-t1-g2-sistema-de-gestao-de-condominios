@@ -34,24 +34,30 @@ async function readApiError(response: Response) {
 }
 
 export async function apiRequest<TResponse>(
-	path: string,
-	options: RequestInit = {},
+    path: string,
+    options: RequestInit = {},
 ): Promise<TResponse> {
-	const response = await fetch(`${API_BASE_URL}${path}`, {
-		...options,
-		headers: {
-			"Content-Type": "application/json",
-			...options.headers,
-		},
-	});
+    // 1. Criamos um objeto de headers a partir das opções enviadas
+    const headers = new Headers(options.headers);
 
-	if (!response.ok) {
-		throw new Error(await readApiError(response));
-	}
+    // 2. SÓ adicionamos o Content-Type JSON se o body NÃO for um FormData
+    // Se for FormData (upload de arquivo), deixamos o browser definir o header sozinho
+    if (!(options.body instanceof FormData) && !headers.has("Content-Type")) {
+        headers.set("Content-Type", "application/json");
+    }
 
-	if (response.status === 204) {
-		return undefined as TResponse;
-	}
+    const response = await fetch(`${API_BASE_URL}${path}`, {
+        ...options,
+        headers, // Usamos o nosso objeto de headers inteligente
+    });
 
-	return response.json() as Promise<TResponse>;
+    if (!response.ok) {
+        throw new Error(await readApiError(response));
+    }
+
+    if (response.status === 204) {
+        return undefined as TResponse;
+    }
+
+    return response.json() as Promise<TResponse>;
 }

@@ -7,13 +7,20 @@ import { useEffect, useMemo, useState } from "react";
 import { 
     createOccurrence, 
     fetchMyOccurrences, 
+    fetchAllOccurrences, 
     updateOccurrence, 
     deleteOccurrence, 
     uploadOccurrenceImage 
 } from "../services/occurrences-service";
 import type { CreateOccurrenceForm, Occurrence, OccurrenceStats } from "../types/occurrence";
 
-const EMPTY_FORM: CreateOccurrenceForm = { title: "", description: "" };
+// 1. CORREÇÃO: Adicionado imageUrl ao estado inicial do formulário
+const EMPTY_FORM: CreateOccurrenceForm = { 
+    title: "", 
+    description: "", 
+    status: "Aberto",
+    imageUrl: "" 
+};
 
 export function useOccurrencesPage() {
     const navigate = useNavigate();
@@ -24,7 +31,6 @@ export function useOccurrencesPage() {
     const [form, setForm] = useState<CreateOccurrenceForm>(EMPTY_FORM);
     const [hydrated, setHydrated] = useState(false);
     
-    // Novos estados para arquivo e edição
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [editingId, setEditingId] = useState<number | null>(null);
     
@@ -35,78 +41,82 @@ export function useOccurrencesPage() {
         setHydrated(true);
     }, []);
 
-    const displayName = authUser?.username || authUser?.email || "Morador";
+    const isAdmin = authUser?.profile === "Administrador";
+    const displayName = authUser?.username || authUser?.email || "Usuário";
     const profileLabel = getProfileLabel(authUser?.profile);
     const avatarUrl = getAvatarUrl(displayName, authUser?.profile);
 
     const occurrencesQuery = useQuery({
-        queryKey: ["my-occurrences"],
-        queryFn: fetchMyOccurrences,
+        queryKey: [isAdmin ? "all-occurrences" : "my-occurrences"],
+        queryFn: isAdmin ? fetchAllOccurrences : fetchMyOccurrences,
         enabled: hydrated && Boolean(authToken),
         retry: false,
     });
 
-    // Mutação para CRIAR (com suporte a upload de arquivo)
+    const invalidate = () => {
+        queryClient.invalidateQueries({ queryKey: [isAdmin ? "all-occurrences" : "my-occurrences"] });
+    };
+
     const createMutation = useMutation({
         mutationFn: async () => {
             const newOcc = await createOccurrence(form);
-            if (selectedFile && newOcc.id) {
-                await uploadOccurrenceImage(newOcc.id, selectedFile);
+            const id = (newOcc as any).id || (newOcc as any).Id;
+            if (selectedFile && id) {
+                await uploadOccurrenceImage(id, selectedFile);
             }
             return newOcc;
         },
         onSuccess: () => {
             handleCloseModal();
-            queryClient.invalidateQueries({ queryKey: ["my-occurrences"] });
+            invalidate();
         },
     });
 
-    // Mutação para EDITAR
     const updateMutation = useMutation({
-        mutationFn: () => updateOccurrence(editingId!, form),
+        mutationFn: (payload?: CreateOccurrenceForm) => 
+            updateOccurrence(editingId!, payload || form),
         onSuccess: () => {
             handleCloseModal();
-            queryClient.invalidateQueries({ queryKey: ["my-occurrences"] });
+            invalidate();
         },
     });
 
-    // Mutação para EXCLUIR
     const deleteMutation = useMutation({
         mutationFn: (id: number) => deleteOccurrence(id),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["my-occurrences"] });
-        },
+        onSuccess: invalidate,
     });
 
+    // 2. OCORRÊNCIAS: Mapeamento garantindo consistência entre CamelCase e PascalCase do C#
     const occurrences = useMemo<Occurrence[]>(() => {
-    const records = (occurrencesQuery.data as any[]) ?? [];
-    const term = searchTerm.trim().toLowerCase();
-    
-    // DEBUG: Abra o console do navegador (F12) e veja o que aparece aqui
-    if (records.length > 0) console.log("Exemplo de ocorrência vinda do banco:", records[0]);
+        const records = (occurrencesQuery.data as any[]) ?? [];
+        const term = searchTerm.trim().toLowerCase();
+        
+        return records
+            .filter((rec) => {
+                const title = (rec.title || rec.Title || "").toLowerCase();
+                const desc = (rec.description || rec.Description || "").toLowerCase();
+                return title.includes(term) || desc.includes(term);
+            })
+            .map((rec) => ({
+                id: rec.id || rec.Id,
+                title: rec.title || rec.Title,
+                description: rec.description || rec.Description,
+                status: rec.status || rec.Status,
+                // CORREÇÃO: Garante que a ImageUrl seja mapeada para a lista
+                imageUrl: rec.imageUrl || rec.ImageUrl || rec.file_path, 
+                createdAt: rec.createdAt || rec.CreatedAt || rec.created_at || rec.Created_at,
+            }));
+    }, [occurrencesQuery.data, searchTerm]);
 
-    return records
-        .filter((rec) => {
-            const title = (rec.title || rec.Title || "").toLowerCase();
-            const desc = (rec.description || rec.Description || "").toLowerCase();
-            return title.includes(term) || desc.includes(term);
-        })
-        .map((rec) => ({
-            id: rec.id || rec.Id,
-            title: rec.title || rec.Title,
-            description: rec.description || rec.Description,
-            status: rec.status || rec.Status,
-            // Tenta todas as combinações possíveis de nome de campo de data
-            createdAt: rec.createdAt || rec.CreatedAt || rec.created_at || rec.Created_at,
-        }));
-}, [occurrencesQuery.data, searchTerm]);
-
+    // 3. ESTATÍSTICAS
     const stats = useMemo<OccurrenceStats>(() => {
-        const records = occurrencesQuery.data ?? [];
+        const records = (occurrencesQuery.data as any[]) ?? [];
+        const getS = (r: any) => (r.status || r.Status || "");
+        
         return {
-            totalAberto: records.filter((r) => r.status.toLowerCase() === "aberto").length,
-            emAnalise: records.filter((r) => r.status.toLowerCase().includes("análise") || r.status.toLowerCase().includes("analise")).length,
-            resolvidos: records.filter((r) => r.status.toLowerCase() === "finalizado" || r.status.toLowerCase() === "resolvido").length,
+            totalAberto: records.filter((r) => getS(r) === "Aberto").length,
+            emAnalise: records.filter((r) => getS(r) === "Em Andamento").length,
+            resolvidos: records.filter((r) => getS(r) === "Resolvido" || getS(r) === "Fechado").length,
         };
     }, [occurrencesQuery.data]);
 
@@ -115,22 +125,26 @@ export function useOccurrencesPage() {
         navigate({ to: "/login", replace: true });
     }
 
-    function handleFormChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    function handleFormChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
         setForm((current) => ({
             ...current,
             [event.target.name]: event.target.value,
         }));
     }
 
-    // Função para capturar o arquivo do input
     function handleFileChange(file: File | null) {
         setSelectedFile(file);
     }
 
-    // Abre modal em modo de edição
+    // 4. CORREÇÃO: Agora passamos a imageUrl da ocorrência para o formulário de edição
     function openEditModal(occ: Occurrence) {
         setEditingId(occ.id);
-        setForm({ title: occ.title, description: occ.description });
+        setForm({ 
+            title: occ.title, 
+            description: occ.description,
+            status: occ.status,
+            imageUrl: occ.imageUrl // Fundamental para a foto aparecer no modal
+        });
         setModalOpen(true);
     }
 
@@ -144,7 +158,7 @@ export function useOccurrencesPage() {
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         if (editingId) {
-            updateMutation.mutate();
+            updateMutation.mutate(undefined); 
         } else {
             createMutation.mutate();
         }
@@ -164,9 +178,8 @@ export function useOccurrencesPage() {
         searchTerm,
         setSearchTerm,
         handleLogout,
-        
         modalOpen,
-        setModalOpen: (open: boolean) => !open && handleCloseModal() || setModalOpen(open),
+        setModalOpen: (open: boolean) => !open ? handleCloseModal() : setModalOpen(open),
         form,
         handleFormChange,
         handleFileChange,
@@ -174,14 +187,14 @@ export function useOccurrencesPage() {
         createMutation,
         updateMutation,
         deleteMutation,
-        
         isEditing: !!editingId,
+        isAdmin,
         openEditModal,
         handleDelete,
-
         hydrated,
         occurrencesQuery,
         occurrences,
         stats,
+        isPending: createMutation.isPending || updateMutation.isPending
     };
 }

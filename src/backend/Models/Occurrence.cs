@@ -2,7 +2,7 @@
 
 namespace backend.Models
 {
-    [JsonConverter(typeof(IgnoreIdConverter<Occurrence>))]
+    //[JsonConverter(typeof(IgnoreIdConverter<Occurrence>))]
     public class Occurrence
     {
         [JsonPropertyName("id")]
@@ -20,8 +20,12 @@ namespace backend.Models
         [JsonPropertyName("status")]
         public string? Status { get; set; }
 
+        // ADICIONADO: Campo para o caminho da imagem
+        [JsonPropertyName("imageUrl")]
+        public string? ImageUrl { get; set; }
+
         [JsonPropertyName("created_at")]
-        [JsonIgnore]
+        // Removi o [JsonIgnore] para que a data apareça no seu Frontend
         public DateTime? CreatedAt { get; set; }
 
         [JsonPropertyName("updated_at")]

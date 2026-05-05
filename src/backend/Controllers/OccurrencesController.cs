@@ -32,7 +32,14 @@ namespace backend.Controllers
             {
                 await using var connection = new NpgsqlConnection(connectionString);
                 await connection.OpenAsync(ct);
-                const string sql = "SELECT * FROM public.occurrences ORDER BY id DESC;";
+
+                // Query com subquery para trazer a imagem junto
+                const string sql = @"
+                    SELECT o.*, 
+                           (SELECT file_path FROM public.occurrence_images WHERE occurrence_id = o.id LIMIT 1) as file_path 
+                    FROM public.occurrences o 
+                    ORDER BY o.id DESC;";
+
                 await using var command = new NpgsqlCommand(sql, connection);
                 await using var reader = await command.ExecuteReaderAsync(ct);
 
@@ -63,7 +70,14 @@ namespace backend.Controllers
             {
                 await using var connection = new NpgsqlConnection(connectionString);
                 await connection.OpenAsync(ct);
-                const string sql = "SELECT * FROM public.occurrences WHERE user_id = @u ORDER BY id DESC;";
+
+                const string sql = @"
+                    SELECT o.*, 
+                           (SELECT file_path FROM public.occurrence_images WHERE occurrence_id = o.id LIMIT 1) as file_path 
+                    FROM public.occurrences o 
+                    WHERE o.user_id = @u 
+                    ORDER BY o.id DESC;";
+
                 await using var command = new NpgsqlCommand(sql, connection);
                 command.Parameters.AddWithValue("u", userId);
                 await using var reader = await command.ExecuteReaderAsync(ct);
@@ -77,7 +91,7 @@ namespace backend.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro ao listar ocorrências: {ex.Message}");
+                return StatusCode(500, $"Erro ao listar minhas ocorrências: {ex.Message}");
             }
         }
 
@@ -92,7 +106,13 @@ namespace backend.Controllers
             {
                 await using var connection = new NpgsqlConnection(connectionString);
                 await connection.OpenAsync(ct);
-                const string sql = "SELECT * FROM public.occurrences WHERE id = @id LIMIT 1;";
+
+                const string sql = @"
+                    SELECT o.*, 
+                           (SELECT file_path FROM public.occurrence_images WHERE occurrence_id = o.id LIMIT 1) as file_path 
+                    FROM public.occurrences o 
+                    WHERE o.id = @id LIMIT 1;";
+
                 await using var command = new NpgsqlCommand(sql, connection);
                 command.Parameters.AddWithValue("id", id);
 
@@ -111,7 +131,6 @@ namespace backend.Controllers
 
         [Authorize(Roles = "Morador")]
         [HttpPost]
-        [Consumes("application/json")]
         public async Task<ActionResult<Occurrence>> Create([FromBody] CreateOccurrenceRequest request, CancellationToken ct)
         {
             var userId = GetCurrentUserId();
@@ -149,15 +168,12 @@ namespace backend.Controllers
             }
         }
 
-        // --- EDIÇÃO (CORRIGIDA) ---
+        // --- EDIÇÃO (COM TRAVAS DE SEGURANÇA) ---
 
         [Authorize(Roles = "Administrador,Morador")]
         [HttpPut("{id:int}")]
         public async Task<ActionResult<Occurrence>> Update(int id, [FromBody] Occurrence model, CancellationToken ct)
         {
-            if (string.IsNullOrWhiteSpace(model.Title) || string.IsNullOrWhiteSpace(model.Description))
-                return BadRequest("Título e descrição são obrigatórios");
-
             var userId = GetCurrentUserId();
             var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
             var (connectionString, error) = GetConnectionString();
@@ -168,34 +184,44 @@ namespace backend.Controllers
                 await using var connection = new NpgsqlConnection(connectionString);
                 await connection.OpenAsync(ct);
 
-                // Segurança: Buscar dados atuais para checar dono e manter status
-                const string checkSql = "SELECT user_id, status FROM public.occurrences WHERE id = @id";
+                const string checkSql = "SELECT user_id, title, description, status FROM public.occurrences WHERE id = @id";
                 await using var checkCmd = new NpgsqlCommand(checkSql, connection);
                 checkCmd.Parameters.AddWithValue("id", id);
                 await using var readerCheck = await checkCmd.ExecuteReaderAsync(ct);
 
                 if (!await readerCheck.ReadAsync(ct)) return NotFound();
                 var dbUserId = readerCheck.GetInt32(0);
-                var dbStatus = readerCheck.GetString(1);
+                var dbTitle = readerCheck.GetString(1);
+                var dbDescription = readerCheck.GetString(2);
+                var dbStatus = readerCheck.GetString(3);
                 await readerCheck.CloseAsync();
 
-                if (userRole == "Morador")
+                string finalTitle = model.Title;
+                string finalDescription = model.Description;
+                string finalStatus = model.Status;
+
+                if (userRole == "Administrador")
+                {
+                    finalTitle = dbTitle;
+                    finalDescription = dbDescription;
+                }
+                else if (userRole == "Morador")
                 {
                     if (dbUserId != userId) return Forbid();
-                    model.Status = dbStatus; // Morador não troca status
+                    finalStatus = dbStatus;
                 }
 
                 const string sql = @"
                     UPDATE public.occurrences 
                     SET title = @t, description = @d, status = @s::occurrence_status, updated_at = CURRENT_TIMESTAMP
                     WHERE id = @id
-                    RETURNING *;";
+                    RETURNING *, (SELECT file_path FROM public.occurrence_images WHERE occurrence_id = @id LIMIT 1) as file_path;";
 
                 await using var command = new NpgsqlCommand(sql, connection);
                 command.Parameters.AddWithValue("id", id);
-                command.Parameters.AddWithValue("t", model.Title);
-                command.Parameters.AddWithValue("d", model.Description);
-                command.Parameters.AddWithValue("s", model.Status ?? dbStatus);
+                command.Parameters.AddWithValue("t", finalTitle);
+                command.Parameters.AddWithValue("d", finalDescription);
+                command.Parameters.AddWithValue("s", finalStatus ?? dbStatus);
 
                 await using var reader = await command.ExecuteReaderAsync(ct);
                 if (!await reader.ReadAsync(ct)) return NotFound();
@@ -208,7 +234,7 @@ namespace backend.Controllers
             }
         }
 
-        // --- EXCLUSÃO (CORRIGIDA) ---
+        // --- EXCLUSÃO ---
 
         [Authorize(Roles = "Administrador,Morador")]
         [HttpDelete("{id:int}")]
@@ -224,7 +250,6 @@ namespace backend.Controllers
                 await using var connection = new NpgsqlConnection(connectionString);
                 await connection.OpenAsync(ct);
 
-                // Verificar dono
                 const string checkSql = "SELECT user_id FROM public.occurrences WHERE id = @id";
                 await using var checkCmd = new NpgsqlCommand(checkSql, connection);
                 checkCmd.Parameters.AddWithValue("id", id);
@@ -233,13 +258,11 @@ namespace backend.Controllers
                 if (ownerId == null) return NotFound();
                 if (userRole == "Morador" && (int)ownerId != userId) return Forbid();
 
-                // 1. APAGAR AS IMAGENS PRIMEIRO (Evita erro de FK)
                 const string sqlImages = "DELETE FROM public.occurrence_images WHERE occurrence_id = @id;";
                 await using var cmdImages = new NpgsqlCommand(sqlImages, connection);
                 cmdImages.Parameters.AddWithValue("id", id);
                 await cmdImages.ExecuteNonQueryAsync(ct);
 
-                // 2. APAGAR A OCORRÊNCIA
                 const string sqlOcc = "DELETE FROM public.occurrences WHERE id = @id RETURNING id;";
                 await using var command = new NpgsqlCommand(sqlOcc, connection);
                 command.Parameters.AddWithValue("id", id);
@@ -254,11 +277,11 @@ namespace backend.Controllers
             }
         }
 
-        // --- UPLOAD DE IMAGENS E HELPERS ---
+        // --- UPLOAD DE IMAGENS ---
 
         [Authorize(Roles = "Morador")]
         [HttpPost("{id:int}/images")]
-        public async Task<ActionResult<OccurrenceImage>> UploadImage(int id, IFormFile? file, CancellationToken ct)
+        public async Task<ActionResult<OccurrenceImage>> UploadImage(int id, [FromForm] IFormFile file, CancellationToken ct)
         {
             var userId = GetCurrentUserId();
             var (connectionString, error) = GetConnectionString();
@@ -278,10 +301,12 @@ namespace backend.Controllers
 
                 if (file != null && file.Length > 0) return await ProcessFileUpload(id, file, connectionString, ct);
 
-                return BadRequest("Envie um arquivo.");
+                return BadRequest("Envie um arquivo válido.");
             }
             catch (Exception ex) { return StatusCode(500, ex.Message); }
         }
+
+        // --- HELPERS ---
 
         private async Task<ActionResult<OccurrenceImage>> ProcessFileUpload(int id, IFormFile file, string connectionString, CancellationToken ct)
         {
@@ -341,7 +366,11 @@ namespace backend.Controllers
             Description = r.IsDBNull(r.GetOrdinal("description")) ? null : r.GetString(r.GetOrdinal("description")),
             Status = r.IsDBNull(r.GetOrdinal("status")) ? null : r.GetString(r.GetOrdinal("status")),
             CreatedAt = r.IsDBNull(r.GetOrdinal("created_at")) ? null : r.GetDateTime(r.GetOrdinal("created_at")),
-            UpdatedAt = r.IsDBNull(r.GetOrdinal("updated_at")) ? null : r.GetDateTime(r.GetOrdinal("updated_at"))
+            UpdatedAt = r.IsDBNull(r.GetOrdinal("updated_at")) ? null : r.GetDateTime(r.GetOrdinal("updated_at")),
+            // AQUI É A CHAVE DO SUCESSO:
+            ImageUrl = r.HasColumn("file_path") && !r.IsDBNull(r.GetOrdinal("file_path"))
+                       ? r.GetString(r.GetOrdinal("file_path"))
+                       : null
         };
 
         private static OccurrenceImage MapOccurrenceImage(NpgsqlDataReader r) => new()
@@ -354,5 +383,18 @@ namespace backend.Controllers
             FileSize = r.IsDBNull(r.GetOrdinal("file_size")) ? null : r.GetInt32(r.GetOrdinal("file_size")),
             CreatedAt = r.IsDBNull(r.GetOrdinal("created_at")) ? null : r.GetDateTime(r.GetOrdinal("created_at"))
         };
+    }
+
+    public static class NpgsqlReaderExtensions
+    {
+        public static bool HasColumn(this NpgsqlDataReader reader, string columnName)
+        {
+            for (int i = 0; i < reader.FieldCount; i++)
+            {
+                if (reader.GetName(i).Equals(columnName, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+            return false;
+        }
     }
 }

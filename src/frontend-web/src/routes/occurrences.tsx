@@ -47,45 +47,48 @@ export function OccurrencesPage() {
 
       <main className="ml-64 p-10 md:p-16 min-h-screen">
         <div className="max-w-5xl mx-auto space-y-10">
+          
           <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-slate-800 tracking-tight">
-                Minhas Ocorrências
+                {page.isAdmin ? "Gestão de Ocorrências" : "Minhas Ocorrências"}
               </h1>
               <p className="text-slate-500 mt-1">
-                Acompanhe e registre solicitações de manutenção ou limpeza.
+                {page.isAdmin 
+                  ? "Visualize e gerencie todos os chamados abertos pelos moradores." 
+                  : "Acompanhe e registre solicitações de manutenção ou limpeza."}
               </p>
             </div>
-            <Button
-              color="modern"
-              icon={<MaterialIcon name="add_circle" />}
-              onClick={() => page.setModalOpen(true)}
-            >
-              Nova Ocorrência
-            </Button>
+
+            {/* Oculta o botão de "Nova Ocorrência" para o Admin, já que ele apenas gerencia */}
+            {!page.isAdmin && (
+              <Button
+                color="modern"
+                icon={<MaterialIcon name="add_circle" />}
+                onClick={() => page.setModalOpen(true)}
+              >
+                Nova Ocorrência
+              </Button>
+            )}
           </header>
 
           <OccurrencesStatsGrid stats={page.stats} />
 
-          {/* LISTA: Passando as funções de editar e deletar */}
           <OccurrencesList
-            occurrences={page.occurrences}
-            isLoading={page.hydrated ? page.occurrencesQuery.isLoading : false}
-            errorMessage={
-              page.hydrated ? page.occurrencesQuery.error?.message : undefined
-            }
-            onEdit={page.openEditModal}
-            onDelete={page.handleDelete}
-          />
+    occurrences={page.occurrences}
+    isLoading={page.occurrencesQuery.isLoading}
+    onEdit={page.openEditModal}
+    onDelete={page.handleDelete}
+/>
         </div>
       </main>
 
-      {/* MODAL: Passando o estado de edição e a função de arquivo */}
       <CreateOccurrenceModal
         open={page.modalOpen}
         form={page.form}
-        isPending={page.createMutation.isPending || page.updateMutation.isPending}
+        isPending={page.isPending}
         isEditing={page.isEditing}
+        isAdmin={page.isAdmin} // NOVO: Para mostrar o status no modal de edição
         onChange={page.handleFormChange}
         onFileChange={page.handleFileChange}
         onClose={() => page.setModalOpen(false)}
