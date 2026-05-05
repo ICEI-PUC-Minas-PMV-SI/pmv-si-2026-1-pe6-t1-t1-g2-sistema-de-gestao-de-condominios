@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 // Lembre-se de checar o caminho das importações!
 import { AdminSidebar } from "#/components/layout/AdminSidebar";
 import { AdminTopbar } from "#/components/layout/AdminTopbar";
-import { Button, MaterialIcon } from "#/components/ui";
+import { Button } from "#/components/ui";
 import { ProfileConfigModal } from "#/components/modals/ProfileConfigModal";
 import { useProfileModal } from "#/hooks/useProfileModal";
 
@@ -49,21 +49,24 @@ export function OccurrencesPage() {
         searchTerm={page.searchTerm}
       />
 
-      <main className="ml-64 p-10 md:p-16 min-h-screen">
-        <div className="max-w-5xl mx-auto space-y-10">
+      <main className="min-h-screen p-4 md:ml-64 md:p-10 lg:p-16">
+        <div className="mx-auto max-w-5xl space-y-6 md:space-y-10">
           {/* Cabeçalho da página (como na imagem) */}
-          <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <header className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
             <div>
-              <h1 className="text-3xl font-bold text-slate-800 tracking-tight">
+              <span className="bg-surface-container-high text-primary font-label-sm text-xs px-3 py-1 rounded-full tracking-wider">
+                MANUTENÇÃO E LIMPEZA
+              </span>
+              <h1 className="text-headline-md font-headline-md text-slate-900 mt-2">
                 Minhas Ocorrências
               </h1>
-              <p className="text-slate-500 mt-1">
+              <p className="text-slate-500 font-body-md text-sm mt-1">
                 Acompanhe e registre solicitações de manutenção ou limpeza.
               </p>
             </div>
             <Button
-              color="modern"
-              icon={<MaterialIcon name="add_circle" />}
+              color="primary"
+              size="md"
               onClick={() => page.setModalOpen(true)}
             >
               Nova Ocorrência

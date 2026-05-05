@@ -1,10 +1,10 @@
 import type { DeliveryForm, FilterForm } from "./types/delivery";
 
-export const DEFAULT_DELIVERY_STATUS = "Disponível para Retirada";
+export const DEFAULT_DELIVERY_STATUS = "Registrada";
 
 export const DELIVERY_STATUS_OPTIONS = [
   DEFAULT_DELIVERY_STATUS,
-  "Entregue",
+  "Disponível para Retirada",
 ] as const;
 
 const today = new Date().toISOString().split("T")[0];

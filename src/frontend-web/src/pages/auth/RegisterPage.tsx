@@ -140,7 +140,7 @@ export function RegisterPage() {
 							</Button>
 						</form>
 						<AuthDivider label="ou cadastre-se com" />
-						<div className="grid grid-cols-2 gap-4">
+						<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 							<SocialAuthButton
 								icon={
 									<svg aria-hidden="true" className="h-6 w-6" viewBox="0 0 24 24">

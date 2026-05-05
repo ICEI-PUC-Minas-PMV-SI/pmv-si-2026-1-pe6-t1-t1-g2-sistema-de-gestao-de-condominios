@@ -8,3 +8,38 @@
 **/bin/
 **/obj/
 *.user
+
+# Build output
+src/backend/bin/
+src/backend/obj/
+
+# Visual Studio / usuário
+.vs/
+src/backend/.vs/
+src/backend/*.user
+src/backend/*.rsuser
+src/backend/*.suo
+frontend-web/.vscode/
+
+# Logs e arquivos temporários
+src/backend/*.log
+src/backend/logs/
+src/backend/TestResults/
+
+# Publicação local
+src/backend/publish/
+src/backend/artifacts/
+src/frontend-web/node_modules
+src/frontend-web/.netlify
+src/frontend-web/.tanstack
+src/frontend-web/dist/
+
+# Segredos locais (User Secrets)
+src/backend/secrets.json
+
+# Configurações de ambiente
+src/backend/appsettings.Development.json
+src/frontend-web/.env
+
+
+

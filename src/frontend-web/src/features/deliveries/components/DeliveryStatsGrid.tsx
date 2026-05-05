@@ -36,10 +36,10 @@ export function DeliveryStatsGrid({
 		: 0;
 
 	return (
-		<div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+		<div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-6 lg:grid-cols-4">
 			{cards.map((card) => (
 				<div
-					className="bg-white p-6 rounded-[2rem] soft-shadow border border-slate-50"
+					className="bg-white p-4 rounded-[2rem] soft-shadow border border-slate-50 md:p-6"
 					key={card.key}
 				>
 					<div className="flex items-center justify-between mb-4">
@@ -56,7 +56,7 @@ export function DeliveryStatsGrid({
 				</div>
 			))}
 
-			<div className="bg-primary text-white p-6 rounded-[2rem] shadow-xl shadow-primary/20 relative overflow-hidden">
+			<div className="bg-primary text-white p-4 rounded-[2rem] shadow-xl shadow-primary/20 relative overflow-hidden md:p-6">
 				<div className="relative z-10">
 					<p className="text-primary-fixed text-xs font-medium opacity-80">
 						Encomendas no Depósito

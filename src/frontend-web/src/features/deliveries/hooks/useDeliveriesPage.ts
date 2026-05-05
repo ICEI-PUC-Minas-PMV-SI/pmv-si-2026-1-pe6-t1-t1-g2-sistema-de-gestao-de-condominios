@@ -113,6 +113,7 @@ export function useDeliveriesPage() {
     onSuccess: () => {
       setEditModalOpen(false);
       setEditingDelivery(null);
+      setFormData({});
       queryClient.invalidateQueries({ queryKey: ["deliveries"] });
     },
   });
@@ -133,6 +134,17 @@ export function useDeliveriesPage() {
   ) {
     setForm((currentForm) => ({
       ...currentForm,
+      [event.target.name]: event.target.value,
+    }));
+  }
+
+  function handleEditFormChange(
+    event: ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) {
+    setFormData((currentData) => ({
+      ...currentData,
       [event.target.name]: event.target.value,
     }));
   }
@@ -166,8 +178,46 @@ export function useDeliveriesPage() {
   }
 
   function handleEditDelivery(delivery: Delivery) {
+    const arrivalDate = new Date(delivery.arrival_date)
+      .toISOString()
+      .split("T")[0];
+    const arrivalTime = new Date(delivery.arrival_date)
+      .toTimeString()
+      .slice(0, 5);
+
+    setFormData({
+      recipientUserId: delivery.recipient_user_id?.toString() ?? "",
+      description: delivery.description ?? "",
+      status: delivery.status ?? "",
+      arrivalDate,
+      arrivalTime,
+    });
     setEditingDelivery(delivery);
     setEditModalOpen(true);
+  }
+
+  function handleSubmitEditDelivery(event: React.FormEvent) {
+    event.preventDefault();
+    if (!editingDelivery) return;
+
+    const arrivalDateTime = new Date(
+      `${formData.arrivalDate}T${formData.arrivalTime}:00`,
+    ).toISOString();
+
+    updateDeliveryMutation.mutate({
+      id: editingDelivery.id,
+      data: {
+        recipient_user_id: formData.recipientUserId
+          ? Number(formData.recipientUserId)
+          : null,
+        registered_by_user_id:
+          authUser?.id && authUser.id > 0 ? authUser.id : undefined,
+        description: formData.description.trim(),
+        arrival_date: arrivalDateTime,
+        pickup_date: editingDelivery.pickup_date ?? null,
+        status: formData.status,
+      },
+    });
   }
 
   return {
@@ -190,10 +240,12 @@ export function useDeliveriesPage() {
     setFormData,
     handleDeleteDelivery,
     handleEditDelivery,
+    handleEditFormChange,
     handleFormChange,
     handleLogout,
     handleProfileClick,
     handleSubmitDelivery,
+    handleSubmitEditDelivery,
     modalOpen,
     openFilterModal,
     profileLabel,

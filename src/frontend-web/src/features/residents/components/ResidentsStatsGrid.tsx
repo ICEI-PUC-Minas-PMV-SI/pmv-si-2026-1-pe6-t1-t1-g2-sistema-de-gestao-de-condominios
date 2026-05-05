@@ -30,10 +30,10 @@ const cards = [
 
 export function ResidentsStatsGrid({ stats, onReportClick }: ResidentsStatsGridProps) {
 	return (
-		<section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+		<section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 md:gap-8">
 			{cards.map((card) => (
 				<button
-					className="bg-white p-6 rounded-[2rem] soft-shadow border border-slate-50 flex items-center gap-4 hover:shadow-md transition-shadow text-left"
+					className="bg-white p-4 rounded-[2rem] soft-shadow border border-slate-50 flex items-center gap-4 hover:shadow-md transition-shadow text-left md:p-6"
 					key={card.key}
 					onClick={card.key === "pendingRequests" ? onReportClick : undefined}
 					disabled={card.key !== "pendingRequests"}

@@ -43,8 +43,8 @@ export function ResidentsPage() {
         isOpen={profileModal.isOpen}
         onClose={profileModal.close}
       />
-      <main className="ml-64 p-10 md:p-16 min-h-screen">
-        <div className="max-w-6xl mx-auto space-y-8">
+      <main className="min-h-screen p-4 md:ml-64 md:p-10 lg:p-16">
+        <div className="mx-auto max-w-6xl space-y-6 md:space-y-8">
           <ResidentsPageHeader
             onCreateClick={() => page.setModalOpen(true)}
             showCreate={page.isAdmin}
