@@ -36,3 +36,19 @@ export function uploadOccurrenceImage(occurrenceId: number, file: File) {
         body: formData,
     });
 }
+
+
+export function updateOccurrence(id: number, payload: CreateOccurrenceForm) {
+    return apiRequest<OccurrenceApiRecord>(`/api/Occurrences/${id}`, {
+        method: "PUT",
+        headers: getAuthHeaders(),
+        body: JSON.stringify(payload),
+    });
+}
+
+export function deleteOccurrence(id: number) {
+    return apiRequest<void>(`/api/Occurrences/${id}`, {
+        method: "DELETE",
+        headers: getAuthHeaders(),
+    });
+}

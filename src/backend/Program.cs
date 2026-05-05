@@ -10,7 +10,6 @@ using Microsoft.OpenApi;
 using Resend;
 using Microsoft.AspNetCore.Http.Features;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Configuração inicial para inciar serviço de email (Resend).
@@ -20,12 +19,10 @@ builder.Services.Configure<ResendClientOptions>(opts =>
 {
     opts.ApiToken = Environment.GetEnvironmentVariable("RESEND_API_KEY") ?? throw new InvalidOperationException("RESEND_API_KEY environment variable is not set.");
 });
-builder.Services.AddTransient<IResend,ResendClient>();
+builder.Services.AddTransient<IResend, ResendClient>();
 builder.Services.AddTransient<EmailService>();
 
-// Se DefaultConnection estiver vazio, usa DATABASE_URL ou SUPABASE_DB_URL (URI postgresql://... do Supabase).
-// Isso alinha com o "Direct connection" do painel. Variaveis de ambiente no Windows: DATABASE_URL ou
-// ConnectionStrings__DefaultConnection (com dois sublinhados).
+// Configuração de Conexão com o Banco
 var defaultConnection = builder.Configuration.GetConnectionString("DefaultConnection");
 if (string.IsNullOrWhiteSpace(defaultConnection))
 {
@@ -39,20 +36,19 @@ if (string.IsNullOrWhiteSpace(defaultConnection))
 
 // Swagger UI Documentation
 builder.Services.AddEndpointsApiExplorer();
-
-builder.Services.AddSwaggerGen(c=>{
-    c.AddSecurityDefinition("Bearer",new OpenApiSecurityScheme{
-        In=ParameterLocation.Header,
-        Description="Insira um token para logar",
-        Name="Authorization",
-        Type=SecuritySchemeType.Http,
-        BearerFormat="JWT",
-        Scheme="bearer"
+builder.Services.AddSwaggerGen(c => {
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Insira um token para logar",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "bearer"
     });
-}
-);
+});
 
-// Add authentication services (JWT Bearer)
+// Autenticação JWT
 var signInKey = Environment.GetEnvironmentVariable("JWT_SECRET");
 if (string.IsNullOrEmpty(signInKey))
 {
@@ -61,23 +57,21 @@ if (string.IsNullOrEmpty(signInKey))
 JwtGen.secret_key = signInKey;
 builder.Services.AddAuthentication(options =>
 {
-   options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; 
-   options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-   options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
     options.SaveToken = true;
-    options.RequireHttpsMetadata = false; // Em produção, isso deve ser true.
+    options.RequireHttpsMetadata = false;
     options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
     {
-        ValidateIssuer=false,
-        ValidateAudience=false,
+        ValidateIssuer = false,
+        ValidateAudience = false,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signInKey))
     };
-
 });
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 
@@ -98,9 +92,7 @@ builder.Services.Configure<FormOptions>(options =>
     options.MultipartBodyLengthLimit = 104857600; // 100 MB
 });
 
-
-
-// Enum nativo PostgreSQL (coluna status em public.reservations). Nome do tipo deve coincidir com o Supabase.
+// Configuração DbContext e Enum Npgsql
 var resolvedConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 if (!string.IsNullOrWhiteSpace(resolvedConnectionString))
 {
@@ -119,12 +111,10 @@ else
 
 var app = builder.Build();
 
+// Logger de inicialização
 app.Lifetime.ApplicationStarted.Register(() =>
 {
-    if (!app.Environment.IsDevelopment())
-    {
-        return;
-    }
+    if (!app.Environment.IsDevelopment()) return;
 
     var logger = app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Startup");
     foreach (var url in app.Urls)
@@ -133,33 +123,29 @@ app.Lifetime.ApplicationStarted.Register(() =>
     }
 });
 
-// Configure the HTTP request pipeline.
+// --- CONFIGURAÇÃO DO PIPELINE DE REQUISIÇÕES ---
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-if (!app.Environment.IsDevelopment())
+else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+    // Ativa o redirecionamento HTTPS apenas quando NÃO for ambiente de desenvolvimento
+    app.UseHttpsRedirection();
 }
 
-// Usar static files para servir uploads
 app.UseStaticFiles();
 app.UseCors("AllowAll");
-
-//app.UseHttpsRedirection();
 app.UseRouting();
 
-// Utilizar autenticação e autorização.
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")

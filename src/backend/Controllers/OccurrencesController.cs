@@ -19,7 +19,8 @@ namespace backend.Controllers
             _environment = environment;
         }
 
-        // ADMINISTRADOR: listar todas as ocorrências
+        // --- LISTAGEM E BUSCA ---
+
         [Authorize(Roles = "Administrador")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Occurrence>>> GetAll(CancellationToken ct)
@@ -48,7 +49,6 @@ namespace backend.Controllers
             }
         }
 
-        // MORADOR: listar suas próprias ocorrências
         [Authorize(Roles = "Morador")]
         [HttpGet("meu")]
         public async Task<ActionResult<IEnumerable<Occurrence>>> GetMyOccurrences(CancellationToken ct)
@@ -107,7 +107,8 @@ namespace backend.Controllers
             }
         }
 
-        // MORADOR: criar ocorrência
+        // --- CRIAÇÃO ---
+
         [Authorize(Roles = "Morador")]
         [HttpPost]
         [Consumes("application/json")]
@@ -148,234 +149,17 @@ namespace backend.Controllers
             }
         }
 
-        // MORADOR: upload de foto (arquivo ou URL)
-        [Authorize(Roles = "Morador")]
-        [HttpPost("{id:int}/images")]
-        public async Task<ActionResult<OccurrenceImage>> UploadImage(int id, IFormFile? file, CancellationToken ct)
-        {
-            var userId = GetCurrentUserId();
-            if (userId == 0) return Unauthorized("Usuário não autenticado");
+        // --- EDIÇÃO (CORRIGIDA) ---
 
-            var (connectionString, error) = GetConnectionString();
-            if (error != null) return error;
-
-            try
-            {
-                // Verificar se a ocorrência existe e pertence ao usuário
-                await using var verifyConnection = new NpgsqlConnection(connectionString);
-                await verifyConnection.OpenAsync(ct);
-                const string verifySql = "SELECT user_id FROM public.occurrences WHERE id = @id LIMIT 1;";
-                await using var verifyCommand = new NpgsqlCommand(verifySql, verifyConnection);
-                verifyCommand.Parameters.AddWithValue("id", id);
-                var occurrenceUserId = await verifyCommand.ExecuteScalarAsync(ct);
-
-                if (occurrenceUserId == null)
-                    return NotFound("Ocorrência não encontrada");
-
-                if ((int)occurrenceUserId != userId)
-                    return Forbid("Você não tem permissão para adicionar imagens a esta ocorrência");
-
-                // Se tem arquivo (multipart/form-data)
-                if (file != null && file.Length > 0)
-                {
-                    return await ProcessFileUpload(id, file, connectionString, ct);
-                }
-
-                // Se não tem arquivo, tenta processar como URL (JSON)
-                if (HttpContext.Request.ContentType?.Contains("application/json") == true)
-                {
-                    HttpContext.Request.Body.Position = 0;
-                    using var reader = new StreamReader(HttpContext.Request.Body);
-                    var json = await reader.ReadToEndAsync();
-                    using var jsonDoc = System.Text.Json.JsonDocument.Parse(json);
-                    var fileUrl = jsonDoc.RootElement.GetProperty("file").GetString();
-
-                    if (string.IsNullOrWhiteSpace(fileUrl))
-                        return BadRequest("URL da imagem é obrigatória");
-
-                    return await ProcessUrlUpload(id, fileUrl, connectionString, ct);
-                }
-
-                return BadRequest("Envie um arquivo ou uma URL no formato JSON com propriedade 'file'");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Erro ao fazer upload da imagem: {ex.Message}");
-            }
-        }
-
-        private async Task<ActionResult<OccurrenceImage>> ProcessFileUpload(int id, IFormFile file, string connectionString, CancellationToken ct)
-        {
-            if (file.Length == 0)
-                return BadRequest("Arquivo não foi enviado");
-
-            // Validar tipo de arquivo
-            var allowedTypes = new[] { "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "video/quicktime" };
-            if (!allowedTypes.Contains(file.ContentType))
-                return BadRequest("Tipo de arquivo não permitido. Use: JPEG, PNG, GIF ou WebP");
-
-            // Validar tamanho (máx 5MB)
-            if (file.Length > 5 * 1024 * 1024)
-                return BadRequest("Arquivo deve ter no máximo 5MB");
-
-            try
-            {
-                // Criar diretório se não existir
-                var uploadsDir = Path.Combine(_environment.ContentRootPath, "uploads", "occurrences");
-                Directory.CreateDirectory(uploadsDir);
-
-                // Gerar nome único para o arquivo
-                var fileName = $"{id}_{DateTime.UtcNow.Ticks}_{Path.GetFileName(file.FileName)}";
-                var filePath = Path.Combine(uploadsDir, fileName);
-
-                // Salvar arquivo
-                await using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream, ct);
-                }
-
-                // Inserir registro no banco
-                await using var connection = new NpgsqlConnection(connectionString);
-                await connection.OpenAsync(ct);
-                const string sql = @"
-                    INSERT INTO public.occurrence_images (occurrence_id, file_path, file_name, mime_type, file_size, created_at)
-                    VALUES (@o, @p, @n, @m, @s, CURRENT_TIMESTAMP)
-                    RETURNING *;";
-                await using var command = new NpgsqlCommand(sql, connection);
-                command.Parameters.AddWithValue("o", id);
-                command.Parameters.AddWithValue("p", $"/uploads/occurrences/{fileName}");
-                command.Parameters.AddWithValue("n", file.FileName);
-                command.Parameters.AddWithValue("m", file.ContentType);
-                command.Parameters.AddWithValue("s", (int)file.Length);
-
-                await using var reader = await command.ExecuteReaderAsync(ct);
-                await reader.ReadAsync(ct);
-
-                var result = MapOccurrenceImage(reader);
-                return CreatedAtAction(nameof(GetImageById), new { id = result.Id }, result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Erro ao fazer upload da imagem: {ex.Message}");
-            }
-        }
-
-        private async Task<ActionResult<OccurrenceImage>> ProcessUrlUpload(int id, string imageUrl, string connectionString, CancellationToken ct)
-        {
-            if (!Uri.TryCreate(imageUrl, UriKind.Absolute, out var uri))
-                return BadRequest("URL inválida");
-
-            try
-            {
-                // Baixar imagem da URL
-                using var httpClient = new HttpClient();
-                httpClient.Timeout = TimeSpan.FromSeconds(30);
-                var response = await httpClient.GetAsync(imageUrl, HttpCompletionOption.ResponseHeadersRead, ct);
-                response.EnsureSuccessStatusCode();
-
-                // Validar tipo de arquivo
-                var contentType = response.Content.Headers.ContentType?.MediaType ?? "";
-                var allowedTypes = new[] { "image/jpeg", "image/png", "image/gif", "image/webp" };
-                if (!allowedTypes.Contains(contentType))
-                    return BadRequest("Tipo de arquivo não permitido. Use: JPEG, PNG, GIF ou WebP");
-
-                // Validar tamanho (máx 5MB)
-                var contentLength = response.Content.Headers.ContentLength ?? 0;
-                if (contentLength > 5 * 1024 * 1024 || contentLength == 0)
-                    return BadRequest("Arquivo deve ter entre 1B e 5MB");
-
-                // Criar diretório se não existir
-                var uploadsDir = Path.Combine(_environment.ContentRootPath, "uploads", "occurrences");
-                Directory.CreateDirectory(uploadsDir);
-
-                // Gerar nome único para o arquivo
-                var ext = contentType switch
-                {
-                    "image/jpeg" => ".jpg",
-                    "image/png" => ".png",
-                    "image/gif" => ".gif",
-                    "image/webp" => ".webp",
-                    _ => ".jpg"
-                };
-                var fileName = $"{id}_{DateTime.UtcNow.Ticks}{ext}";
-                var filePath = Path.Combine(uploadsDir, fileName);
-
-                // Salvar arquivo
-                await using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await response.Content.CopyToAsync(stream, ct);
-                }
-
-                // Obter tamanho do arquivo
-                var fileInfo = new FileInfo(filePath);
-                var fileSize = fileInfo.Length;
-
-                // Inserir registro no banco
-                await using var connection = new NpgsqlConnection(connectionString);
-                await connection.OpenAsync(ct);
-                const string sql = @"
-                    INSERT INTO public.occurrence_images (occurrence_id, file_path, file_name, mime_type, file_size, created_at)
-                    VALUES (@o, @p, @n, @m, @s, CURRENT_TIMESTAMP)
-                    RETURNING *;";
-                await using var command = new NpgsqlCommand(sql, connection);
-                command.Parameters.AddWithValue("o", id);
-                command.Parameters.AddWithValue("p", $"/uploads/occurrences/{fileName}");
-                command.Parameters.AddWithValue("n", imageUrl);
-                command.Parameters.AddWithValue("m", contentType);
-                command.Parameters.AddWithValue("s", (int)fileSize);
-
-                await using var reader = await command.ExecuteReaderAsync(ct);
-                await reader.ReadAsync(ct);
-
-                var result = MapOccurrenceImage(reader);
-                return CreatedAtAction(nameof(GetImageById), new { id = result.Id }, result);
-            }
-            catch (HttpRequestException ex)
-            {
-                return BadRequest($"Erro ao baixar imagem: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Erro ao fazer upload da imagem: {ex.Message}");
-            }
-        }
-
-        // Obter imagem
-        [HttpGet("{id:int}/images/{imageId:int}")]
-        [Authorize]
-        public async Task<ActionResult<OccurrenceImage>> GetImageById(int id, int imageId, CancellationToken ct)
-        {
-            var (connectionString, error) = GetConnectionString();
-            if (error != null) return error;
-
-            try
-            {
-                await using var connection = new NpgsqlConnection(connectionString);
-                await connection.OpenAsync(ct);
-                const string sql = "SELECT * FROM public.occurrence_images WHERE id = @id AND occurrence_id = @o LIMIT 1;";
-                await using var command = new NpgsqlCommand(sql, connection);
-                command.Parameters.AddWithValue("id", imageId);
-                command.Parameters.AddWithValue("o", id);
-
-                await using var reader = await command.ExecuteReaderAsync(ct);
-                if (!await reader.ReadAsync(ct)) return NotFound();
-
-                return Ok(MapOccurrenceImage(reader));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Erro ao buscar imagem: {ex.Message}");
-            }
-        }
-
-        // ADMINISTRADOR: atualizar ocorrência
-        [Authorize(Roles = "Administrador")]
+        [Authorize(Roles = "Administrador,Morador")]
         [HttpPut("{id:int}")]
         public async Task<ActionResult<Occurrence>> Update(int id, [FromBody] Occurrence model, CancellationToken ct)
         {
             if (string.IsNullOrWhiteSpace(model.Title) || string.IsNullOrWhiteSpace(model.Description))
                 return BadRequest("Título e descrição são obrigatórios");
 
+            var userId = GetCurrentUserId();
+            var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
             var (connectionString, error) = GetConnectionString();
             if (error != null) return error;
 
@@ -383,16 +167,35 @@ namespace backend.Controllers
             {
                 await using var connection = new NpgsqlConnection(connectionString);
                 await connection.OpenAsync(ct);
+
+                // Segurança: Buscar dados atuais para checar dono e manter status
+                const string checkSql = "SELECT user_id, status FROM public.occurrences WHERE id = @id";
+                await using var checkCmd = new NpgsqlCommand(checkSql, connection);
+                checkCmd.Parameters.AddWithValue("id", id);
+                await using var readerCheck = await checkCmd.ExecuteReaderAsync(ct);
+
+                if (!await readerCheck.ReadAsync(ct)) return NotFound();
+                var dbUserId = readerCheck.GetInt32(0);
+                var dbStatus = readerCheck.GetString(1);
+                await readerCheck.CloseAsync();
+
+                if (userRole == "Morador")
+                {
+                    if (dbUserId != userId) return Forbid();
+                    model.Status = dbStatus; // Morador não troca status
+                }
+
                 const string sql = @"
                     UPDATE public.occurrences 
                     SET title = @t, description = @d, status = @s::occurrence_status, updated_at = CURRENT_TIMESTAMP
                     WHERE id = @id
                     RETURNING *;";
+
                 await using var command = new NpgsqlCommand(sql, connection);
                 command.Parameters.AddWithValue("id", id);
                 command.Parameters.AddWithValue("t", model.Title);
                 command.Parameters.AddWithValue("d", model.Description);
-                command.Parameters.AddWithValue("s", (object?)model.Status ?? "Aberto");
+                command.Parameters.AddWithValue("s", model.Status ?? dbStatus);
 
                 await using var reader = await command.ExecuteReaderAsync(ct);
                 if (!await reader.ReadAsync(ct)) return NotFound();
@@ -401,14 +204,18 @@ namespace backend.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro ao atualizar ocorrência: {ex.Message}");
+                return StatusCode(500, $"Erro ao atualizar: {ex.Message}");
             }
         }
 
+        // --- EXCLUSÃO (CORRIGIDA) ---
+
+        [Authorize(Roles = "Administrador,Morador")]
         [HttpDelete("{id:int}")]
-        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Delete(int id, CancellationToken ct)
         {
+            var userId = GetCurrentUserId();
+            var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
             var (connectionString, error) = GetConnectionString();
             if (error != null) return error;
 
@@ -416,48 +223,114 @@ namespace backend.Controllers
             {
                 await using var connection = new NpgsqlConnection(connectionString);
                 await connection.OpenAsync(ct);
-                const string sql = "DELETE FROM public.occurrences WHERE id = @id RETURNING id;";
-                await using var command = new NpgsqlCommand(sql, connection);
+
+                // Verificar dono
+                const string checkSql = "SELECT user_id FROM public.occurrences WHERE id = @id";
+                await using var checkCmd = new NpgsqlCommand(checkSql, connection);
+                checkCmd.Parameters.AddWithValue("id", id);
+                var ownerId = await checkCmd.ExecuteScalarAsync(ct);
+
+                if (ownerId == null) return NotFound();
+                if (userRole == "Morador" && (int)ownerId != userId) return Forbid();
+
+                // 1. APAGAR AS IMAGENS PRIMEIRO (Evita erro de FK)
+                const string sqlImages = "DELETE FROM public.occurrence_images WHERE occurrence_id = @id;";
+                await using var cmdImages = new NpgsqlCommand(sqlImages, connection);
+                cmdImages.Parameters.AddWithValue("id", id);
+                await cmdImages.ExecuteNonQueryAsync(ct);
+
+                // 2. APAGAR A OCORRÊNCIA
+                const string sqlOcc = "DELETE FROM public.occurrences WHERE id = @id RETURNING id;";
+                await using var command = new NpgsqlCommand(sqlOcc, connection);
                 command.Parameters.AddWithValue("id", id);
 
-                var deletedId = await command.ExecuteScalarAsync(ct);
-                if (deletedId == null) return NotFound();
+                if (await command.ExecuteScalarAsync(ct) == null) return NotFound();
 
                 return NoContent();
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro ao deletar ocorrência: {ex.Message}");
+                return StatusCode(500, $"Erro ao deletar: {ex.Message}");
             }
+        }
+
+        // --- UPLOAD DE IMAGENS E HELPERS ---
+
+        [Authorize(Roles = "Morador")]
+        [HttpPost("{id:int}/images")]
+        public async Task<ActionResult<OccurrenceImage>> UploadImage(int id, IFormFile? file, CancellationToken ct)
+        {
+            var userId = GetCurrentUserId();
+            var (connectionString, error) = GetConnectionString();
+            if (error != null) return error;
+
+            try
+            {
+                await using var verifyConnection = new NpgsqlConnection(connectionString);
+                await verifyConnection.OpenAsync(ct);
+                const string verifySql = "SELECT user_id FROM public.occurrences WHERE id = @id LIMIT 1;";
+                await using var verifyCommand = new NpgsqlCommand(verifySql, verifyConnection);
+                verifyCommand.Parameters.AddWithValue("id", id);
+                var occurrenceUserId = await verifyCommand.ExecuteScalarAsync(ct);
+
+                if (occurrenceUserId == null) return NotFound("Ocorrência não encontrada");
+                if ((int)occurrenceUserId != userId) return Forbid();
+
+                if (file != null && file.Length > 0) return await ProcessFileUpload(id, file, connectionString, ct);
+
+                return BadRequest("Envie um arquivo.");
+            }
+            catch (Exception ex) { return StatusCode(500, ex.Message); }
+        }
+
+        private async Task<ActionResult<OccurrenceImage>> ProcessFileUpload(int id, IFormFile file, string connectionString, CancellationToken ct)
+        {
+            var allowedTypes = new[] { "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "video/quicktime" };
+            if (!allowedTypes.Contains(file.ContentType)) return BadRequest("Tipo não permitido.");
+            if (file.Length > 50 * 1024 * 1024) return BadRequest("Máximo 50MB");
+
+            var uploadsDir = Path.Combine(_environment.ContentRootPath, "uploads", "occurrences");
+            Directory.CreateDirectory(uploadsDir);
+            var fileName = $"{id}_{DateTime.UtcNow.Ticks}_{Path.GetFileName(file.FileName)}";
+            var filePath = Path.Combine(uploadsDir, fileName);
+
+            await using (var stream = new FileStream(filePath, FileMode.Create))
+                await file.CopyToAsync(stream, ct);
+
+            await using var connection = new NpgsqlConnection(connectionString);
+            await connection.OpenAsync(ct);
+            const string sql = @"
+                INSERT INTO public.occurrence_images (occurrence_id, file_path, file_name, mime_type, file_size, created_at)
+                VALUES (@o, @p, @n, @m, @s, CURRENT_TIMESTAMP)
+                RETURNING *;";
+            await using var command = new NpgsqlCommand(sql, connection);
+            command.Parameters.AddWithValue("o", id);
+            command.Parameters.AddWithValue("p", $"/uploads/occurrences/{fileName}");
+            command.Parameters.AddWithValue("n", file.FileName);
+            command.Parameters.AddWithValue("m", file.ContentType);
+            command.Parameters.AddWithValue("s", (int)file.Length);
+
+            await using var reader = await command.ExecuteReaderAsync(ct);
+            await reader.ReadAsync(ct);
+            return MapOccurrenceImage(reader);
         }
 
         private int GetCurrentUserId()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            if (int.TryParse(userIdClaim?.Value, out var userId))
-                return userId;
-            return 0;
+            return int.TryParse(userIdClaim?.Value, out var userId) ? userId : 0;
         }
 
         private (string ConnectionString, ActionResult? Error) GetConnectionString()
         {
             var s = _configuration.GetConnectionString("DefaultConnection");
-            if (string.IsNullOrEmpty(s)) return ("", StatusCode(500, "Configure ConnectionStrings:DefaultConnection."));
-
+            if (string.IsNullOrEmpty(s)) return ("", StatusCode(500, "Configure ConnectionStrings."));
             try
             {
-                var builder = new NpgsqlConnectionStringBuilder(s)
-                {
-                    SslMode = SslMode.Require,
-                    TrustServerCertificate = true
-                };
-
-                return (builder.ConnectionString, null);
+                var b = new NpgsqlConnectionStringBuilder(s) { SslMode = SslMode.Require, TrustServerCertificate = true };
+                return (b.ConnectionString, null);
             }
-            catch
-            {
-                return (s, null);
-            }
+            catch { return (s, null); }
         }
 
         private static Occurrence MapOccurrence(NpgsqlDataReader r) => new()

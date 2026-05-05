@@ -2,12 +2,14 @@ import { MaterialIcon } from "#/components/ui";
 import type { Occurrence } from "../types/occurrence";
 
 type Props = { 
-  occurrences: Occurrence[];
-  isLoading: boolean;
-  errorMessage?: string;
+    occurrences: Occurrence[];
+    isLoading: boolean;
+    errorMessage?: string;
+    onEdit: (occ: Occurrence) => void;
+    onDelete: (id: number) => void;
 };
 
-export function OccurrencesList({ occurrences, isLoading, errorMessage }: Props) {
+export function OccurrencesList({ occurrences, isLoading, errorMessage, onEdit, onDelete }: Props) {
     if (isLoading) return <p className="text-slate-500 mt-8 text-center">Buscando suas ocorrências...</p>;
     if (errorMessage) return <p className="text-red-500 mt-8 text-center">{errorMessage}</p>;
     if (occurrences.length === 0) return <p className="text-slate-500 mt-8 text-center">Nenhuma ocorrência encontrada.</p>;
@@ -32,14 +34,23 @@ export function OccurrencesList({ occurrences, isLoading, errorMessage }: Props)
                                 <span className="text-[9px] font-bold text-slate-400 tracking-widest uppercase mb-2">Status</span>
                                 <div className={`w-3 h-3 rounded-full ${styles.dot}`}></div>
                             </div>
+                            
                             <div>
                                 <h3 className="text-slate-800 font-semibold text-lg">{occ.title}</h3>
+                                
                                 <div className="flex items-center gap-3 mt-1.5">
                                     <span className="flex items-center text-xs text-slate-400 font-medium">
                                         <MaterialIcon name="schedule" className="text-[14px] mr-1" />
-                                        Criado em {new Date(occ.createdAt).toLocaleDateString("pt-BR")}
+                                        Criado em {(() => {
+                                            if (!occ.createdAt) return "Data não disponível";
+                                            const date = new Date(occ.createdAt);
+                                            return isNaN(date.getTime()) 
+                                                ? "Data inválida" 
+                                                : date.toLocaleDateString("pt-BR");
+                                        })()}
                                     </span>
                                 </div>
+                                
                                 <p className="text-sm text-slate-500 mt-2">{occ.description}</p>
                             </div>
                         </div>
@@ -48,7 +59,23 @@ export function OccurrencesList({ occurrences, isLoading, errorMessage }: Props)
                             <span className={`px-4 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase ${styles.badge}`}>
                                 {occ.status}
                             </span>
-                            <MaterialIcon name="chevron_right" className="text-slate-300" />
+                            
+                            <div className="flex items-center gap-1">
+                                <button 
+                                    onClick={() => onEdit(occ)}
+                                    className="p-2 hover:bg-blue-50 rounded-full text-blue-600 transition-colors"
+                                    title="Editar Ocorrência"
+                                >
+                                    <MaterialIcon name="edit" className="text-xl" />
+                                </button>
+                                <button 
+                                    onClick={() => onDelete(occ.id)}
+                                    className="p-2 hover:bg-red-50 rounded-full text-red-500 transition-colors"
+                                    title="Excluir Ocorrência"
+                                >
+                                    <MaterialIcon name="delete" className="text-xl" />
+                                </button>
+                            </div>
                         </div>
 
                     </div>
