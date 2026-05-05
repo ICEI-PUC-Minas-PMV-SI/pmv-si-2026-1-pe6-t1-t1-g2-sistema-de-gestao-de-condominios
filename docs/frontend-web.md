@@ -16,6 +16,63 @@
 
 ## Fluxo de Dados
 
+### User Flow Graph
+
+```mermaid
+graph LR
+    A["🏠 Tela Inicial"] -->|Sem autenticação| B["🔐 Login/Cadastro"]
+    B -->|Login sucesso| C["📊 Dashboard"]
+    B -->|Cadastro sucesso| C
+    
+    C -->|Navegar| D["📦 Encomendas"]
+    C -->|Navegar| E["👥 Residentes"]
+    C -->|Navegar| F["🔧 Manutenção"]
+    C -->|Navegar| G["📅 Reservas"]
+    C -->|Navegar| H["🔔 Notificações"]
+    C -->|Perfil| I["👤 Meu Perfil"]
+    
+    D -->|Detalhe| D1["📦 Detalhe Encomenda"]
+    E -->|Detalhe| E1["👥 Perfil Residente"]
+    F -->|Abrir| F1["✏️ Nova Solicitação"]
+    G -->|Agendar| G1["📅 Agendar Área"]
+    H -->|Notificação| H1["📬 Centro Notificações"]
+    I -->|Editar| I1["✏️ Editar Perfil"]
+    
+    D1 -->|Voltar| D
+    E1 -->|Voltar| E
+    F1 -->|Voltar| F
+    G1 -->|Voltar| G
+    H1 -->|Voltar| H
+    I1 -->|Voltar| I
+    
+    D -->|Voltar| C
+    E -->|Voltar| C
+    F -->|Voltar| C
+    G -->|Voltar| C
+    H -->|Voltar| C
+    I -->|Voltar| C
+    
+    C -->|Logout| B
+    
+    style A fill:#e1f5ff,stroke:#01579b,stroke-width:2px,color:#000
+    style B fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    style C fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    style D fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px,color:#000
+    style E fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px,color:#000
+    style F fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px,color:#000
+    style G fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px,color:#000
+    style H fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px,color:#000
+    style I fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px,color:#000
+    style D1 fill:#f1f8e9,stroke:#558b2f,stroke-width:1px,color:#000
+    style E1 fill:#f1f8e9,stroke:#558b2f,stroke-width:1px,color:#000
+    style F1 fill:#f1f8e9,stroke:#558b2f,stroke-width:1px,color:#000
+    style G1 fill:#f1f8e9,stroke:#558b2f,stroke-width:1px,color:#000
+    style H1 fill:#f1f8e9,stroke:#558b2f,stroke-width:1px,color:#000
+    style I1 fill:#f1f8e9,stroke:#558b2f,stroke-width:1px,color:#000
+```
+
+O diagrama acima representa o fluxo completo de navegação do usuário pela aplicação, mostrando todas as telas (frames) e as transições entre elas. As cores indicam: azul para tela inicial, laranja para autenticação, roxo para dashboard (hub central), verde para as seções principais e verde claro para detalhes e sub-telas.
+
 ### Login
 ![Tela Login](img/tela-login.png)
 

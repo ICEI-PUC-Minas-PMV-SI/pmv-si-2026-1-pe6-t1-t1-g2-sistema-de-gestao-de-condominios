@@ -17,7 +17,6 @@ const navItems = [
   { icon: "group", label: "Residentes", to: "/residents" },
   { icon: "package_2", label: "Encomendas", to: "/deliveries" },
   { icon: "build", label: "Manutenção", to: "/occurrences" },
-  { icon: "settings", label: "Configurações" },
 ];
 
 export function AdminSidebar({
