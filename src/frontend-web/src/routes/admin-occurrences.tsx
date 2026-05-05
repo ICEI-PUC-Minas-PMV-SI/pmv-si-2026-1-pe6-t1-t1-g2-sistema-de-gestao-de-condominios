@@ -9,7 +9,7 @@ export const Route = createFileRoute("/admin-occurrences")({
 });
 
 export function AdminOccurrencesPage() {
-  const page = useOccurrencesPage(); // Vamos ajustar o hook para carregar tudo se for admin
+  const page = useOccurrencesPage(); 
 
   return (
     <div className="bg-[#FAFAFA] min-h-screen">
@@ -33,11 +33,10 @@ export function AdminOccurrencesPage() {
             <p className="text-slate-500">Visão geral de todos os chamados do condomínio.</p>
           </header>
 
-          {/* Aqui usaremos a mesma lista, mas com o GetAll do backend */}
           <OccurrencesList
             occurrences={page.occurrences}
             isLoading={page.occurrencesQuery.isLoading}
-            onEdit={page.openEditModal} // No admin, isso pode servir para mudar o status
+            onEdit={page.openEditModal}
             onDelete={page.handleDelete}
           />
         </div>
