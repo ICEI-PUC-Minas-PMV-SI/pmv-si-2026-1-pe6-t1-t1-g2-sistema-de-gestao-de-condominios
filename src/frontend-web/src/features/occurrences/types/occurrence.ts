@@ -1,4 +1,4 @@
-export type OccurrenceStatus = 'Aberto' | 'Em Análise' | 'Finalizado' | 'Resolvido';
+export type OccurrenceStatus = 'Aberto' | 'Em Andamento' | 'Resolvido' | 'Fechado';
 
 export type OccurrenceApiRecord = {
   id: number;
@@ -6,6 +6,7 @@ export type OccurrenceApiRecord = {
   title: string;
   description: string;
   status: OccurrenceStatus;
+  imageUrl?: string; // ADICIONADO
   createdAt: string;
   updatedAt: string;
 };
@@ -15,12 +16,15 @@ export type Occurrence = {
   title: string;
   description: string;
   status: OccurrenceStatus;
+  imageUrl?: string; // ADICIONADO
   createdAt: string;
 };
 
 export type CreateOccurrenceForm = {
   title: string;
   description: string;
+  status?: OccurrenceStatus;
+  imageUrl?: string;
 };
 
 export type OccurrenceStats = {
