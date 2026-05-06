@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>OAuth Callback</title>
+  </head>
+  <body>
+    <script>
+      (function(){
+        try {
+          const params = new URLSearchParams(window.location.search);
+          const code = params.get('code');
+          const state = params.get('state');
+          const error = params.get('error');
+
+          if (window.opener && (code || error)) {
+            window.opener.postMessage({ code, state, error }, window.location.origin);
+          }
+        } catch (e) {
+          // ignore
+        }
+        // close automatically
+        try { window.close(); } catch(e) {}
+      })();
+    </script>
+    <p>Redirecting...</p>
+  </body>
+</html>

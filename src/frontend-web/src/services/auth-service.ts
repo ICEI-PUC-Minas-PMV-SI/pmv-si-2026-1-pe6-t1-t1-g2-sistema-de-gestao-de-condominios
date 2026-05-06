@@ -97,6 +97,25 @@ export async function loginUser(payload: LoginPayload): Promise<AuthResult> {
 	};
 }
 
+export async function exchangeSocial(payload: { provider: string; providerSubject: string; email?: string | null; name?: string | null; emailVerified?: boolean }): Promise<AuthResult> {
+	const response = await apiRequest<Record<string, unknown>>("/api/Users/exchange", {
+		method: "POST",
+		body: JSON.stringify(payload),
+	});
+
+	const token = (response.token ?? response.Token) as string | undefined;
+	if (!token) {
+		throw new Error("O backend não retornou um token de autenticação.");
+	}
+
+	const rawUser = (response.user ?? response.User) as Record<string, unknown> | undefined;
+
+	return {
+		token,
+		user: normalizeAuthUser(rawUser, token, 0),
+	};
+}
+
 export function saveAuthToken(token: string) {
 	if (typeof window === "undefined") return;
 	window.localStorage.setItem(AUTH_TOKEN_KEY, token);

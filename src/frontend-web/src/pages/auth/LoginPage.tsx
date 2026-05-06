@@ -210,6 +210,7 @@ export function LoginPage() {
 
           <div className="flex gap-4">
             <SocialAuthButton
+              provider="google"
               className="h-[50px] flex-1 py-0 border-[var(--color-outline)]"
               icon={
                 <svg aria-hidden="true" className="h-6 w-6" viewBox="0 0 24 24">
@@ -233,6 +234,7 @@ export function LoginPage() {
               }
             />
             <SocialAuthButton
+              provider="apple"
               className="h-[50px] flex-1 py-0 border-[var(--color-outline)]"
               icon={
                 <svg
