@@ -27,16 +27,16 @@ export function AdminTopbar({
 
   return (
     <>
-      <header className="sticky top-0 z-40 flex items-center justify-between border-b border-slate-100 bg-white/90 px-4 py-3 text-sm antialiased shadow-sm backdrop-blur-md font-manrope md:ml-64 md:w-[calc(100%-16rem)] w-full">
+      <header className="flex justify-between items-center px-6 py-3 sticky top-0 z-40 bg-white/90 backdrop-blur-md font-manrope text-sm antialiased shadow-sm border-b border-slate-100 ml-64 w-[calc(100%-16rem)]">
         <div className="flex-1">
           {showSearch && (
-            <div className="flex w-full items-center rounded-full border border-slate-100 bg-slate-50 px-4 py-1.5 transition-all focus-within:ring-2 focus-within:ring-primary/20 md:w-96">
+            <div className="flex items-center bg-slate-50 rounded-full px-4 py-1.5 w-96 border border-slate-100 transition-all focus-within:ring-2 focus-within:ring-primary/20">
               <MaterialIcon
                 name="search"
                 className="text-slate-400 text-sm mr-2"
               />
               <input
-                className="w-full border-none bg-transparent text-xs text-slate-600 placeholder:text-slate-400 focus:ring-0"
+                className="bg-transparent border-none text-xs w-full text-slate-600 placeholder:text-slate-400"
                 onChange={(event) => onSearchTermChange?.(event.target.value)}
                 placeholder={placeholder}
                 type="text"

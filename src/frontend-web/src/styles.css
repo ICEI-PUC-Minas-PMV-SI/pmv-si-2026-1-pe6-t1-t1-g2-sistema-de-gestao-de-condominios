@@ -82,6 +82,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+input{
+  @apply outline-none;
+}
 
 button,
 a {
