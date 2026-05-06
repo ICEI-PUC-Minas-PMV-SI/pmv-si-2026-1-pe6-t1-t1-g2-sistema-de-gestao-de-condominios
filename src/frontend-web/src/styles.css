@@ -83,7 +83,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 input{
-  @apply outline-none;
+  @apply outline-none!;
 }
 
 button,

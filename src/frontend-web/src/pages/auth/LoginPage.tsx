@@ -57,7 +57,7 @@ export function LoginPage() {
               className="text-xs font-bold uppercase tracking-wider"
               style={{ color: "var(--color-on-surface)" }}
             >
-              Modernidade Soft
+               Gestão Inteligente para Condomínios
             </span>
           </div>
 

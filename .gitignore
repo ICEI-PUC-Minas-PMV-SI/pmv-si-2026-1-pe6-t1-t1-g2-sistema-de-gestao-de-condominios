@@ -3,6 +3,7 @@
 ################################################################################
 
 /.vs
+/.vscode/
 
 # Build
 **/bin/
@@ -39,7 +40,8 @@ src/backend/secrets.json
 
 # Configurações de ambiente
 src/backend/appsettings.Development.json
-src/frontend-web/.env
+**/.env*
+
 
 
 

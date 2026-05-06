@@ -15,6 +15,7 @@
     "check": "biome check"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.105.3",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-query": "latest",
     "@tanstack/react-router": "latest",
