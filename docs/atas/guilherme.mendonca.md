@@ -13,10 +13,10 @@
 | **23/03 - 29/03** | APIs e Web Services - Unidade 2 | ✅ | Testes e documentação da API. | - Corrigi **enum/status** das reservas alinhados ao **Supabase**.<br>- Revisei merges e revert nos PRs do fluxo **feature/crud-reservas**.<br>- Reorganizei o **`docs/backend-apis.md`** para voltar ao formato do template.<br>- Trabalhei localmente em configuração (**`appsettings`**) para ambiente de desenvolvimento. |
 | **30/03 - 05/04** | Recuperação de Informação na Web e Redes Sociais - Unidade 1 | ✅ | | - Acompanhei evoluções do módulo de reservas já integrado na `main` e revisei documentação da API com a equipe.<br>- Continuei o estudo dos conteúdos da disciplina de Recuperação de Informação na Web (Unidade 1). |
 | **06/04 - 12/04** | Recuperação de Informação na Web e Redes Sociais - Unidade 2 | ✅ | | - Atualizei **`docs/backend-apis.md`** com objetivos, stack e endpoints do **módulo Reservas** e integrei a branch com a **main**, resolvendo conflitos na documentação.<br>- **Finalizei os microfundamentos.** |
-| **13/04 - 19/04** | Computação Ubíqua e Pervasiva e IoT - Unidade 1 | ⬜ | | |
-| **20/04 - 26/04** | Computação Ubíqua e Pervasiva e IoT - Unidade 2 | ⬜ | | |
-| **27/04 - 03/05** | Desenvolvimento de Aplicações Móveis - Unidade 1 | ⬜ | | |
-| **04/05 - 10/05** | Desenvolvimento de Aplicações Móveis - Unidade 2 | ⬜ | | |
+| **13/04 - 19/04** | Computação Ubíqua e Pervasiva e IoT - Unidade 1 | ✅ | Planejamento do design geral da interface e definição das telas-chave. | - Estruturei o design base do front-end e organizei os fluxos principais para guiar os wireframes. |
+| **20/04 - 26/04** | Computação Ubíqua e Pervasiva e IoT - Unidade 2 | ✅ | Elaboração dos wireframes das telas principais da aplicação web. | - Produzi os wireframes de Login, Dashboard, Reservas, Ocorrências e Gestão de Usuários. |
+| **27/04 - 03/05** | Desenvolvimento de Aplicações Móveis - Unidade 1 | ✅ | Apoio ao time na implementação das telas com base no material de UX/UI. | - Apoiei a implementação visual das telas, alinhando componentes e layout ao design definido. |
+| **04/05 - 10/05** | Desenvolvimento de Aplicações Móveis - Unidade 2 | ✅ | Atualização da documentação do front-end com wireframes e descrição visual. | - Atualizei a documentação da Etapa 3 com wireframes, descrição do design e ajustes de coerência textual. |
 | **11/05 - 17/05** | Desenvolvimento de Aplicações Móveis - Unidade 2 | ⬜ | | |
 | **18/05 - 24/05** | Fundamentos de Projeto e Análise de Algoritmos - Unidade 1 | ⬜ | | |
 | **25/05 - 31/05** | Fundamentos de Projeto e Análise de Algoritmos - Unidade 2 | ⬜ | | |
