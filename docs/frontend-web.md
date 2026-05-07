@@ -1,18 +1,41 @@
 # Front-end Web
 
-[Inclua uma breve descrição do projeto e seus objetivos.]
+O Front-end Web do projeto **Gestão Integrada de Condomínios** foi concebido para oferecer uma experiência clara, responsiva e eficiente aos perfis de **Morador** e **Administrador**. A interface centraliza os fluxos de autenticação, acompanhamento de informações do condomínio e execução de tarefas operacionais (como gestão de usuários, ocorrências, reservas e encomendas), reduzindo atritos da rotina condominial e aumentando a transparência entre administração e condôminos.
 
 ## Projeto da Interface Web
 
-[Descreva o projeto da interface Web da aplicação, incluindo o design visual, layout das páginas, interações do usuário e outros aspectos relevantes.]
+O projeto da interface web adota uma estrutura de navegação orientada a produtividade, com **barra lateral para acesso aos módulos principais**, **barra superior para ações globais** (busca, notificações e configurações) e **área central dinâmica** para apresentação de conteúdo. Esse padrão mantém consistência entre telas e reduz a curva de aprendizado, principalmente para o perfil administrativo que utiliza o sistema com maior frequência no desktop.
+
+No fluxo de uso, as interações priorizam objetividade: formulários de autenticação com validação direta, tabelas com ações de edição e exclusão, modais para operações pontuais (cadastro, filtros, relatórios e confirmação), além de indicadores visuais de status para facilitar tomada de decisão. O desenho da interface também considera o contexto distribuído da solução, consumindo os serviços da API de forma organizada e mantendo o usuário informado sobre estados de carregamento, sucesso e erro.
 
 ### Wireframes
 
-[Inclua os wireframes das páginas principais da interface, mostrando a disposição dos elementos na página.]
+Os wireframes das páginas principais foram definidos para representar o fluxo completo de uso da plataforma, desde o acesso inicial até os módulos de operação. A composição prioriza hierarquia visual, navegação lateral persistente e blocos funcionais com ações bem delimitadas.
+
+As principais telas modeladas são:
+- **Login e Cadastro:** entrada segura na plataforma, com fluxo de autenticação e criação de conta.
+- **Dashboard:** visão geral com atalhos para ações frequentes e acompanhamento de informações relevantes.
+- **Reservas e Ocorrências:** áreas focadas no registro e acompanhamento de solicitações dos moradores.
+- **Gestão/Residentes:** interface administrativa para controle de usuários, permissões e status de contas.
+
+Os wireframes utilizados nesta etapa estão documentados nas imagens anexadas ao trabalho e nas capturas de tela incorporadas ao documento (seções de fluxo de dados), que refletem a disposição dos elementos e os padrões de interação adotados.
+
+#### Wireframes anexados
+![Wireframe - Login](img/wireframes/wireframe-login.png)
+
+![Wireframe - Reservas](img/wireframes/wireframe-reservas.png)
+
+![Wireframe - Ocorrências](img/wireframes/wireframe-ocorrencias.png)
+
+![Wireframe - Dashboard](img/wireframes/wireframe-dashboard.png)
+
+![Wireframe - Gestão de Usuários](img/wireframes/wireframe-gestao-usuarios.png)
 
 ### Design Visual
 
-[Descreva o estilo visual da interface, incluindo paleta de cores, tipografia, ícones e outros elementos gráficos.]
+O design visual segue uma linguagem moderna e limpa, com predominância de tons frios (variações de azul, cinza e branco), transmitindo confiabilidade e organização. O contraste foi planejado para favorecer legibilidade em formulários, tabelas, cards e indicadores de status, com uso de cores de apoio para destacar estados como ativo, pendente, em análise e concluído.
+
+A tipografia sem serifa reforça a leitura em telas administrativas e melhora a escaneabilidade de informações densas. Os ícones têm papel funcional na navegação e nas ações rápidas (notificações, configurações, edição, exclusão e criação), enquanto elementos como cantos arredondados, espaçamento consistente e sombras suaves contribuem para uma experiência visual amigável sem comprometer o caráter profissional da aplicação.
 
 ## Fluxo de Dados
 
