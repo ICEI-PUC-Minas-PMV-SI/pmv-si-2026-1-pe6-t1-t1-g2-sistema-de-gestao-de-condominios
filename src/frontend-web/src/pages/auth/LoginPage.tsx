@@ -233,20 +233,6 @@ export function LoginPage() {
                 </svg>
               }
             />
-            <SocialAuthButton
-              provider="apple"
-              className="h-[50px] flex-1 py-0 border-[var(--color-outline)]"
-              icon={
-                <svg
-                  aria-hidden="true"
-                  className="h-6 w-6"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M17.05 20.28c-.96.95-2.04 1.44-3.14 1.44-1.12 0-1.63-.42-2.94-.42-1.33 0-1.92.42-2.94.42-1.07 0-2.11-.53-3.08-1.5C3.39 18.66 2.5 16.03 2.5 13.5c0-2.55 1.02-4.59 2.6-5.52.88-.53 1.83-.81 2.8-.81 1.02 0 1.63.31 2.76.31s1.74-.31 2.76-.31c1.23 0 2.37.47 3.24 1.34-2.88 1.43-2.42 5.56.54 7.02-.63 1.55-1.48 3.1-2.15 4.25zM12.03 7.25c-.02-2.23 1.84-4.14 3.99-4.25.12 2.23-1.84 4.31-3.99 4.25z" />
-                </svg>
-              }
-            />
           </div>
 
           <div className="mt-8 text-center text-sm">

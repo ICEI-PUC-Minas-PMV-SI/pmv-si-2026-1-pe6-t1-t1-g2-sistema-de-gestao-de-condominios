@@ -35,6 +35,7 @@ src/frontend-web/node_modules
 src/frontend-web/.netlify
 src/frontend-web/.tanstack
 src/frontend-web/dist/
+src/frontend-web/.vscode
 
 # Segredos locais (User Secrets)
 src/backend/secrets.json
