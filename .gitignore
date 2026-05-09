@@ -27,4 +27,8 @@ backend/secrets.json
 backend/appsettings.Development.json
 frontend-web/.env
 
+src/backend/bin/
+src/backend/obj/
+src/frontend-web/node_modules/
+src/frontend-web/dist/
 
