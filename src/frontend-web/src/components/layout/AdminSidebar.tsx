@@ -14,7 +14,7 @@ type AdminSidebarProps = {
 };
 
 const navItems = [
-  { icon: "dashboard", label: "Dashboard" },
+  { icon: "dashboard", label: "Dashboard", to: "/dashboard" },
   { icon: "group", label: "Residentes", to: "/residents" },
   { icon: "event_available", label: "Reservas", to: "/reservations" },
   { icon: "package_2", label: "Encomendas", to: "/deliveries" },

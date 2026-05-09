@@ -1,0 +1,7 @@
+{
+  "provider": "google",
+  "providerSubject": "test-subject-123",
+  "email": "test+social@example.com",
+  "name": "Test Social",
+  "emailVerified": true
+}
