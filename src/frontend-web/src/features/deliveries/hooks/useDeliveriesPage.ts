@@ -34,6 +34,7 @@ export function useDeliveriesPage() {
   const queryClient = useQueryClient();
   const authToken = getAuthToken();
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
+  const [hydrated, setHydrated] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [reportModalOpen, setReportModalOpen] = useState(false);
   const [filterModalOpen, setFilterModalOpen] = useState(false);
@@ -48,22 +49,24 @@ export function useDeliveriesPage() {
 
   useEffect(() => {
     setAuthUser(getAuthUser());
+    setHydrated(true);
   }, []);
 
+  const isAdmin = (authUser?.profile ?? "").toLowerCase() === "administrador";
   const displayName = authUser?.username || authUser?.email || "Usuário";
   const profileLabel = getProfileLabel(authUser?.profile);
   const avatarUrl = getAvatarUrl(displayName, authUser?.profile);
 
   const deliveriesQuery = useQuery({
-    queryKey: ["deliveries"],
-    queryFn: fetchDeliveries,
-    enabled: Boolean(authToken),
+    queryKey: ["deliveries", isAdmin ? "all" : authUser?.id],
+    queryFn: () => fetchDeliveries(isAdmin ? undefined : authUser?.id ?? undefined),
+    enabled: hydrated && Boolean(authToken) && (isAdmin || Boolean(authUser?.id)),
   });
 
   const usersQuery = useQuery({
     queryKey: ["users"],
     queryFn: fetchDeliveryUsers,
-    enabled: Boolean(authToken),
+    enabled: hydrated && Boolean(authToken),
     retry: false,
   });
 
@@ -246,6 +249,7 @@ export function useDeliveriesPage() {
     handleProfileClick,
     handleSubmitDelivery,
     handleSubmitEditDelivery,
+    isAdmin,
     modalOpen,
     openFilterModal,
     profileLabel,

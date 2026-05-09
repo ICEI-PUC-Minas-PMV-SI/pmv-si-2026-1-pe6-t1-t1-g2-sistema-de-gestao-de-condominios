@@ -3,12 +3,20 @@ export type ReservationStatus = "Pendente" | "Aprovada" | "Cancelada";
 export type ReservationApiRecord = {
   id?: number;
   Id?: number;
+  common_area_id?: number;
+  CommonAreaId?: number;
   areaComumId?: number;
   AreaComumId?: number;
+  user_id?: number;
+  UserId?: number;
   moradorId?: number;
   MoradorId?: number;
+  start_time?: string;
+  StartTime?: string;
   dataHoraInicio?: string;
   DataHoraInicio?: string;
+  end_time?: string;
+  EndTime?: string;
   dataHoraFim?: string;
   DataHoraFim?: string;
   status?: ReservationStatus;
@@ -32,7 +40,9 @@ export type Reservation = {
 
 export type ReservationForm = {
   areaComumId: string;
-  dataHoraInicio: string;
-  dataHoraFim: string;
+  dataInicio: string;
+  horaInicio: string;
+  dataFim: string;
+  horaFim: string;
   status: ReservationStatus;
 };

@@ -14,10 +14,18 @@ function getAuthHeaders(): HeadersInit {
 function mapReservation(record: ReservationApiRecord): Reservation {
   return {
     id: Number(record.id ?? record.Id ?? 0),
-    areaComumId: Number(record.areaComumId ?? record.AreaComumId ?? 0),
-    moradorId: Number(record.moradorId ?? record.MoradorId ?? 0),
-    dataHoraInicio: String(record.dataHoraInicio ?? record.DataHoraInicio ?? ""),
-    dataHoraFim: String(record.dataHoraFim ?? record.DataHoraFim ?? ""),
+    areaComumId: Number(
+      record.common_area_id ?? record.CommonAreaId ?? record.areaComumId ?? record.AreaComumId ?? 0,
+    ),
+    moradorId: Number(
+      record.user_id ?? record.UserId ?? record.moradorId ?? record.MoradorId ?? 0,
+    ),
+    dataHoraInicio: String(
+      record.start_time ?? record.StartTime ?? record.dataHoraInicio ?? record.DataHoraInicio ?? "",
+    ),
+    dataHoraFim: String(
+      record.end_time ?? record.EndTime ?? record.dataHoraFim ?? record.DataHoraFim ?? "",
+    ),
     status: (record.status ?? record.Status ?? "Pendente") as Reservation["status"],
     createdAt: (record.createdAt ?? record.CreatedAt ?? null) as string | null,
     updatedAt: (record.updatedAt ?? record.UpdatedAt ?? null) as string | null,
@@ -39,10 +47,10 @@ export async function createReservation(
     method: "POST",
     headers: getAuthHeaders(),
     body: JSON.stringify({
-      areaComumId: Number(payload.areaComumId),
-      moradorId,
-      dataHoraInicio: new Date(payload.dataHoraInicio).toISOString(),
-      dataHoraFim: new Date(payload.dataHoraFim).toISOString(),
+      common_area_id: Number(payload.areaComumId),
+      user_id: moradorId,
+      start_time: new Date(`${payload.dataInicio}T${payload.horaInicio}`).toISOString(),
+      end_time: new Date(`${payload.dataFim}T${payload.horaFim}`).toISOString(),
       status: payload.status,
     }),
   });
@@ -55,11 +63,10 @@ export async function updateReservation(id: number, payload: Reservation) {
     method: "PUT",
     headers: getAuthHeaders(),
     body: JSON.stringify({
-      id,
-      areaComumId: payload.areaComumId,
-      moradorId: payload.moradorId,
-      dataHoraInicio: new Date(payload.dataHoraInicio).toISOString(),
-      dataHoraFim: new Date(payload.dataHoraFim).toISOString(),
+      common_area_id: payload.areaComumId,
+      user_id: payload.moradorId,
+      start_time: new Date(payload.dataHoraInicio).toISOString(),
+      end_time: new Date(payload.dataHoraFim).toISOString(),
       status: payload.status,
     }),
   });

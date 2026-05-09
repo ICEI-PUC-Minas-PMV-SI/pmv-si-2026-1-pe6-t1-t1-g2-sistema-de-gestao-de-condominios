@@ -7,8 +7,9 @@ function getAuthHeaders(): HeadersInit {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
-export function fetchDeliveries() {
-  return apiRequest<Delivery[]>("/api/Deliveries", {
+export function fetchDeliveries(recipientUserId?: number) {
+  const params = recipientUserId ? `?recipientUserId=${recipientUserId}` : "";
+  return apiRequest<Delivery[]>(`/api/Deliveries${params}`, {
     headers: getAuthHeaders(),
   });
 }

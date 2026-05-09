@@ -12,7 +12,7 @@ namespace backend.Models
     /// </summary>
     public class IgnoreIdConverter<T> : JsonConverter<T> where T : new()
     {
-        private static readonly PropertyInfo[] Props = 
+        private static readonly PropertyInfo[] Props =
             typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
         public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -57,7 +57,6 @@ namespace backend.Models
                 return;
             }
 
-            // Serializar manualmente cada propriedade
             writer.WriteStartObject();
 
             foreach (var property in Props)
@@ -69,9 +68,8 @@ namespace backend.Models
                 var jsonName = jsonPropertyAttr?.Name ?? property.Name;
                 var propValue = property.GetValue(value);
 
-                // Serializar como JSON primitivo sem usar conversor
                 writer.WritePropertyName(jsonName);
-                
+
                 if (propValue == null)
                 {
                     writer.WriteNullValue();
@@ -98,7 +96,6 @@ namespace backend.Models
                 }
                 else
                 {
-                    // Para tipos complexos, usar JsonSerializer sem conversor deste tipo
                     var jsonStr = JsonSerializer.Serialize(propValue, propValue.GetType(), new JsonSerializerOptions(options) { WriteIndented = false });
                     using (var jsonDoc = JsonDocument.Parse(jsonStr))
                     {
