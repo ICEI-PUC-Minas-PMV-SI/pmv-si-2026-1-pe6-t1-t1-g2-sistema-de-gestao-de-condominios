@@ -1,10 +1,30 @@
-################################################################################
-# Este arquivo .gitignore foi criado automaticamente pelo Microsoft(R) Visual Studio.
-################################################################################
+# Build output
+backend/bin/
+backend/obj/
 
-/.vs
+# Visual Studio / usuário
+.vs/
+backend/.vs/
+backend/*.user
+backend/*.rsuser
+backend/*.suo
+frontend-web/.vscode/
 
-# Build
-**/bin/
-**/obj/
-*.user
+# Logs e arquivos temporários
+backend/*.log
+backend/logs/
+backend/TestResults/
+
+# Publicação local
+backend/publish/
+backend/artifacts/
+frontend-web/node_modules
+
+# Segredos locais (User Secrets)
+backend/secrets.json
+
+# Configurações de ambiente
+backend/appsettings.Development.json
+frontend-web/.env
+
+
