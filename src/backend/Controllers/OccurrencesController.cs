@@ -12,11 +12,13 @@ namespace backend.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _environment;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public OccurrencesController(IConfiguration configuration, IWebHostEnvironment environment)
+        public OccurrencesController(IConfiguration configuration, IWebHostEnvironment environment, IHttpClientFactory httpClientFactory)
         {
             _configuration = configuration;
             _environment = environment;
+            _httpClientFactory = httpClientFactory;
         }
 
         // --- LISTAGEM E BUSCA ---
@@ -314,13 +316,48 @@ namespace backend.Controllers
             if (!allowedTypes.Contains(file.ContentType)) return BadRequest("Tipo não permitido.");
             if (file.Length > 50 * 1024 * 1024) return BadRequest("Máximo 50MB");
 
-            var uploadsDir = Path.Combine(_environment.ContentRootPath, "uploads", "occurrences");
-            Directory.CreateDirectory(uploadsDir);
             var fileName = $"{id}_{DateTime.UtcNow.Ticks}_{Path.GetFileName(file.FileName)}";
-            var filePath = Path.Combine(uploadsDir, fileName);
+            string filePublicPath;
 
-            await using (var stream = new FileStream(filePath, FileMode.Create))
-                await file.CopyToAsync(stream, ct);
+            var supabaseUrl = Environment.GetEnvironmentVariable("SUPABASE_URL");
+            var supabaseKey = Environment.GetEnvironmentVariable("SUPABASE_SERVICE_KEY");
+
+            if (!string.IsNullOrWhiteSpace(supabaseUrl) && !string.IsNullOrWhiteSpace(supabaseKey))
+            {
+                // Produção: upload para Supabase Storage
+                using var memoryStream = new MemoryStream();
+                await file.CopyToAsync(memoryStream, ct);
+                memoryStream.Position = 0;
+
+                var uploadUrl = $"{supabaseUrl.TrimEnd('/')}/storage/v1/object/occurrence-images/{fileName}";
+                var httpClient = _httpClientFactory.CreateClient();
+                using var content = new StreamContent(memoryStream);
+                content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+
+                using var request = new HttpRequestMessage(HttpMethod.Post, uploadUrl);
+                request.Headers.Add("Authorization", $"Bearer {supabaseKey}");
+                request.Headers.Add("x-upsert", "true");
+                request.Content = content;
+
+                var response = await httpClient.SendAsync(request, ct);
+                if (!response.IsSuccessStatusCode)
+                {
+                    var body = await response.Content.ReadAsStringAsync(ct);
+                    return StatusCode(500, $"Erro no upload para Supabase Storage: {body}");
+                }
+
+                filePublicPath = $"{supabaseUrl.TrimEnd('/')}/storage/v1/object/public/occurrence-images/{fileName}";
+            }
+            else
+            {
+                // Desenvolvimento: fallback para disco local
+                var uploadsDir = Path.Combine(_environment.ContentRootPath, "uploads", "occurrences");
+                Directory.CreateDirectory(uploadsDir);
+                var filePath = Path.Combine(uploadsDir, fileName);
+                await using (var stream = new FileStream(filePath, FileMode.Create))
+                    await file.CopyToAsync(stream, ct);
+                filePublicPath = $"/uploads/occurrences/{fileName}";
+            }
 
             await using var connection = new NpgsqlConnection(connectionString);
             await connection.OpenAsync(ct);
@@ -330,7 +367,7 @@ namespace backend.Controllers
                 RETURNING *;";
             await using var command = new NpgsqlCommand(sql, connection);
             command.Parameters.AddWithValue("o", id);
-            command.Parameters.AddWithValue("p", $"/uploads/occurrences/{fileName}");
+            command.Parameters.AddWithValue("p", filePublicPath);
             command.Parameters.AddWithValue("n", file.FileName);
             command.Parameters.AddWithValue("m", file.ContentType);
             command.Parameters.AddWithValue("s", (int)file.Length);

@@ -78,13 +78,15 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 
 // Configurar CORS
+var frontendUrl = Environment.GetEnvironmentVariable("FRONTEND_URL");
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
+        if (!string.IsNullOrWhiteSpace(frontendUrl))
+            policy.WithOrigins(frontendUrl).AllowAnyMethod().AllowAnyHeader();
+        else
+            policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
     });
 });
 
@@ -171,12 +173,18 @@ else
 }
 
 app.UseStaticFiles();
-app.UseStaticFiles(new StaticFileOptions
+if (app.Environment.IsDevelopment())
 {
-    FileProvider = new PhysicalFileProvider(
-        Path.Combine(builder.Environment.ContentRootPath, "uploads")),
-    RequestPath = "/uploads"
-});
+    var uploadsPath = Path.Combine(builder.Environment.ContentRootPath, "uploads");
+    if (Directory.Exists(uploadsPath))
+    {
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(uploadsPath),
+            RequestPath = "/uploads"
+        });
+    }
+}
 app.UseCors("AllowAll");
 app.UseRouting();
 
