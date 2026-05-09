@@ -135,6 +135,44 @@ namespace backend.Controllers
             }
         }
 
+        [HttpPatch("{id:int}/read-status")]
+        public async Task<ActionResult<Notification>> UpdateReadStatus(
+            int id,
+            [FromBody] NotificationReadStatusRequest requestBody,
+            CancellationToken cancellationToken)
+        {
+            var (connectionString, errorResult) = GetConnectionString();
+            if (errorResult is not null) return errorResult;
+
+            try
+            {
+                await using var connection = new NpgsqlConnection(connectionString);
+                await connection.OpenAsync(cancellationToken);
+                const string sql = @"
+                    UPDATE public.notifications
+                    SET is_read = @is_read,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE id = @id
+                    RETURNING id, user_id, type, message, is_read,
+                              reservation_id, occurrence_id, delivery_id,
+                              created_at, updated_at;";
+
+                await using var command = new NpgsqlCommand(sql, connection);
+                command.Parameters.AddWithValue("id", id);
+                command.Parameters.AddWithValue("is_read", requestBody.IsRead);
+
+                await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+                if (!await reader.ReadAsync(cancellationToken))
+                    return NotFound();
+
+                return Ok(MapNotification(reader));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiError($"Erro ao atualizar status da notificação: {ex.Message}"));
+            }
+        }
+
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {
@@ -189,5 +227,10 @@ namespace backend.Controllers
                 UpdatedAt = reader.IsDBNull(reader.GetOrdinal("updated_at")) ? null : reader.GetDateTime(reader.GetOrdinal("updated_at")),
             };
         }
+    }
+
+    public class NotificationReadStatusRequest
+    {
+        public bool IsRead { get; set; }
     }
 }

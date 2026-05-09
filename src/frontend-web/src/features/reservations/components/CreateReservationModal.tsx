@@ -53,34 +53,68 @@ export function CreateReservationModal({
           </select>
         </div>
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-700" htmlFor="dataHoraInicio">
-            Inicio
-          </label>
-          <input
-            id="dataHoraInicio"
-            name="dataHoraInicio"
-            type="datetime-local"
-            value={form.dataHoraInicio}
-            onChange={onChange}
-            required
-            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
-          />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-slate-700" htmlFor="dataInicio">
+              Data de início
+            </label>
+            <input
+              id="dataInicio"
+              name="dataInicio"
+              type="date"
+              value={form.dataInicio}
+              onChange={onChange}
+              required
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-slate-700" htmlFor="horaInicio">
+              Hora de início
+            </label>
+            <input
+              id="horaInicio"
+              name="horaInicio"
+              type="time"
+              value={form.horaInicio}
+              onChange={onChange}
+              required
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
+            />
+          </div>
         </div>
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-700" htmlFor="dataHoraFim">
-            Fim
-          </label>
-          <input
-            id="dataHoraFim"
-            name="dataHoraFim"
-            type="datetime-local"
-            value={form.dataHoraFim}
-            onChange={onChange}
-            required
-            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
-          />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-slate-700" htmlFor="dataFim">
+              Data de fim
+            </label>
+            <input
+              id="dataFim"
+              name="dataFim"
+              type="date"
+              value={form.dataFim}
+              onChange={onChange}
+              required
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-slate-700" htmlFor="horaFim">
+              Hora de fim
+            </label>
+            <input
+              id="horaFim"
+              name="horaFim"
+              type="time"
+              value={form.horaFim}
+              onChange={onChange}
+              required
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
+            />
+          </div>
         </div>
 
         {isAdmin && (

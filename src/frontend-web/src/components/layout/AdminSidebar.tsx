@@ -19,6 +19,7 @@ const navItems = [
   { icon: "event_available", label: "Reservas", to: "/reservations" },
   { icon: "package_2", label: "Encomendas", to: "/deliveries" },
   { icon: "build", label: "Manutenção", to: "/occurrences" },
+  { icon: "notifications", label: "Notificações", to: "/notifications" },
 ];
 
 export function AdminSidebar({

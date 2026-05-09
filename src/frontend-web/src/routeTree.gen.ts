@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ResidentsRouteImport } from './routes/residents'
 import { Route as ReservationsRouteImport } from './routes/reservations'
 import { Route as OccurrencesRouteImport } from './routes/occurrences'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DeliveriesRouteImport } from './routes/deliveries'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -32,6 +33,11 @@ const ReservationsRoute = ReservationsRouteImport.update({
 const OccurrencesRoute = OccurrencesRouteImport.update({
   id: '/occurrences',
   path: '/occurrences',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/deliveries': typeof DeliveriesRoute
   '/login': typeof LoginRoute
+  '/notifications': typeof NotificationsRoute
   '/occurrences': typeof OccurrencesRoute
   '/reservations': typeof ReservationsRoute
   '/residents': typeof ResidentsRoute
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/deliveries': typeof DeliveriesRoute
   '/login': typeof LoginRoute
+  '/notifications': typeof NotificationsRoute
   '/occurrences': typeof OccurrencesRoute
   '/reservations': typeof ReservationsRoute
   '/residents': typeof ResidentsRoute
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/deliveries': typeof DeliveriesRoute
   '/login': typeof LoginRoute
+  '/notifications': typeof NotificationsRoute
   '/occurrences': typeof OccurrencesRoute
   '/reservations': typeof ReservationsRoute
   '/residents': typeof ResidentsRoute
@@ -107,6 +116,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/deliveries'
     | '/login'
+    | '/notifications'
     | '/occurrences'
     | '/reservations'
     | '/residents'
@@ -118,6 +128,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/deliveries'
     | '/login'
+    | '/notifications'
     | '/occurrences'
     | '/reservations'
     | '/residents'
@@ -129,6 +140,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/deliveries'
     | '/login'
+    | '/notifications'
     | '/occurrences'
     | '/reservations'
     | '/residents'
@@ -141,6 +153,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   DeliveriesRoute: typeof DeliveriesRoute
   LoginRoute: typeof LoginRoute
+  NotificationsRoute: typeof NotificationsRoute
   OccurrencesRoute: typeof OccurrencesRoute
   ReservationsRoute: typeof ReservationsRoute
   ResidentsRoute: typeof ResidentsRoute
@@ -168,6 +181,13 @@ declare module '@tanstack/react-router' {
       path: '/occurrences'
       fullPath: '/occurrences'
       preLoaderRoute: typeof OccurrencesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -221,6 +241,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   DeliveriesRoute: DeliveriesRoute,
   LoginRoute: LoginRoute,
+  NotificationsRoute: NotificationsRoute,
   OccurrencesRoute: OccurrencesRoute,
   ReservationsRoute: ReservationsRoute,
   ResidentsRoute: ResidentsRoute,

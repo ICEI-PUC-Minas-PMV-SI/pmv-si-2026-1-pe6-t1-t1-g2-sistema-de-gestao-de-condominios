@@ -15,15 +15,35 @@ import type { Reservation, ReservationForm } from "../types/reservation";
 
 const EMPTY_FORM: ReservationForm = {
   areaComumId: "",
-  dataHoraInicio: "",
-  dataHoraFim: "",
+  dataInicio: "",
+  horaInicio: "",
+  dataFim: "",
+  horaFim: "",
   status: "Pendente",
 };
 
 function toInputDateTime(isoDateTime: string) {
   const date = new Date(isoDateTime);
-  const timezoneOffset = date.getTimezoneOffset() * 60000;
-  return new Date(date.getTime() - timezoneOffset).toISOString().slice(0, 16);
+  // Extract UTC components to avoid timezone conversion issues
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  const hours = String(date.getUTCHours()).padStart(2, "0");
+  const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
+function combineDateTime(date: string, time: string): string {
+  const normalizedTime = time.substring(0, 5);
+  const isoString = `${date}T${normalizedTime}:00`; // sem Z
+  const result = new Date(isoString);
+
+  if (isNaN(result.getTime())) {
+    throw new Error(`Data inválida: ${isoString}`);
+  }
+
+  return result.toISOString();
 }
 
 export function useReservationsPage() {
@@ -74,25 +94,33 @@ export function useReservationsPage() {
     },
   });
 
-  const updateMutation = useMutation({
-    mutationFn: async () => {
-      if (!editingReservation) {
-        throw new Error("Nenhuma reserva selecionada para edição.");
-      }
+const updateMutation = useMutation({
+  mutationFn: async () => {
+    if (!editingReservation) {
+      throw new Error("Nenhuma reserva selecionada para edição.");
+    }
 
-      return updateReservation(editingReservation.id, {
-        ...editingReservation,
-        areaComumId: Number(form.areaComumId),
-        dataHoraInicio: form.dataHoraInicio,
-        dataHoraFim: form.dataHoraFim,
-        status: form.status,
-      });
-    },
-    onSuccess: () => {
-      handleCloseModal();
-      queryClient.invalidateQueries({ queryKey: ["reservations"] });
-    },
-  });
+    const payload = {
+      id: editingReservation.id,
+      areaComumId: Number(form.areaComumId),
+      moradorId: editingReservation.moradorId,
+      dataHoraInicio: combineDateTime(form.dataInicio, form.horaInicio),
+      dataHoraFim: combineDateTime(form.dataFim, form.horaFim),
+      status: form.status,
+      createdAt: editingReservation.createdAt,
+      updatedAt: editingReservation.updatedAt,
+    };
+
+    return updateReservation(editingReservation.id, payload);
+  },
+  onSuccess: () => {
+    handleCloseModal();
+    queryClient.invalidateQueries({ queryKey: ["reservations"] });
+  },
+  onError: (error) => {
+    console.error("Erro ao atualizar:", error);
+  },
+});
 
   const deleteMutation = useMutation({
     mutationFn: deleteReservation,
@@ -147,11 +175,16 @@ export function useReservationsPage() {
   }
 
   function openEditModal(reservation: Reservation) {
+    const start = toInputDateTime(reservation.dataHoraInicio).split("T");
+    const end = toInputDateTime(reservation.dataHoraFim).split("T");
+
     setEditingReservation(reservation);
     setForm({
       areaComumId: String(reservation.areaComumId),
-      dataHoraInicio: toInputDateTime(reservation.dataHoraInicio),
-      dataHoraFim: toInputDateTime(reservation.dataHoraFim),
+      dataInicio: start[0],
+      horaInicio: start[1],
+      dataFim: end[0],
+      horaFim: end[1],
       status: reservation.status,
     });
     setModalOpen(true);

@@ -45,15 +45,6 @@ export function AdminTopbar({
             </div>
           )}
         </div>
-        <div className="flex items-center gap-4">
-          <button
-            className="w-10 h-10 flex items-center justify-center text-slate-600 hover:bg-slate-50 rounded-full transition-colors relative"
-            type="button"
-          >
-            <MaterialIcon name="notifications" />
-            <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-error rounded-full border-2 border-white" />
-          </button>
-        </div>
       </header>
       <Modal
         open={profileOpen}
