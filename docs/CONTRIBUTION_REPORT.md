@@ -1,6 +1,6 @@
 # 📊 Relatório de Contribuições do Projeto
 
-**Última atualização:** 09/05/2026 21:41
+**Última atualização:** 09/05/2026 21:53
 
 ---
 
@@ -13,13 +13,13 @@
 | Gabriel Oliveira       |        36 |       208 |        80 |         13 |             29 |               5 |
 | Guilherme Mendonca     |        11 |      1079 |       362 |         20 |              9 |               3 |
 | Guilherme Mendonça     |         2 |       768 |         8 |         19 |              1 |               2 |
-| Isaac                  |         3 |      1728 |       363 |         31 |              0 |               0 |
+| Isaac                  |         6 |      1732 |       582 |         31 |              0 |               0 |
 | Isaac Samuel           |        14 |        89 |        76 |          6 |             12 |               5 |
 | Mathbkj                |        39 |     32562 |      6914 |        208 |              3 |               1 |
 | Mukimiw4a              |        38 |      1327 |       235 |         31 |             28 |               9 |
 | YanGuimaraesMartins    |        10 |       300 |        16 |          8 |              7 |               4 |
 | copilot-swe-agent[bot] |         1 |         0 |         0 |          0 |              0 |               0 |
-| github-actions[bot]    |        90 |       688 |       669 |          3 |             90 |               1 |
+| github-actions[bot]    |        91 |       695 |       676 |          3 |             91 |               1 |
 | github-classroom[bot]  |         1 |      2152 |         0 |         45 |              1 |              13 |
 | guigsmendonca          |        21 |       178 |       150 |          9 |             16 |               4 |
 | tuxego                 |         1 |   5263498 |         1 |      34971 |              0 |               0 |
@@ -27,7 +27,7 @@
 
 ## 📅 Contribuições Semanais (Todo o Semestre)
 
-**2026-05-02**: Bruno Alfeu: 7, Gabriel: 3, Gabriel Oliveira: 5, Guilherme Mendonça: 2, Isaac: 1, Isaac Samuel: 2, Mathbkj: 18, Mukimiw4a: 6, copilot-swe-agent[bot]: 1, github-actions[bot]: 17, guigsmendonca: 1, tuxego: 1
+**2026-05-02**: Bruno Alfeu: 7, Gabriel: 3, Gabriel Oliveira: 5, Guilherme Mendonça: 2, Isaac: 4, Isaac Samuel: 2, Mathbkj: 18, Mukimiw4a: 6, copilot-swe-agent[bot]: 1, github-actions[bot]: 18, guigsmendonca: 1, tuxego: 1
 
 **2026-04-25**: Mathbkj: 1, Mukimiw4a: 3, github-actions[bot]: 3
 
