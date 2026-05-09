@@ -6,7 +6,7 @@ namespace backend.Services
 {
     public static class JwtGen
     {
-        public static string secret_key {get; set; }
+        public static string secret_key {get; set; } = string.Empty;
         public static string CreateToken(int userId, string profile, string? username = null, string? email = null)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

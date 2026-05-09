@@ -113,7 +113,37 @@ else
 
 var app = builder.Build();
 
-// Logger de inicialização
+// Apply DB bootstrap SQL (idempotent) if available
+try
+{
+    var resolvedConnectionStringForApply = builder.Configuration.GetConnectionString("DefaultConnection");
+    if (!string.IsNullOrWhiteSpace(resolvedConnectionStringForApply))
+    {
+        var sqlPath = Path.Combine(Directory.GetCurrentDirectory(), "sql", "add_federated_identity.sql");
+        if (File.Exists(sqlPath))
+        {
+            var sql = File.ReadAllText(sqlPath);
+            try
+            {
+                using var conn = new Npgsql.NpgsqlConnection(resolvedConnectionStringForApply);
+                conn.Open();
+                using var cmd = conn.CreateCommand();
+                cmd.CommandText = sql;
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                var logger = app.Services.GetService<ILoggerFactory>()?.CreateLogger("Startup");
+                logger?.LogWarning("Could not apply DB bootstrap SQL: {0}", ex.Message);
+            }
+        }
+    }
+}
+catch
+{
+    // swallow any errors here to avoid blocking startup
+}
+
 app.Lifetime.ApplicationStarted.Register(() =>
 {
     if (!app.Environment.IsDevelopment()) return;

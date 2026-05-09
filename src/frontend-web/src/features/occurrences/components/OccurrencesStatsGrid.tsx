@@ -5,8 +5,8 @@ type Props = { stats: OccurrenceStats; };
 
 export function OccurrencesStatsGrid({ stats }: Props) {
     return (
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-4">
+        <section className="grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-6">
+            <div className="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-4 md:p-6">
                 <div className="p-4 rounded-xl bg-slate-100 text-slate-600">
                     <MaterialIcon name="inbox" />
                 </div>
@@ -16,7 +16,7 @@ export function OccurrencesStatsGrid({ stats }: Props) {
                 </div>
             </div>
 
-            <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-4">
+            <div className="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-4 md:p-6">
                 <div className="p-4 rounded-xl bg-slate-100 text-slate-600">
                     <MaterialIcon name="check_circle" />
                 </div>
@@ -26,7 +26,7 @@ export function OccurrencesStatsGrid({ stats }: Props) {
                 </div>
             </div>
 
-            <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-4">
+            <div className="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-4 md:p-6">
                 <div className="p-4 rounded-xl bg-orange-50 text-orange-500">
                     <MaterialIcon name="schedule" />
                 </div>

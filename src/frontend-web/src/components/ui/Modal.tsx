@@ -13,10 +13,9 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
 	return (
 		<div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm transition-all">
 			<div
-				className="bg-surface text-on-surface rounded-xl shadow-2xl w-full max-w-2xl sm:max-w-xl mx-4 p-6 md:p-10 relative flex flex-col animate-fade-in"
+				className="bg-surface text-on-surface mx-4 flex w-full max-w-[calc(100vw-2rem)] flex-col rounded-xl p-6 shadow-2xl animate-fade-in sm:max-w-xl md:max-w-2xl md:p-10"
 				style={{
 					minWidth: "320px",
-					maxWidth: "600px",
 					maxHeight: "90vh",
 					overflowY: "auto",
 				}}

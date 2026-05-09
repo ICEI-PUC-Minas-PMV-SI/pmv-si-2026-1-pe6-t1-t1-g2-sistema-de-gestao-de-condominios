@@ -100,11 +100,11 @@ export function ProfileConfigModal({
         type="button"
       />
       <main
-        className="relative bg-white w-full max-w-4xl rounded-[32px] shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in duration-300"
+        className="relative flex w-full max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-[32px] bg-white shadow-2xl animate-in fade-in zoom-in duration-300 md:max-w-4xl"
         data-purpose="settings-modal-container"
       >
         {/* Header */}
-        <header className="px-8 pt-8 pb-4 flex items-center justify-between border-b border-gray-100">
+        <header className="flex items-center justify-between border-b border-gray-100 px-6 pb-4 pt-6 md:px-8 md:pt-8">
           <div className="flex items-center gap-4">
             <div className="p-2.5 bg-[#2e4a7d] rounded-xl text-white">
               <Settings className="h-6 w-6" strokeWidth={2} />
@@ -123,10 +123,10 @@ export function ProfileConfigModal({
         </header>
 
         {/* Content Area */}
-        <div className="flex flex-1 min-h-[500px]">
+        <div className="flex min-h-[500px] flex-1 flex-col md:flex-row">
           {/* Modal Sidebar */}
           <aside
-            className="w-64 border-r border-gray-100 p-6 flex flex-col gap-2"
+            className="flex flex-col gap-2 border-b border-gray-100 p-4 md:w-64 md:border-b-0 md:border-r md:p-6"
             data-purpose="modal-sidebar"
           >
             <nav>
@@ -141,7 +141,7 @@ export function ProfileConfigModal({
           </aside>
 
           {/* Main Content */}
-          <section className="flex-1 p-10" data-purpose="profile-content">
+          <section className="flex-1 p-6 md:p-10" data-purpose="profile-content">
             <header className="mb-8">
               <h2 className="text-xl font-bold text-slate-800">
                 Informações do Perfil
@@ -179,7 +179,7 @@ export function ProfileConfigModal({
               data-purpose="profile-edit-form"
               onSubmit={handleSubmit}
             >
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="space-y-2">
                   <label
                     className="block text-sm font-semibold text-slate-600 ml-1"
@@ -245,7 +245,7 @@ export function ProfileConfigModal({
         </div>
 
         {/* Footer */}
-        <footer className="px-8 py-6 flex items-center justify-end gap-6 bg-gray-50/30">
+        <footer className="flex items-center justify-end gap-4 bg-gray-50/30 px-6 py-6 md:gap-6 md:px-8">
           <button
             className="text-slate-500 font-medium hover:text-slate-800 transition-colors"
             onClick={onClose}

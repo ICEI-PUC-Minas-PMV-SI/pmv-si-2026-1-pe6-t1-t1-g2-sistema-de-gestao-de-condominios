@@ -7,6 +7,7 @@ import { getUserLabel } from "../utils/delivery-formatters";
 type EditDeliveryModalProps = {
   delivery: Delivery | null;
   errorMessage?: string;
+  formData?: Record<string, string>;
   isPending: boolean;
   onChange: (
     event: ChangeEvent<
@@ -22,6 +23,7 @@ type EditDeliveryModalProps = {
 export function EditDeliveryModal({
   delivery,
   errorMessage,
+  formData = {},
   isPending,
   onChange,
   onClose,
@@ -31,12 +33,12 @@ export function EditDeliveryModal({
 }: EditDeliveryModalProps) {
   if (!delivery) return null;
 
-  const arrivalDate = new Date(delivery.arrival_date)
+  const arrivalDate = formData.arrivalDate || (new Date(delivery.arrival_date)
     .toISOString()
-    .split("T")[0];
-  const arrivalTime = new Date(delivery.arrival_date)
+    .split("T")[0]);
+  const arrivalTime = formData.arrivalTime || (new Date(delivery.arrival_date)
     .toTimeString()
-    .slice(0, 5);
+    .slice(0, 5));
 
   return (
     <Modal open={open} onClose={onClose} title="Editar Encomenda">
@@ -54,7 +56,7 @@ export function EditDeliveryModal({
               id="recipientUserId"
               name="recipientUserId"
               onChange={onChange}
-              value={delivery.recipient_user_id?.toString() ?? ""}
+              value={formData.recipientUserId ?? ""}
             >
               <option value="">Sem destinatário vinculado</option>
               {users.map((user) => (
@@ -71,7 +73,7 @@ export function EditDeliveryModal({
               onChange={onChange}
               placeholder="ID do destinatário"
               type="number"
-              value={delivery.recipient_user_id?.toString() ?? ""}
+              value={formData.recipientUserId ?? ""}
             />
           )}
         </div>
@@ -90,7 +92,7 @@ export function EditDeliveryModal({
             placeholder="Descrição registrada para esta encomenda"
             required
             rows={3}
-            value={delivery.description ?? ""}
+            value={formData.description ?? ""}
           />
         </div>
         <div className="flex flex-col gap-2">
@@ -105,7 +107,7 @@ export function EditDeliveryModal({
             id="status"
             name="status"
             onChange={onChange}
-            value={delivery.status ?? ""}
+            value={formData.status ?? ""}
           >
             {DELIVERY_STATUS_OPTIONS.map((status) => (
               <option key={status} value={status}>
@@ -114,7 +116,7 @@ export function EditDeliveryModal({
             ))}
           </select>
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="flex flex-col gap-2">
             <label
               className="text-sm font-semibold text-on-surface"
@@ -128,7 +130,7 @@ export function EditDeliveryModal({
               name="arrivalDate"
               onChange={onChange}
               type="date"
-              value={arrivalDate}
+              value={formData.arrivalDate ?? arrivalDate}
             />
           </div>
           <div className="flex flex-col gap-2">
@@ -144,7 +146,7 @@ export function EditDeliveryModal({
               name="arrivalTime"
               onChange={onChange}
               type="time"
-              value={arrivalTime}
+              value={formData.arrivalTime ?? arrivalTime}
             />
           </div>
         </div>

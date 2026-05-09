@@ -36,7 +36,7 @@ export function AdminTopbar({
                 className="text-slate-400 text-sm mr-2"
               />
               <input
-                className="bg-transparent border-none text-xs focus:ring-0 w-full text-slate-600 placeholder:text-slate-400"
+                className="bg-transparent border-none text-xs w-full text-slate-600 placeholder:text-slate-400"
                 onChange={(event) => onSearchTermChange?.(event.target.value)}
                 placeholder={placeholder}
                 type="text"

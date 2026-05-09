@@ -41,13 +41,13 @@ export function DeliveriesPage() {
         searchTerm={page.searchTerm}
       />
 
-      <main className="ml-64 p-8 min-h-screen">
+      <main className="min-h-screen p-4 md:ml-64 md:p-8">
         <ProfileConfigModal
           authUser={page.authUser}
           isOpen={profileModal.isOpen}
           onClose={profileModal.close}
         />
-        <div className="max-w-7xl mx-auto space-y-8">
+        <div className="mx-auto max-w-7xl space-y-6 md:space-y-8">
           <DeliveryPageHeader
             onCreateClick={() => page.setModalOpen(true)}
             canCreate={canCreateDeliveries(page.authUser?.profile)}
@@ -107,35 +107,11 @@ export function DeliveriesPage() {
             <EditDeliveryModal
               delivery={page.editingDelivery}
               errorMessage={page.updateDeliveryMutation.error?.message}
+              formData={page.formData}
               isPending={page.updateDeliveryMutation.isPending}
-              onChange={(e) =>
-                e.target.name &&
-                page.setFormData((prev) => ({
-                  ...prev,
-                  [e.target.name]: e.target.value,
-                }))
-              }
+              onChange={page.handleEditFormChange}
               onClose={() => page.setEditModalOpen(false)}
-              onSubmit={(e) => {
-                e.preventDefault();
-                const form = e.currentTarget;
-                const formData = new FormData(form);
-                const recipientUserId = formData.get("recipient_user_id");
-                const arrivalDate = String(formData.get("arrivalDate") ?? "");
-                const arrivalTime = String(formData.get("arrivalTime") ?? "");
-                const arrivalDateTime = new Date(`${arrivalDate}T${arrivalTime}:00`).toISOString();
-                page.updateDeliveryMutation.mutate({
-                  id: page.editingDelivery!.id,
-                  data: {
-                    recipient_user_id: recipientUserId
-                      ? Number(recipientUserId)
-                      : null,
-                    description: String(formData.get("description") ?? ""),
-                    status: String(formData.get("status") ?? ""),
-                    arrival_date: arrivalDateTime,
-                  },
-                });
-              }}
+              onSubmit={page.handleSubmitEditDelivery}
               open={page.editModalOpen}
               users={page.usersQuery.data ?? []}
             />

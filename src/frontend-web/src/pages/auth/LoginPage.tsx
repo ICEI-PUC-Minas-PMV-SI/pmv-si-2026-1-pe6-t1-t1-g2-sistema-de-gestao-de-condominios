@@ -57,7 +57,7 @@ export function LoginPage() {
               className="text-xs font-bold uppercase tracking-wider"
               style={{ color: "var(--color-on-surface)" }}
             >
-              Modernidade Soft
+               Gestão Inteligente para Condomínios
             </span>
           </div>
 
@@ -210,6 +210,7 @@ export function LoginPage() {
 
           <div className="flex gap-4">
             <SocialAuthButton
+              provider="google"
               className="h-[50px] flex-1 py-0 border-[var(--color-outline)]"
               icon={
                 <svg aria-hidden="true" className="h-6 w-6" viewBox="0 0 24 24">
@@ -229,19 +230,6 @@ export function LoginPage() {
                     d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                     fill="#EA4335"
                   />
-                </svg>
-              }
-            />
-            <SocialAuthButton
-              className="h-[50px] flex-1 py-0 border-[var(--color-outline)]"
-              icon={
-                <svg
-                  aria-hidden="true"
-                  className="h-6 w-6"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M17.05 20.28c-.96.95-2.04 1.44-3.14 1.44-1.12 0-1.63-.42-2.94-.42-1.33 0-1.92.42-2.94.42-1.07 0-2.11-.53-3.08-1.5C3.39 18.66 2.5 16.03 2.5 13.5c0-2.55 1.02-4.59 2.6-5.52.88-.53 1.83-.81 2.8-.81 1.02 0 1.63.31 2.76.31s1.74-.31 2.76-.31c1.23 0 2.37.47 3.24 1.34-2.88 1.43-2.42 5.56.54 7.02-.63 1.55-1.48 3.1-2.15 4.25zM12.03 7.25c-.02-2.23 1.84-4.14 3.99-4.25.12 2.23-1.84 4.31-3.99 4.25z" />
                 </svg>
               }
             />

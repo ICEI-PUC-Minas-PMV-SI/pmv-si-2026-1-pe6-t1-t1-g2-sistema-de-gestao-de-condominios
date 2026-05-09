@@ -1,4 +1,4 @@
-import { Button, MaterialIcon } from "#/components/ui";
+import { Button } from "#/components/ui";
 
 type ResidentsPageHeaderProps = {
 	onCreateClick?: () => void;
@@ -12,20 +12,21 @@ export function ResidentsPageHeader({
 	return (
 		<header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
 			<div className="space-y-1">
-				<span className="inline-block px-3 py-1 text-[11px] font-bold tracking-wider text-[#3949AB] bg-[#E8EAF6] rounded-full uppercase">
-					Gestão de Residentes
+				<span className="bg-surface-container-high text-primary font-label-sm text-xs px-3 py-1 rounded-full tracking-wider">
+					GESTÃO DE RESIDENTES
 				</span>
-				<h1 className="text-3xl font-bold text-slate-800">
+				<h1 className="text-headline-md font-headline-md text-slate-900 mt-2">
 					Lista de Residentes
 				</h1>
-				<p className="text-slate-500">
+				<p className="text-slate-500 font-body-md text-sm mt-1">
 					Visualize e gerencie os moradores cadastrados no condomínio.
 				</p>
 			</div>
 			{showCreate && (
 				<Button
-					color="modern"
-					icon={<MaterialIcon name="person_add" />}
+					color="primary"
+					size="md"
+					className="whitespace-nowrap"
 					onClick={onCreateClick}
 				>
 					Novo Residente

@@ -97,17 +97,17 @@ export function DeliveriesTable({
 				</div>
 			)}
 
-			<div className="overflow-x-auto">
-				<table className="w-full text-left">
+			<div className="overflow-x-auto -mx-4 md:mx-0">
+				<table className="min-w-[960px] w-full text-left">
 					<thead>
 						<tr className="text-slate-400 text-[10px] uppercase tracking-widest bg-slate-50/50">
-							<th className="px-8 py-4 font-bold">Destinatário</th>
-							<th className="px-8 py-4 font-bold">Registrado por</th>
-							<th className="px-8 py-4 font-bold">Descrição</th>
-							<th className="px-8 py-4 font-bold">Status</th>
-							<th className="px-8 py-4 font-bold">Data de Recebimento</th>
-							<th className="px-8 py-4 font-bold">Data de Retirada</th>
-							<th className="px-8 py-4 font-bold text-right">Ações</th>
+							<th className="px-4 py-4 font-bold md:px-6 lg:px-8">Destinatário</th>
+							<th className="px-4 py-4 font-bold md:px-6 lg:px-8">Registrado por</th>
+							<th className="px-4 py-4 font-bold md:px-6 lg:px-8">Descrição</th>
+							<th className="px-4 py-4 font-bold md:px-6 lg:px-8">Status</th>
+							<th className="px-4 py-4 font-bold md:px-6 lg:px-8">Data de Recebimento</th>
+							<th className="px-4 py-4 font-bold md:px-6 lg:px-8">Data de Retirada</th>
+							<th className="px-4 py-4 font-bold text-right md:px-6 lg:px-8">Ações</th>
 						</tr>
 					</thead>
 					<tbody className="divide-y divide-slate-50">
@@ -135,7 +135,7 @@ export function DeliveriesTable({
 									key={delivery.id}
 									className="group hover:bg-slate-50/50 transition-colors"
 								>
-									<td className="px-8 py-5">
+									<td className="px-4 py-5 md:px-6 lg:px-8">
 										<div className="flex items-center gap-3">
 											<div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 overflow-hidden">
 												<MaterialIcon name="person" />
@@ -151,7 +151,7 @@ export function DeliveriesTable({
 											</span>
 										</div>
 									</td>
-									<td className="px-8 py-5">
+									<td className="px-4 py-5 md:px-6 lg:px-8">
 										<span className="text-sm text-slate-600 font-medium">
 											{getUserLabel(
 												{
@@ -162,12 +162,12 @@ export function DeliveriesTable({
 											)}
 										</span>
 									</td>
-									<td className="px-8 py-5">
+									<td className="px-4 py-5 md:px-6 lg:px-8">
 										<span className="line-clamp-2 text-sm text-slate-600">
 											{delivery.description || "-"}
 										</span>
 									</td>
-									<td className="px-8 py-5">
+									<td className="px-4 py-5 md:px-6 lg:px-8">
 										<span
 											className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold ${getStatusClasses(delivery.status)}`}
 										>
@@ -175,13 +175,13 @@ export function DeliveriesTable({
 											{delivery.status ?? "-"}
 										</span>
 									</td>
-									<td className="px-8 py-5 text-sm text-slate-500 font-medium">
+									<td className="px-4 py-5 text-sm font-medium text-slate-500 md:px-6 lg:px-8">
 										{formatDateTime(delivery.arrival_date)}
 									</td>
-									<td className="px-8 py-5 text-sm text-slate-500 font-medium">
+									<td className="px-4 py-5 text-sm font-medium text-slate-500 md:px-6 lg:px-8">
 										{formatDateTime(delivery.pickup_date)}
 									</td>
-									<td className="px-8 py-5 text-right">
+									<td className="px-4 py-5 text-right md:px-6 lg:px-8">
 										{userIsAdmin ? (
 											<div className="flex items-center justify-end gap-2">
 												<button

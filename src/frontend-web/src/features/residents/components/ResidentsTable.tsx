@@ -95,23 +95,23 @@ export function ResidentsTable({
 					</Button>
 				</div>
 			</div>
-			<div className="overflow-x-auto">
-				<table className="w-full text-left border-collapse">
+			<div className="overflow-x-auto -mx-4 md:mx-0">
+				<table className="min-w-[860px] w-full text-left border-collapse">
 					<thead>
 						<tr className="border-y border-slate-100 bg-slate-50/50">
-							<th className="px-8 py-4 text-[10px] font-bold text-slate-300 uppercase tracking-widest">
+							<th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-300 md:px-6 lg:px-8">
 								Nome
 							</th>
-							<th className="px-6 py-4 text-[10px] font-bold text-slate-300 uppercase tracking-widest">
+							<th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-300 md:px-6 lg:px-8">
 								Unidade/Bloco
 							</th>
-							<th className="px-6 py-4 text-[10px] font-bold text-slate-300 uppercase tracking-widest">
+							<th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-300 md:px-6 lg:px-8">
 								Contato
 							</th>
-							<th className="px-6 py-4 text-[10px] font-bold text-slate-300 uppercase tracking-widest">
+							<th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-300 md:px-6 lg:px-8">
 								Status
 							</th>
-							<th className="px-8 py-4 text-[10px] font-bold text-slate-300 uppercase tracking-widest text-right">
+							<th className="px-4 py-4 text-right text-[10px] font-bold uppercase tracking-widest text-slate-300 md:px-6 lg:px-8">
 								Ações
 							</th>
 						</tr>
@@ -141,7 +141,7 @@ export function ResidentsTable({
 									className="hover:bg-slate-50/80 transition-colors group"
 									key={resident.id}
 								>
-									<td className="px-8 py-6">
+									<td className="px-4 py-6 md:px-6 lg:px-8">
 										<div className="flex items-center gap-4">
 											<div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-400">
 												<MaterialIcon name="person" />
@@ -156,12 +156,12 @@ export function ResidentsTable({
 											</div>
 										</div>
 									</td>
-									<td className="px-6 py-6">
+									<td className="px-4 py-6 md:px-6 lg:px-8">
 										<p className="text-slate-600 font-medium">
 											{resident.unit}
 										</p>
 									</td>
-									<td className="px-6 py-6">
+									<td className="px-4 py-6 md:px-6 lg:px-8">
 										{resident.phone && resident.phone !== "-" ? (
 											<>
 												<p className="text-slate-700 text-sm">
@@ -177,7 +177,7 @@ export function ResidentsTable({
 											</p>
 										)}
 									</td>
-									<td className="px-6 py-6">
+									<td className="px-4 py-6 md:px-6 lg:px-8">
 										<span
 											className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase ${getStatusClasses(resident.status)}`}
 										>
@@ -187,7 +187,7 @@ export function ResidentsTable({
 											{resident.status}
 										</span>
 									</td>
-									<td className="px-8 py-6 text-right">
+									<td className="px-4 py-6 text-right md:px-6 lg:px-8">
 										<div className="relative">
 											<button
 												className="text-slate-300 group-hover:text-slate-500 transition-colors hover:bg-slate-100 p-2 rounded-lg"
