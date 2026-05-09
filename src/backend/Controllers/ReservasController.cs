@@ -561,16 +561,30 @@ namespace backend.Controllers
             string type,
             CancellationToken cancellationToken)
         {
+            // Busca o nome da área comum
+            string areaName = $"área comum (ID: {reservation.AreaComumId})"; // fallback
+            const string areaSql = @"
+                SELECT name FROM public.common_areas
+                WHERE id = @area_id LIMIT 1;";
+
+            await using var areaCommand = new NpgsqlCommand(areaSql, connection);
+            areaCommand.Parameters.AddWithValue("area_id", reservation.AreaComumId);
+            var areaResult = await areaCommand.ExecuteScalarAsync(cancellationToken);
+            if (areaResult is string name && !string.IsNullOrWhiteSpace(name))
+            {
+                areaName = name;
+            }
+
+            var message = type == "Reserva Cancelada"
+                ? $"Sua reserva da área comum {areaName} foi cancelada."
+                : $"Sua reserva da área comum {areaName} foi confirmada.";
+
             const string sql = @"
                 INSERT INTO public.notifications
                     (user_id, type, message, is_read, reservation_id, occurrence_id, delivery_id)
                 VALUES
                     (@user_id, @type::notification_type, @message, @is_read, @reservation_id, @occurrence_id, @delivery_id)
                 RETURNING id;";
-
-            var message = type == "Reserva Cancelada"
-                ? $"Sua reserva da área comum (ID: {reservation.Id}) foi cancelada."
-                : $"Sua reserva da área comum (ID: {reservation.Id}) foi confirmada.";
 
             await using var command = new NpgsqlCommand(sql, connection);
             command.Parameters.AddWithValue("user_id", reservation.MoradorId);

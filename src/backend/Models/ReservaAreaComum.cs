@@ -3,7 +3,6 @@ using System.Text.Json.Serialization;
 
 namespace backend.Models
 {
-    [JsonConverter(typeof(IgnoreIdConverter<ReservaAreaComum>))]
     public class ReservaAreaComum
     {
         [JsonPropertyName("id")]
@@ -26,19 +25,16 @@ namespace backend.Models
         [JsonConverter(typeof(ReservationStatusJsonConverter))]
         public ReservationStatus Status { get; set; }
 
-        /// <summary>
-        /// Opcional na API; não há coluna correspondente em <c>public.reservations</c> no Supabase (não persistido).
-        /// </summary>
         [NotMapped]
         [JsonPropertyName("notes")]
         public string? Observacao { get; set; }
 
         [JsonPropertyName("created_at")]
-        [JsonIgnore]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public DateTime? CreatedAt { get; set; }
 
         [JsonPropertyName("updated_at")]
-        [JsonIgnore]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public DateTime? UpdatedAt { get; set; }
     }
 }

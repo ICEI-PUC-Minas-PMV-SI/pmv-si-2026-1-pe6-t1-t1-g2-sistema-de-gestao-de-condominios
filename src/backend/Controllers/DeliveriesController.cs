@@ -24,29 +24,35 @@ namespace backend.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Delivery>>> GetAll(CancellationToken cancellationToken)
-
+        public async Task<ActionResult<IEnumerable<Delivery>>> GetAll(
+            [FromQuery] int? recipientUserId,  // ← adicione este parâmetro
+            CancellationToken cancellationToken)
         {
             var (connectionString, errorResult) = GetConnectionString();
-            if (errorResult is not null)
-            {
-                return errorResult;
-            }
+            if (errorResult is not null) return errorResult;
 
             try
             {
                 await using var connection = new NpgsqlConnection(connectionString);
                 await connection.OpenAsync(cancellationToken);
-                const string sql = DeliverySelectSql + " ORDER BY d.id;";
+
+                var sql = DeliverySelectSql;
+
+                if (recipientUserId.HasValue)
+                    sql += " WHERE d.recipient_user_id = @recipient_user_id";
+
+                sql += " ORDER BY d.id;";
 
                 await using var command = new NpgsqlCommand(sql, connection);
+
+                if (recipientUserId.HasValue)
+                    command.Parameters.AddWithValue("recipient_user_id", recipientUserId.Value);
+
                 await using var reader = await command.ExecuteReaderAsync(cancellationToken);
                 var deliveries = new List<Delivery>();
 
                 while (await reader.ReadAsync(cancellationToken))
-                {
                     deliveries.Add(MapDelivery(reader));
-                }
 
                 return Ok(deliveries);
             }
@@ -124,9 +130,27 @@ namespace backend.Controllers
                 }
 
                 const string sql = @"
-                    INSERT INTO public.deliveries (recipient_user_id, registered_by_user_id, description, arrival_date, pickup_date, status)
-                    VALUES (@recipient_user_id, @registered_by_user_id, @description, @arrival_date, @pickup_date, @status::delivery_status)
-                    RETURNING id, recipient_user_id, registered_by_user_id, description, arrival_date, pickup_date, status, created_at, updated_at;";
+                    WITH inserted AS (
+                        INSERT INTO public.deliveries (recipient_user_id, registered_by_user_id, description, arrival_date, pickup_date, status)
+                        VALUES (@recipient_user_id, @registered_by_user_id, @description, @arrival_date, @pickup_date, @status::delivery_status)
+                        RETURNING id, recipient_user_id, registered_by_user_id, description, arrival_date, pickup_date, status, created_at, updated_at
+                    )
+                    SELECT inserted.id,
+                           inserted.recipient_user_id,
+                           recipient.username AS recipient_username,
+                           recipient.email AS recipient_email,
+                           inserted.registered_by_user_id,
+                           registered_by.username AS registered_by_username,
+                           registered_by.email AS registered_by_email,
+                           inserted.description,
+                           inserted.arrival_date,
+                           inserted.pickup_date,
+                           inserted.status,
+                           inserted.created_at,
+                           inserted.updated_at
+                    FROM inserted
+                    LEFT JOIN public.users recipient ON recipient.id = inserted.recipient_user_id
+                    LEFT JOIN public.users registered_by ON registered_by.id = inserted.registered_by_user_id;";
 
                 await using var command = new NpgsqlCommand(sql, connection);
                 command.Parameters.AddWithValue("recipient_user_id", requestBody.RecipientUserId is null ? DBNull.Value : requestBody.RecipientUserId);
@@ -207,16 +231,34 @@ namespace backend.Controllers
                 }
 
                 const string sql = @"
-                    UPDATE public.deliveries
-                    SET recipient_user_id = @recipient_user_id,
-                        registered_by_user_id = @registered_by_user_id,
-                        description = @description,
-                        arrival_date = @arrival_date,
-                        pickup_date = @pickup_date,
-                        status = @status::delivery_status,
-                        updated_at = CURRENT_TIMESTAMP
-                    WHERE id = @id
-                    RETURNING id, recipient_user_id, registered_by_user_id, description, arrival_date, pickup_date, status, created_at, updated_at;";
+                    WITH updated AS (
+                        UPDATE public.deliveries
+                        SET recipient_user_id = @recipient_user_id,
+                            registered_by_user_id = @registered_by_user_id,
+                            description = @description,
+                            arrival_date = @arrival_date,
+                            pickup_date = @pickup_date,
+                            status = @status::delivery_status,
+                            updated_at = CURRENT_TIMESTAMP
+                        WHERE id = @id
+                        RETURNING id, recipient_user_id, registered_by_user_id, description, arrival_date, pickup_date, status, created_at, updated_at
+                    )
+                    SELECT updated.id,
+                           updated.recipient_user_id,
+                           recipient.username AS recipient_username,
+                           recipient.email AS recipient_email,
+                           updated.registered_by_user_id,
+                           registered_by.username AS registered_by_username,
+                           registered_by.email AS registered_by_email,
+                           updated.description,
+                           updated.arrival_date,
+                           updated.pickup_date,
+                           updated.status,
+                           updated.created_at,
+                           updated.updated_at
+                    FROM updated
+                    LEFT JOIN public.users recipient ON recipient.id = updated.recipient_user_id
+                    LEFT JOIN public.users registered_by ON registered_by.id = updated.registered_by_user_id;";
 
                 await using var command = new NpgsqlCommand(sql, connection);
                 command.Parameters.AddWithValue("id", id);
@@ -385,7 +427,7 @@ namespace backend.Controllers
             await using var command = new NpgsqlCommand(sql, connection);
             command.Parameters.AddWithValue("user_id", delivery.RecipientUserId.Value);
             command.Parameters.AddWithValue("type", "Encomenda Chegou");
-            command.Parameters.AddWithValue("message", $"Sua encomenda (ID: {delivery.Id}) está disponível para retirada.");
+            command.Parameters.AddWithValue("message", BuildDeliveryNotificationMessage(delivery));
             command.Parameters.AddWithValue("is_read", false);
             command.Parameters.AddWithValue("reservation_id", DBNull.Value);
             command.Parameters.AddWithValue("occurrence_id", DBNull.Value);
@@ -393,6 +435,24 @@ namespace backend.Controllers
 
             var result = await command.ExecuteScalarAsync(cancellationToken);
             return result != null ? (int)result : -1;
+        }
+
+        private static string BuildDeliveryNotificationMessage(Delivery delivery)
+        {
+            var description = string.IsNullOrWhiteSpace(delivery.Description)
+                ? "Sem descrição informada"
+                : delivery.Description.Trim();
+            var requestedBy = GetDeliveryUserLabel(delivery.RegisteredByUsername, delivery.RegisteredByEmail, delivery.RegisteredByUserId);
+            var arrivalDate = delivery.ArrivalDate.ToString("dd/MM/yyyy HH:mm");
+
+            return $"Sua encomenda está disponível para retirada. Descrição: {description}. Solicitada por: {requestedBy}. Recebida em: {arrivalDate}.";
+        }
+
+        private static string GetDeliveryUserLabel(string? username, string? email, int? fallbackId)
+        {
+            if (!string.IsNullOrWhiteSpace(username)) return username.Trim();
+            if (!string.IsNullOrWhiteSpace(email)) return email.Trim();
+            return fallbackId.HasValue ? $"usuário #{fallbackId.Value}" : "Não informado";
         }
 
         private static async Task<bool> UserExistsAsync(NpgsqlConnection connection, int userId, CancellationToken cancellationToken)

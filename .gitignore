@@ -1,31 +1,33 @@
 # Build output
-backend/bin/
-backend/obj/
+src/backend/bin/
+src/backend/obj/
+src/backend.tests/bin/
+src/backend.tests/obj/
 
 # Visual Studio / usuário
 .vs/
-backend/.vs/
-backend/*.user
-backend/*.rsuser
-backend/*.suo
-frontend-web/.vscode/
+src/backend/.vs/
+src/backend/*.user
+src/backend/*.rsuser
+src/backend/*.suo
+src/frontend-web/.vscode/
 
 # Logs e arquivos temporários
-backend/*.log
-backend/logs/
-backend/TestResults/
+src/backend/*.log
+src/backend/logs/
+src/backend/TestResults/
 
 # Publicação local
-backend/publish/
-backend/artifacts/
-frontend-web/node_modules
+src/backend/publish/
+src/backend/artifacts/
+src/frontend-web/node_modules
 
 # Segredos locais (User Secrets)
-backend/secrets.json
+src/backend/secrets.json
 
 # Configurações de ambiente
-backend/appsettings.Development.json
-frontend-web/.env
+src/backend/appsettings.Development.json
+src/frontend-web/.env
 
 src/backend/bin/
 src/backend/obj/
