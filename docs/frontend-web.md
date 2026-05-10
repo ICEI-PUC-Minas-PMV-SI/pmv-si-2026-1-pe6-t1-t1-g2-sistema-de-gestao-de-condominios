@@ -425,13 +425,95 @@ caso acesse `dashboard` diretamente e dê erro 404, deve-se configurar redirects
 
 ## Testes
 
-[Descreva a estratégia de teste, incluindo os tipos de teste a serem realizados (unitários, integração, carga, etc.) e as ferramentas a serem utilizadas.]
+# Estratégia de Testes Frontend
 
-1. Crie casos de teste para cobrir todos os requisitos funcionais e não funcionais da aplicação.
-2. Implemente testes unitários para testar unidades individuais de código, como funções e classes.
-3. Realize testes de integração para verificar a interação correta entre os componentes da aplicação.
-4. Execute testes de carga para avaliar o desempenho da aplicação sob carga significativa.
-5. Utilize ferramentas de teste adequadas, como frameworks de teste e ferramentas de automação de teste, para agilizar o processo de teste.
+## 1. Testes Unitários
+
+### Objetivo
+Validar o comportamento de partes isoladas do código (funções, componentes e hooks), assegurando que cada unidade funcione corretamente sem dependências externas.
+
+### O que testar
+- Funções utilitárias (ex.: formatação de dados)
+- Componentes React isolados (renderização e lógica interna)
+- Estados e chamadas internas
+
+### Ferramentas recomendadas
+- **Vitest** – executor moderno de testes para projetos com Vite (que o frontend já usa); rápido e com suporte nativo a TypeScript.
+- **Jest** – tradicional no ecossistema JavaScript/React, com ampla comunidade e fácil integração com mocks.
+- **@testing-library/react** – biblioteca para testar componentes React com foco no comportamento visível para o usuário.
+- **Sinon.js (ou similares)** – para spies/mocks/stubs quando necessário simular dependências.
+
+---
+
+## 2. Testes de Integração
+
+### Objetivo
+Verificar a interação entre múltiplos componentes ou entre frontend e APIs (mockadas/estágios controlados), garantindo que as integrações estejam funcionando.
+
+### O que testar
+- Formulários que enviam dados e lidam com respostas
+- Fluxos completos envolvendo múltiplos componentes trabalhando juntos
+- Comunicação com o backend (usando mocks para simular endpoints)
+
+### Ferramentas recomendadas
+- **Vitest + @testing-library/react** – usando renderização real de componentes que interagem entre si.
+- **Mock Service Worker (MSW)** – para interceptar chamadas de rede e simular respostas de API sem depender de servidores reais.
+- **React Testing Library** – foco na experiência do usuário e interação entre componentes.
+
+---
+
+## 3. Testes End-to-End (E2E)
+
+### Objetivo
+Validar o sistema completo como um usuário real faria, navegando na interface, realizando cadastros/login e verificando respostas visuais e de lógica.
+
+### O que testar
+- Fluxos críticos (login, logout, navegação entre páginas)
+- Cenários complexos de UI
+- Interação com backend real ou ambiente de staging
+
+### Ferramentas recomendadas
+- **Playwright** – suporte a múltiplos navegadores, fácil de configurar e integração com CI.
+- **Cypress** – muito utilizado para E2E em aplicações web, possui painel visual e bom suporte a testes interativos.
+
+---
+
+## 4. Testes de Carga / Performance
+
+### Objetivo
+Avaliar como a aplicação se comporta sob alta carga ou com muitos usuários simultâneos.
+
+### O que testar
+- Tempo de carregamento de telas com grande número de elementos
+- Requisições simultâneas de API em painéis/dashboards
+- Impacto de recursos pesados (listas, gráficos)
+
+### Ferramentas recomendadas
+- **k6** – open source para testes de carga em APIs e aplicações web.
+- **Lighthouse** – análise de performance, acessibilidade e boas práticas (especialmente útil para frontend).
+- **WebPageTest** – ferramenta externa para medir performance real em diferentes condições de conexão.
+
+---
+
+## 5. Testes Visuais / Regressão de UI
+
+### Objetivo
+Detectar mudanças indesejadas na interface antes de uma entrega.
+
+### Ferramentas recomendadas
+- **Chromatic** – baseado em Storybook, compara snapshots visuais para detectar diferenças.
+- **Percy** – ferramenta de visual testing integrada com pipelines de CI.
+
+---
+
+## 6. Testes de Segurança Básicos
+
+### Objetivo
+Identificar vulnerabilidades comuns (XSS, CSRF, acessos indevidos).
+
+### Ferramentas recomendadas
+- **ESLint com plugins de segurança** (ex.: `eslint-plugin-security`)
+- **Snyk / Dependabot** – para detecção de vulnerabilidades em dependências
 
 # Referências
 
