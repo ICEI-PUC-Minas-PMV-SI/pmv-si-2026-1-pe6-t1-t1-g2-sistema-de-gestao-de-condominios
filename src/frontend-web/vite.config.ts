@@ -7,6 +7,12 @@ import { defineConfig } from "vite";
 const config = defineConfig({
 	resolve: { tsconfigPaths: true },
 	plugins: [netlify(), tailwindcss(), tanstackStart(), viteReact()],
+	test: {
+		environment: "jsdom",
+		setupFiles: "./src/test/setup.ts",
+		clearMocks: true,
+		restoreMocks: true,
+	},
 });
 
 export default config;
