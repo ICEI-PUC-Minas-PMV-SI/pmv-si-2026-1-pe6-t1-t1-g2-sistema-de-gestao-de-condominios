@@ -1,6 +1,6 @@
 # 📊 Relatório de Contribuições do Projeto
 
-**Última atualização:** 09/05/2026 21:53
+**Última atualização:** 10/05/2026 14:51
 
 ---
 
@@ -17,9 +17,9 @@
 | Isaac Samuel           |        14 |        89 |        76 |          6 |             12 |               5 |
 | Mathbkj                |        39 |     32562 |      6914 |        208 |              3 |               1 |
 | Mukimiw4a              |        38 |      1327 |       235 |         31 |             28 |               9 |
-| YanGuimaraesMartins    |        10 |       300 |        16 |          8 |              7 |               4 |
+| YanGuimaraesMartins    |        12 |      1230 |       448 |          9 |              7 |               4 |
 | copilot-swe-agent[bot] |         1 |         0 |         0 |          0 |              0 |               0 |
-| github-actions[bot]    |        91 |       695 |       676 |          3 |             91 |               1 |
+| github-actions[bot]    |        92 |       699 |       680 |          3 |             92 |               1 |
 | github-classroom[bot]  |         1 |      2152 |         0 |         45 |              1 |              13 |
 | guigsmendonca          |        21 |       178 |       150 |          9 |             16 |               4 |
 | tuxego                 |         1 |   5263498 |         1 |      34971 |              0 |               0 |
@@ -27,27 +27,27 @@
 
 ## 📅 Contribuições Semanais (Todo o Semestre)
 
-**2026-05-02**: Bruno Alfeu: 7, Gabriel: 3, Gabriel Oliveira: 5, Guilherme Mendonça: 2, Isaac: 4, Isaac Samuel: 2, Mathbkj: 18, Mukimiw4a: 6, copilot-swe-agent[bot]: 1, github-actions[bot]: 18, guigsmendonca: 1, tuxego: 1
+**2026-05-03**: Bruno Alfeu: 7, Gabriel: 1, Gabriel Oliveira: 4, Guilherme Mendonça: 2, Isaac: 4, Isaac Samuel: 2, Mathbkj: 18, Mukimiw4a: 6, YanGuimaraesMartins: 2, copilot-swe-agent[bot]: 1, github-actions[bot]: 18, guigsmendonca: 1, tuxego: 1
 
-**2026-04-25**: Mathbkj: 1, Mukimiw4a: 3, github-actions[bot]: 3
+**2026-04-26**: Gabriel: 2, Gabriel Oliveira: 1, Mathbkj: 1, Mukimiw4a: 3, github-actions[bot]: 4
 
-**2026-04-18**: Mukimiw4a: 5, github-actions[bot]: 6
+**2026-04-19**: Mukimiw4a: 5, github-actions[bot]: 6
 
-**2026-04-11**: Bruno Alfeu: 10, Gabriel: 5, Gabriel Oliveira: 14, Guilherme Mendonca: 4, Isaac Samuel: 2, Mathbkj: 7, Mukimiw4a: 7, github-actions[bot]: 33, guigsmendonca: 1
+**2026-04-12**: Bruno Alfeu: 10, Gabriel Oliveira: 12, Guilherme Mendonca: 4, Isaac Samuel: 2, Mathbkj: 7, Mukimiw4a: 7, github-actions[bot]: 29, guigsmendonca: 1
 
-**2026-04-04**: Bruno Alfeu: 5, Mathbkj: 3, Mukimiw4a: 4, github-actions[bot]: 7
+**2026-04-05**: Bruno Alfeu: 5, Gabriel: 5, Gabriel Oliveira: 2, Mathbkj: 3, Mukimiw4a: 4, github-actions[bot]: 11
 
-**2026-03-28**: github-actions[bot]: 1
+**2026-03-29**: github-actions[bot]: 1
 
-**2026-03-21**: Gabriel: 2, Gabriel Oliveira: 3, Guilherme Mendonca: 5, Isaac: 1, Mathbkj: 2, Mukimiw4a: 3, github-actions[bot]: 14, guigsmendonca: 7
+**2026-03-22**: Gabriel: 2, Gabriel Oliveira: 3, Guilherme Mendonca: 5, Isaac: 1, Mathbkj: 2, Mukimiw4a: 3, github-actions[bot]: 14, guigsmendonca: 7
 
-**2026-03-14**: Bruno Alfeu: 3, Gabriel: 2, Gabriel Oliveira: 2, Guilherme Mendonca: 2, Isaac: 1, Isaac Samuel: 4, Mathbkj: 8, Mukimiw4a: 2, YanGuimaraesMartins: 3, github-actions[bot]: 9
+**2026-03-15**: Bruno Alfeu: 3, Gabriel: 2, Gabriel Oliveira: 2, Guilherme Mendonca: 2, Isaac: 1, Isaac Samuel: 4, Mathbkj: 8, Mukimiw4a: 2, YanGuimaraesMartins: 3, github-actions[bot]: 9
 
-**2026-03-07**: Bruno Alfeu: 6, Gabriel: 1, Gabriel Oliveira: 10, Isaac Samuel: 5, Mukimiw4a: 6, YanGuimaraesMartins: 5, guigsmendonca: 6
+**2026-03-08**: Bruno Alfeu: 6, Gabriel: 1, Gabriel Oliveira: 9, Isaac Samuel: 5, Mukimiw4a: 6, YanGuimaraesMartins: 5, guigsmendonca: 1
 
-**2026-02-28**: Bruno Alfeu: 2, Gabriel Oliveira: 2, Isaac Samuel: 1, Mukimiw4a: 2, YanGuimaraesMartins: 2, guigsmendonca: 6
+**2026-03-01**: Bruno Alfeu: 2, Gabriel Oliveira: 3, Isaac Samuel: 1, Mukimiw4a: 2, YanGuimaraesMartins: 2, guigsmendonca: 11
 
-**2026-02-14**: github-classroom[bot]: 1
+**2026-02-15**: github-classroom[bot]: 1
 
 
 
