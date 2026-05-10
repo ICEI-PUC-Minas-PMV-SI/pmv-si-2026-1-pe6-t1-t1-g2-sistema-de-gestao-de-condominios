@@ -55,7 +55,7 @@ Ao acessar a tela de cadastro, o usuário deverá registar suas credenciais de n
 
 ### Dashboard
 
-![Tela Dashboard](img/tela-dashboard.jpeg)
+![Tela Dashboard](img/tela-dashboard.png)
 
 Quando o usuário tiver acessado a plataforma, cairá na tela de dashboard. Nesta tela, o usuário poderá navegar para as outras telas por meio da barra de navegação lateral ou pelo conteúdo central. O usuário pode navegar para a tela de reservas, ocorrências ou gestão. Ao clicar sobre avisos aparecerá um conteúdo de modal mostrando as notificações existentes para o usuário.
 
@@ -92,10 +92,11 @@ Ao clicar no botão de relatório na tela de encomendas, aparecerá uma modal co
 Na tela de configuração, o usuário pode alterar a foto de perfil, o nome completo, o nome corporativo e o cargo escolhido. Após as alterações, basta clicar em "Salvar Alterações". Ao salvar as alterações o usuário é redirecionado para a página anterior e as alterações são efetivadas. Para simplesmente voltar à tela anterior e não alterar nada, basta clicar em "Cancelar".
 
 
-### Modal Avisos
-![Modal Avisos](img/modal-avisos.png)
+### Modal Notificações
+[Inserir tela aqui]
 
-Uma vez que o usuário clique em avisos, na tela de dashboard, aparecerá uma modal contendo os avisos mais importantes por ordem de proximidade. O usuário pode pressionar no botão "Fechar Painel" para fechar a modal.
+[Texto sobre a tela aqui]
+
 
 ### Configurações de Perfil
 ![Config Perfil](img/modal-config-perfil.png)
@@ -104,7 +105,7 @@ Ao clicar sobre a parte na sidebar que contém o nome e o perfil do usuário, ap
 
 ### Residentes
 
-![Tela Gestão](img/tela-gestao.jpeg)
+![Tela Gestão](img/tela-residentes.png)
 
 Na tela de gestão, o usuário com perfil de administrador pode gerenciar todos os usuários existentes no condomínio. É possível filtrar os usuários por nome ou cpf, bloco e unidade. O administrador pode atualizar o status do perfil do usuário para inativo ou ativo. Na parte mais inferior da tela, pode-se verificar a quantidade de usuários cadastrados no sistema, a quantidade de ativos e a quantidade de perfis pendentes para aprovação.
 
@@ -115,19 +116,19 @@ Pode-se criar no botão "Novo Usuário" para abrir a modal de adicionar um perfi
 O usuário pode clicar nos números de paginação para navegar para tabelas com as informações sobre outros usuários. 
 
 ### Modal Criação Usuário
-![Modal Criação Usuário](img/modal-criar-usuario.png)
+![Modal Criação Usuário](img/modal-criar-residente.png)
 
 Ao abrir a modal de criar um usuário, as informações de nome completo, email, cpf, bloco, unidade e perfil podem ser preenchidas. Ao clicar em "Cadastrar" a modal será fechada e a página atualizada com o novo usuário. Para cancelar a operação e fechar a modal, basta clicar em "Cancelar".
 
 ### Modal Edição Usuário
 
-![Modal Edição Usuário](img/modal-edicao-usuario.png)
+![Modal Edição Usuário](img/modal-editar-residente.png)
 
 Ao abrir a modal de edição das informações de um usuário cadastrado no sistema, é possível verificar suas principais informações de cadastro. O nome completo, endereço de email, unidade, perfil de acesso e status da conta são visíveis para o administrador verificar informações e operar edições sobre esses valores. Ao clicar em "Salvar Alterações", o sistema atualiza o usuário com as informações preenchidas nos campos. Ao clicar em "Cancelar" a modal é fechada.
 
 ### Popup Exclusão Usuário
 
-![Popup Exclusão Usuário](img/popup-exclusao-usuario.png)
+![Popup Exclusão Usuário](img/popup-excluir-residente.png)
 
 O usuário com perfil administrador pode confirmar a exclusão do usuário do sistema através da confirmação do popup. Para isso, basta clicar em "Confirmar". Para cancelar a operação, basta clicar em "Cancelar". Ao cancelar o usuário volta à tela original. Ao confirmar, a página é atualizada e o usuário selecionado é removido da tabela de usuários.
 
