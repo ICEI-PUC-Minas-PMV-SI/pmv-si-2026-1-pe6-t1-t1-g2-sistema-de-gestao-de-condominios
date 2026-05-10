@@ -212,13 +212,227 @@ As queries ao banco utilizam exclusivamente NpgsqlCommand com parâmetros, elimi
 
 ## Implantação
 
-[Instruções para implantar a aplicação distribuída em um ambiente de produção.]
+## 1. Requisitos de Hardware e Software (Produção)
 
-1. Defina os requisitos de hardware e software necessários para implantar a aplicação em um ambiente de produção.
-2. Escolha uma plataforma de hospedagem adequada, como um provedor de nuvem ou um servidor dedicado.
-3. Configure o ambiente de implantação, incluindo a instalação de dependências e configuração de variáveis de ambiente.
-4. Faça o deploy da aplicação no ambiente escolhido, seguindo as instruções específicas da plataforma de hospedagem.
-5. Realize testes para garantir que a aplicação esteja funcionando corretamente no ambiente de produção.
+### 1.1 Requisitos de Hardware
+
+Como o frontend é uma aplicação web estática (gerada após build), os requisitos são baixos.
+
+Requisitos mínimos recomendados:
+
+- **CPU:** 1 vCPU
+- **Memória RAM:** 512 MB (recomendado 1 GB)
+- **Armazenamento:** 1 GB SSD (ou mais, dependendo de logs e cache do servidor)
+- **Rede:** conexão estável com acesso público (HTTP/HTTPS)
+
+> Observação: caso a hospedagem seja feita em plataformas como Vercel/Netlify/Render, a infraestrutura fica sob responsabilidade do provedor.
+
+---
+
+### 1.2 Requisitos de Software
+
+Para gerar o build e executar a aplicação em produção, é necessário:
+
+- **Node.js (LTS recomendado, ex: Node 18+)**
+- **npm** (ou yarn)
+- Dependências definidas no `package.json`
+- Servidor para arquivos estáticos (exemplos):
+  - Nginx
+  - Apache
+  - Serviços gerenciados como Vercel, Netlify ou Render
+---  
+## 2. Escolha da Plataforma de Hospedagem
+
+Para o frontend web, as plataformas mais indicadas são:
+
+### Opções recomendadas
+
+- **Vercel** (ideal para React, integração direta com GitHub)
+- **Netlify** (deploy rápido, CDN e SSL automático)
+- **Render (Static Site)** (deploy automático e fácil configuração)
+- **GitHub Pages** (boa opção para projetos acadêmicos)
+
+### Recomendação principal
+Para facilidade e estabilidade, recomenda-se **Vercel** ou **Netlify**, pois ambas oferecem:
+- Deploy automático por push no GitHub
+- HTTPS automático
+- CDN global
+- Configuração simples
+---
+## 3. Configuração do Ambiente de Implantação
+
+### 3.1 Clonar o Repositório
+
+```bash
+git clone https://github.com/ICEI-PUC-Minas-PMV-SI/pmv-si-2026-1-pe6-t1-t1-g2-sistema-de-gestao-de-condominios.git
+```
+### 3.2 Acessar a Pasta do Frontend
+
+Após clonar o repositório, acesse o diretório do frontend:
+
+```bash
+cd pmv-si-2026-1-pe6-t1-t1-g2-sistema-de-gestao-de-condominios/src/frontend-webe
+```
+### 3.3 Instalar Dependências
+
+Dentro da pasta do frontend, execute:
+
+```bash
+npm install
+```
+Ou, caso utilize yarn:
+```bash
+yarn install
+```
+### 3.4 Configurar Variáveis de Ambiente
+
+Caso o projeto consuma uma API backend, recomenda-se definir variáveis de ambiente.
+
+Exemplo: criar arquivo `.env.production` na raiz do frontend:
+
+```env
+REACT_APP_API_URL=https://api.seudominio.com
+```
+### 3.5 Gerar Build de Produção
+
+Execute o comando abaixo para gerar a versão otimizada para produção:
+```bash
+npm run build
+```
+Após esse comando, será gerada uma pasta chamada build/ contendo os arquivos estáticos otimizados.
+
+---
+
+## 4. Deploy da Aplicação na Plataforma Escolhida
+A seguir estão as instruções conforme o tipo de hospedagem.
+
+### 4.1 Deploy na Vercel (Recomendado)
+- Acesse: https://vercel.com
+- Faça login (pode usar GitHub).
+- Clique em New Project.
+- Selecione o repositório do GitHub.
+- Configure o projeto:
+    - Root Directory: src/frontend-webe
+    - Build Command: npm run build
+    - Output Directory: build
+- Clique em Deploy.
+- A Vercel irá gerar automaticamente uma URL pública.
+
+### 4.2 Deploy na Netlify
+- Acesse: https://www.netlify.com
+- Faça login e conecte ao GitHub.
+- Clique em Add new site → Import an existing project
+- Selecione o repositório.
+- Configure:
+    Base directory: src/frontend-webe
+    Build command: npm run build
+    Publish directory: src/frontend-webe/build
+- Clique em Deploy site.
+- O Netlify disponibilizará uma URL pública.
+
+### 4.3 Deploy na Render (Static Site)
+- Acesse: https://render.com
+- Crie um novo serviço Static Site.
+- Conecte ao GitHub e selecione o repositório.
+- Configure:
+    - Root Directory: src/frontend-webe
+    - Build Command: npm run build
+    - Publish Directory: build
+- Clique em Create Static Site.
+
+### 4.4 Deploy em Servidor Próprio (Nginx/Apache)
+Passo 1: Gerar build localmente
+```bash
+npm run build
+```
+Passo 2: Copiar pasta build para o servidor
+
+Exemplo via SCP:
+```bash
+scp -r build/ usuario@servidor:/var/www/frontend
+```
+Passo 3: Configurar Nginx
+Exemplo de configuração em /etc/nginx/sites-available/frontend:
+```nginx
+server {
+    listen 80;
+    server_name seudominio.com;
+
+    root /var/www/frontend;
+    index index.html;
+
+    location / {
+        try_files $uri /index.html;
+    }
+}
+```
+Ativar e reiniciar:
+```bash
+sudo ln -s /etc/nginx/sites-available/frontend /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl restart nginx
+```
+### 4.5 Deploy no GitHub Pages
+Passo 1: Instale o pacote gh-pages:
+```bash
+npm install gh-pages --save-dev
+```
+Passo 2: No package.json, configure:
+```json
+"homepage": "https://seuusuario.github.io/nome-do-repo"
+```
+Passo 3: Adicione scripts:
+```json
+"scripts": {
+  "predeploy": "npm run build",
+  "deploy": "gh-pages -d build"
+}
+```
+Passo 4: Execute:
+```bash
+npm run deploy
+```
+---
+# 5. Testes Pós-Deploy (Validação em Produção)
+
+Após a implantação, é necessário validar o funcionamento completo do sistema em ambiente de produção.
+
+---
+
+## 5.1 Testes Básicos
+
+- Abrir a URL do sistema e verificar se o carregamento ocorre corretamente.
+- Verificar se páginas e menus estão funcionando.
+- Testar navegação entre telas.
+- Validar responsividade em dispositivos móveis (utilizando o modo responsivo do navegador).
+
+---
+
+## 5.2 Testes de Integração com Backend (Se existir)
+
+- Verificar se a aplicação consegue consumir a API (login, cadastros, consultas).
+- Conferir se o endpoint configurado na variável `REACT_APP_API_URL` está correto.
+- Validar mensagens de erro e tratamento de falhas.
+
+---
+
+## 5.3 Testes de Console e Performance
+
+Abrir o **DevTools** do navegador e verificar:
+
+- Erros no **Console**
+- Falhas de requisição (aba **Network**)
+- Tempo de carregamento e tamanho dos arquivos
+
+---
+
+## 5.4 Teste de Rotas SPA (React Router)
+
+Se o projeto utiliza **React Router**, é obrigatório garantir que a plataforma redirecione todas as rotas para o `index.html`.
+
+### Exemplo
+
+caso acesse `dashboard` diretamente e dê erro 404, deve-se configurar redirects/rewrite na hospedagem.
 
 ## Testes
 
