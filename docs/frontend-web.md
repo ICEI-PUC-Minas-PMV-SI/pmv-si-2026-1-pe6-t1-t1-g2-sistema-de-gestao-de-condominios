@@ -188,6 +188,52 @@ Ao abrir a modal de edição das informações de um usuário cadastrado no sist
 
 O usuário com perfil administrador pode confirmar a exclusão do usuário do sistema através da confirmação do popup. Para isso, basta clicar em "Confirmar". Para cancelar a operação, basta clicar em "Cancelar". Ao cancelar o usuário volta à tela original. Ao confirmar, a página é atualizada e o usuário selecionado é removido da tabela de usuários.
 
+### Manutenção (Ocorrências)
+
+A tela de manutenção (referenciada internamente como Ocorrências) é o canal onde os problemas estruturais ou de convivência são reportados e geridos. O sistema adapta a visualização de acordo com o perfil logado, garantindo privacidade ao morador e controle total ao administrador.
+
+#### Minhas Ocorrências (Perfil Morador)
+
+![Tela Minhas Ocorrências](img/fluxo-de-dados-ocorrencias/lista-minhas-ocorrencias.png)
+
+Ao acessar o menu de manutenção, o morador é direcionado para a tela "Minhas Ocorrências". Nesta área, ele pode acompanhar o histórico de suas solicitações através de cards que exibem o título, a data de criação e a descrição do problema. No topo da página, cards de resumo indicam a quantidade de chamados abertos, resolvidos e em análise do próprio usuário.
+
+#### Criação de Ocorrência
+
+![Modal Criar Ocorrência](img/fluxo-de-dados-ocorrencias/criando-ocorrencia.png)
+
+Para registrar um novo problema, o morador deve clicar no botão **"Nova Ocorrência"**. Ao fazer isso, uma modal será exibida com campos para inserir um título resumido e a descrição detalhada do incidente. O usuário também tem a opção de anexar fotos ou vídeos para comprovar o ocorrido. Para cancelar a operação, basta clicar no ícone de "X" no topo da modal ou no botão "Cancelar". Ao clicar em **"Registrar Ocorrência"**, os dados são enviados e a lista é atualizada.
+
+#### Edição e Acompanhamento
+
+![Tela Ocorrência Criada](img/fluxo-de-dados-ocorrencias/tela-ocorrencia-criada.png)
+
+Após o registro, a ocorrência aparece com o status **"ABERTO"** (indicado por uma barra lateral vermelha). O morador pode clicar no ícone de lápis para editar as informações caso tenha esquecido algum detalhe, ou no ícone de lixeira para remover o chamado.
+
+![Modal Edição Morador](img/fluxo-de-dados-ocorrencias/morador-edita.png)
+
+Na modal de edição, o usuário altera o conteúdo desejado e clica em **"Salvar Alterações"** para atualizar o chamado, ou "Cancelar" para manter os dados originais.
+
+---
+
+#### Gestão de Ocorrências (Perfil Administrador)
+
+![Tela Gestão de Ocorrências](img/fluxo-de-dados-ocorrencias/todas-ocorrencias.png)
+
+Quando um usuário com perfil de administrador acessa o módulo, ele visualiza a "Gestão de Ocorrências". Diferente do morador, o administrador enxerga todos os chamados abertos no condomínio. Os indicadores superiores refletem o volume total de trabalho da administração, facilitando o controle de demandas pendentes.
+
+#### Gerenciamento de Status
+
+![Modal Gerenciar Status](img/fluxo-de-dados-ocorrencias/admin-edita.png)
+
+O administrador pode operar edições sobre as ocorrências para atualizar o progresso do reparo. Ao clicar no ícone de edição de um chamado, a modal **"Gerenciar Status"** é aberta. Nela, além de visualizar os detalhes enviados pelo morador, o administrador pode alterar o campo "Status da Ocorrência" através de uma lista de seleção (Aberto, Em Andamento, Resolvido).
+
+#### Atualização e Conclusão
+
+![Tela Status Atualizado](img/fluxo-de-dados-ocorrencias/admin-mudou-status-.png)
+
+Ao selecionar um novo status e clicar em **"Salvar Alterações"**, o sistema atualiza o chamado e altera sua cor de identificação. Por exemplo, ao mudar para **"EM ANDAMENTO"**, a barra lateral torna-se laranja; ao mudar para **"RESOLVIDO"**, a barra torna-se verde, sinalizando ao morador que a demanda foi concluída. Assim como nas outras telas, o administrador pode cancelar a operação a qualquer momento clicando em "Cancelar" ou no "X" da modal.
+
 ## Tecnologias Utilizadas
 
 Para o desenvolvimento da interface da aplicação web, de acordo com a proposta do projeto, foram selecionadas as seguintes tecnologias:
