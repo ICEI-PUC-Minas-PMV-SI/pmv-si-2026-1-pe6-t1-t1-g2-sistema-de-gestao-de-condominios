@@ -201,7 +201,14 @@ Framework de estilização CSS baseado em classes utilitárias predefinidas. Per
 
 ## Considerações de Segurança
 
-[Discuta as considerações de segurança relevantes para a aplicação distribuída, como autenticação, autorização, proteção contra ataques, etc.]
+Autenticação
+O sistema utiliza JWT (JSON Web Token) com algoritmo HMAC-SHA256 para autenticação. Os tokens são gerados pelo JwtGen no backend com validade de 8 horas e carregam as claims de userId, role, username e email. No frontend, o token é armazenado no localStorage e enviado em toda requisição via header Authorization: Bearer.
+Autorização
+O controle de acesso é feito por perfis (Administrador e Morador) usando o atributo [Authorize(Roles = "...")] nos controllers ASP.NET. Endpoints sensíveis como criação, edição e exclusão de áreas comuns e usuários são restritos ao perfil Administrador. O frontend reforça essa separação exibindo visões distintas no dashboard conforme o perfil do usuário autenticado.
+Proteção de dados
+Senhas não são armazenadas em texto puro — o campo password_hash indica uso de hash. A comunicação com o banco de dados utiliza parâmetros nomeados (@param) em todas as queries, prevenindo injeção de SQL. Campos sensíveis como created_at e updated_at são marcados com [JsonIgnore] e não são expostos na API.
+Proteção contra ataques
+As queries ao banco utilizam exclusivamente NpgsqlCommand com parâmetros, eliminando vulnerabilidades de SQL Injection. O backend trata exceções do PostgreSQL (ex: violação de unicidade 23505) de forma controlada, sem expor detalhes internos do banco ao cliente.
 
 ## Implantação
 
