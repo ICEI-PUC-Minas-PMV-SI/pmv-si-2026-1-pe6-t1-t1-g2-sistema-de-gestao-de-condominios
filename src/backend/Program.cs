@@ -182,10 +182,12 @@ else
 }
 
 app.UseStaticFiles();
+var uploadsPath = Path.Combine(builder.Environment.ContentRootPath, "uploads");
+Directory.CreateDirectory(uploadsPath);
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
-        Path.Combine(builder.Environment.ContentRootPath, "uploads")),
+        uploadsPath),
     RequestPath = "/uploads"
 });
 app.UseCors("AllowAll");
