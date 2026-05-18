@@ -1,0 +1,95 @@
+[     727ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:14336
+[     748ms] [WARNING] [tanstack-router] These exports from "C:/Users/Usuario/pmv-si-2026-1-pe6-t1-t1-g2-sistema-de-gestao-de-condominios/src/frontend-web/src/routes/occurrences.tsx" will not be code-split and will increase your bundle size:
+- OccurrencesPage
+For the best optimization, these items should either have their export statements removed, or be imported from another location that is not a route file. @ http://localhost:3001/src/routes/occurrences.tsx:3
+[     977ms] [ERROR] Falha ao concluir callback do Supabase Error: Código OAuth ausente na callback do Supabase.
+    at completeLogin (http://localhost:3001/src/routes/auth.callback.tsx?tsr-split=component:23:12)
+    at http://localhost:3001/src/routes/auth.callback.tsx?tsr-split=component:53:8
+    at Object.react_stack_bottom_frame (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:12903:13)
+    at runWithFiberInDEV (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:850:66)
+    at commitHookEffectListMount (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:6616:153)
+    at commitHookPassiveMountEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:6651:55)
+    at reconnectPassiveEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:7700:6)
+    at recursivelyTraverseReconnectPassiveEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:7687:5)
+    at reconnectPassiveEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:7699:6)
+    at recursivelyTraverseReconnectPassiveEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:7687:5) @ http://localhost:3001/src/routes/auth.callback.tsx?tsr-split=component:46
+[  385504ms] [LOG] [vite] server connection lost. Polling for restart... @ http://localhost:3001/@vite/client:968
+[  386657ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:14336
+[  386677ms] [WARNING] [tanstack-router] These exports from "C:/Users/Usuario/pmv-si-2026-1-pe6-t1-t1-g2-sistema-de-gestao-de-condominios/src/frontend-web/src/routes/occurrences.tsx" will not be code-split and will increase your bundle size:
+- OccurrencesPage
+For the best optimization, these items should either have their export statements removed, or be imported from another location that is not a route file. @ http://localhost:3001/src/routes/occurrences.tsx:3
+[  386726ms] [ERROR] Falha ao concluir callback do Supabase Error: Código OAuth ausente na callback do Supabase.
+    at completeLogin (http://localhost:3001/src/routes/auth.callback.tsx?tsr-split=component:23:12)
+    at http://localhost:3001/src/routes/auth.callback.tsx?tsr-split=component:53:8
+    at Object.react_stack_bottom_frame (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:12903:13)
+    at runWithFiberInDEV (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:850:66)
+    at commitHookEffectListMount (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:6616:153)
+    at commitHookPassiveMountEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:6651:55)
+    at reconnectPassiveEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:7700:6)
+    at recursivelyTraverseReconnectPassiveEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:7687:5)
+    at reconnectPassiveEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:7699:6)
+    at recursivelyTraverseReconnectPassiveEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:7687:5) @ http://localhost:3001/src/routes/auth.callback.tsx?tsr-split=component:46
+[  655499ms] [LOG] [vite] server connection lost. Polling for restart... @ http://localhost:3001/@vite/client:968
+[  656843ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:14336
+[  656880ms] [WARNING] [tanstack-router] These exports from "C:/Users/Usuario/pmv-si-2026-1-pe6-t1-t1-g2-sistema-de-gestao-de-condominios/src/frontend-web/src/routes/occurrences.tsx" will not be code-split and will increase your bundle size:
+- OccurrencesPage
+For the best optimization, these items should either have their export statements removed, or be imported from another location that is not a route file. @ http://localhost:3001/src/routes/occurrences.tsx:3
+[  656972ms] [ERROR] Falha ao concluir callback do Supabase Error: Código OAuth ausente na callback do Supabase.
+    at completeLogin (http://localhost:3001/src/routes/auth.callback.tsx?tsr-split=component:23:12)
+    at http://localhost:3001/src/routes/auth.callback.tsx?tsr-split=component:53:8
+    at Object.react_stack_bottom_frame (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:12903:13)
+    at runWithFiberInDEV (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:850:66)
+    at commitHookEffectListMount (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:6616:153)
+    at commitHookPassiveMountEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:6651:55)
+    at reconnectPassiveEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:7700:6)
+    at recursivelyTraverseReconnectPassiveEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:7687:5)
+    at reconnectPassiveEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:7699:6)
+    at recursivelyTraverseReconnectPassiveEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:7687:5) @ http://localhost:3001/src/routes/auth.callback.tsx?tsr-split=component:46
+[ 1297729ms] [LOG] [vite] server connection lost. Polling for restart... @ http://localhost:3001/@vite/client:968
+[ 1300534ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:14336
+[ 1300555ms] [WARNING] [tanstack-router] These exports from "C:/Users/Usuario/pmv-si-2026-1-pe6-t1-t1-g2-sistema-de-gestao-de-condominios/src/frontend-web/src/routes/occurrences.tsx" will not be code-split and will increase your bundle size:
+- OccurrencesPage
+For the best optimization, these items should either have their export statements removed, or be imported from another location that is not a route file. @ http://localhost:3001/src/routes/occurrences.tsx:3
+[ 1300611ms] [ERROR] Falha ao concluir callback do Supabase Error: Código OAuth ausente na callback do Supabase.
+    at completeLogin (http://localhost:3001/src/routes/auth.callback.tsx?tsr-split=component:23:12)
+    at http://localhost:3001/src/routes/auth.callback.tsx?tsr-split=component:53:8
+    at Object.react_stack_bottom_frame (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:12903:13)
+    at runWithFiberInDEV (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:850:66)
+    at commitHookEffectListMount (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:6616:153)
+    at commitHookPassiveMountEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:6651:55)
+    at reconnectPassiveEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:7700:6)
+    at recursivelyTraverseReconnectPassiveEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:7687:5)
+    at reconnectPassiveEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:7699:6)
+    at recursivelyTraverseReconnectPassiveEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:7687:5) @ http://localhost:3001/src/routes/auth.callback.tsx?tsr-split=component:46
+[ 2702367ms] [LOG] [vite] server connection lost. Polling for restart... @ http://localhost:3001/@vite/client:968
+[ 2703648ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:14336
+[ 2703690ms] [WARNING] [tanstack-router] These exports from "C:/Users/Usuario/pmv-si-2026-1-pe6-t1-t1-g2-sistema-de-gestao-de-condominios/src/frontend-web/src/routes/occurrences.tsx" will not be code-split and will increase your bundle size:
+- OccurrencesPage
+For the best optimization, these items should either have their export statements removed, or be imported from another location that is not a route file. @ http://localhost:3001/src/routes/occurrences.tsx:3
+[ 2703845ms] [ERROR] Falha ao concluir callback do Supabase Error: Código OAuth ausente na callback do Supabase.
+    at completeLogin (http://localhost:3001/src/routes/auth.callback.tsx?tsr-split=component:23:12)
+    at http://localhost:3001/src/routes/auth.callback.tsx?tsr-split=component:53:8
+    at Object.react_stack_bottom_frame (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:12903:13)
+    at runWithFiberInDEV (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:850:66)
+    at commitHookEffectListMount (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:6616:153)
+    at commitHookPassiveMountEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:6651:55)
+    at reconnectPassiveEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:7700:6)
+    at recursivelyTraverseReconnectPassiveEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:7687:5)
+    at reconnectPassiveEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:7699:6)
+    at recursivelyTraverseReconnectPassiveEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:7687:5) @ http://localhost:3001/src/routes/auth.callback.tsx?tsr-split=component:46
+[ 2890015ms] [LOG] [vite] server connection lost. Polling for restart... @ http://localhost:3001/@vite/client:968
+[ 2893662ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:14336
+[ 2893682ms] [WARNING] [tanstack-router] These exports from "C:/Users/Usuario/pmv-si-2026-1-pe6-t1-t1-g2-sistema-de-gestao-de-condominios/src/frontend-web/src/routes/occurrences.tsx" will not be code-split and will increase your bundle size:
+- OccurrencesPage
+For the best optimization, these items should either have their export statements removed, or be imported from another location that is not a route file. @ http://localhost:3001/src/routes/occurrences.tsx:3
+[ 2893725ms] [ERROR] Falha ao concluir callback do Supabase Error: Código OAuth ausente na callback do Supabase.
+    at completeLogin (http://localhost:3001/src/routes/auth.callback.tsx?tsr-split=component:23:12)
+    at http://localhost:3001/src/routes/auth.callback.tsx?tsr-split=component:53:8
+    at Object.react_stack_bottom_frame (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:12903:13)
+    at runWithFiberInDEV (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:850:66)
+    at commitHookEffectListMount (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:6616:153)
+    at commitHookPassiveMountEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:6651:55)
+    at reconnectPassiveEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:7700:6)
+    at recursivelyTraverseReconnectPassiveEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:7687:5)
+    at reconnectPassiveEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:7699:6)
+    at recursivelyTraverseReconnectPassiveEffects (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:7687:5) @ http://localhost:3001/src/routes/auth.callback.tsx?tsr-split=component:46

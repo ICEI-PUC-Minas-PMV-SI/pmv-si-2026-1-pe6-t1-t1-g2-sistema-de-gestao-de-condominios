@@ -1,8 +1,10 @@
-import { MaterialIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import * as AuthSession from "expo-auth-session";
+import * as Google from "expo-auth-session/providers/google";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
-  Image,
+  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -13,7 +15,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+import { exchangeSocialCode, loginUser, registerUser } from "@/services/auth";
+import { setAuthToken } from "@/services/authSession";
+
+const GOOGLE_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID?.trim() ?? "";
 
 const COLORS = {
   primary: "#40557b",
@@ -31,172 +38,198 @@ const COLORS = {
 };
 
 export default function CadastroScreen() {
-  const insets = useSafeAreaInsets();
   const router = useRouter();
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [senhaVisivel, setSenhaVisivel] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [feedback, setFeedback] = useState("");
+
+  async function handleRegister() {
+    const normalizedName = nome.trim();
+    const normalizedEmail = email.trim();
+
+    if (!normalizedName || !normalizedEmail || !senha.trim()) {
+      setFeedback("Preencha nome, e-mail e senha para criar sua conta.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setFeedback("");
+
+    try {
+      await registerUser({
+        username: normalizedName,
+        email: normalizedEmail,
+        password: senha,
+      });
+
+      const authResult = await loginUser({
+        email: normalizedEmail,
+        password: senha,
+      });
+
+      setAuthToken(authResult.token);
+
+      router.replace("/(tabs)");
+    } catch (error) {
+      setFeedback(error instanceof Error ? error.message : "Não foi possível criar a conta.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  const handleSocialSuccess = () => {
+    router.replace("/(tabs)");
+  };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.root}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-    >
-      <ScrollView
-        contentContainerStyle={[
-          styles.scrollContent,
-          { paddingTop: insets.top + 16, paddingBottom: insets.bottom + 32 },
-        ]}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
+    <SafeAreaView style={styles.root}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        style={{ flex: 1 }}
       >
-        {/* Header */}
-        <View style={styles.header}>
-          <View style={styles.logoRow}>
-            <MaterialIcons name="apartment" size={24} color={COLORS.primary} />
-            <Text style={styles.logoText}>Condominio</Text>
-          </View>
-          <TouchableOpacity onPress={() => router.replace("/")}>
-            <Text style={styles.entrarBtn}>Entrar</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Card */}
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Criar sua conta</Text>
-          <Text style={styles.cardSubtitle}>Comece sua jornada hoje mesmo.</Text>
-
-          {/* Nome */}
-          <View style={styles.fieldGroup}>
-            <Text style={styles.label}>Nome Completo</Text>
-            <View style={styles.inputWrapper}>
-              <MaterialIcons
-                name="person"
-                size={20}
-                color={COLORS.onSurfaceVariant}
-                style={styles.inputIcon}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="Seu nome"
-                placeholderTextColor={COLORS.onSurfaceVariant + "80"}
-                value={nome}
-                onChangeText={setNome}
-                autoCapitalize="words"
-              />
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.header}>
+            <View style={styles.logoRow}>
+              <Ionicons name="business-outline" size={24} color={COLORS.primary} />
+              <Text style={styles.logoText}>Condominio</Text>
             </View>
+            <TouchableOpacity onPress={() => router.replace("/")}>
+              <Text style={styles.entrarBtn}>Entrar</Text>
+            </TouchableOpacity>
           </View>
 
-          {/* Email */}
-          <View style={styles.fieldGroup}>
-            <Text style={styles.label}>E-mail</Text>
-            <View style={styles.inputWrapper}>
-              <MaterialIcons
-                name="mail"
-                size={20}
-                color={COLORS.onSurfaceVariant}
-                style={styles.inputIcon}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="email@exemplo.com"
-                placeholderTextColor={COLORS.onSurfaceVariant + "80"}
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
-            </View>
-          </View>
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>Criar sua conta</Text>
+            <Text style={styles.cardSubtitle}>Comece sua jornada hoje mesmo.</Text>
 
-          {/* Senha */}
-          <View style={styles.fieldGroup}>
-            <Text style={styles.label}>Senha</Text>
-            <View style={styles.inputWrapper}>
-              <MaterialIcons
-                name="lock"
-                size={20}
-                color={COLORS.onSurfaceVariant}
-                style={styles.inputIcon}
-              />
-              <TextInput
-                style={[styles.input, styles.inputWithTrailing]}
-                placeholder="••••••••"
-                placeholderTextColor={COLORS.onSurfaceVariant + "80"}
-                value={senha}
-                onChangeText={setSenha}
-                secureTextEntry={!senhaVisivel}
-                autoCapitalize="none"
-              />
-              <Pressable
-                onPress={() => setSenhaVisivel((v) => !v)}
-                style={styles.visibilityBtn}
-              >
-                <MaterialIcons
-                  name={senhaVisivel ? "visibility-off" : "visibility"}
+            <View style={styles.fieldGroup}>
+              <Text style={styles.label}>Nome Completo</Text>
+              <View style={styles.inputWrapper}>
+                <Ionicons
+                  name="person-outline"
                   size={20}
                   color={COLORS.onSurfaceVariant}
+                  style={styles.inputIcon}
                 />
-              </Pressable>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Seu nome"
+                  placeholderTextColor={COLORS.onSurfaceVariant + "80"}
+                  value={nome}
+                  onChangeText={setNome}
+                  autoCapitalize="words"
+                />
+              </View>
+            </View>
+
+            <View style={styles.fieldGroup}>
+              <Text style={styles.label}>E-mail</Text>
+              <View style={styles.inputWrapper}>
+                <Ionicons
+                  name="mail-outline"
+                  size={20}
+                  color={COLORS.onSurfaceVariant}
+                  style={styles.inputIcon}
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="email@exemplo.com"
+                  placeholderTextColor={COLORS.onSurfaceVariant + "80"}
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+              </View>
+            </View>
+
+            <View style={styles.fieldGroup}>
+              <Text style={styles.label}>Senha</Text>
+              <View style={styles.inputWrapper}>
+                <Ionicons
+                  name="lock-closed-outline"
+                  size={20}
+                  color={COLORS.onSurfaceVariant}
+                  style={styles.inputIcon}
+                />
+                <TextInput
+                  style={[styles.input, styles.inputWithTrailing]}
+                  placeholder="••••••••"
+                  placeholderTextColor={COLORS.onSurfaceVariant + "80"}
+                  value={senha}
+                  onChangeText={setSenha}
+                  secureTextEntry={!senhaVisivel}
+                  autoCapitalize="none"
+                />
+                <Pressable
+                  onPress={() => setSenhaVisivel((v) => !v)}
+                  style={styles.visibilityBtn}
+                >
+                  <Ionicons
+                    name={senhaVisivel ? "eye-off-outline" : "eye-outline"}
+                    size={20}
+                    color={COLORS.onSurfaceVariant}
+                  />
+                </Pressable>
+              </View>
+            </View>
+
+            <TouchableOpacity
+              style={[styles.primaryBtn, isSubmitting ? styles.primaryBtnDisabled : null]}
+              activeOpacity={0.85}
+              onPress={handleRegister}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <ActivityIndicator color={COLORS.onPrimary} />
+              ) : (
+                <>
+                  <Text style={styles.primaryBtnText}>Criar conta</Text>
+                  <Ionicons name="arrow-forward" size={20} color={COLORS.onPrimary} />
+                </>
+              )}
+            </TouchableOpacity>
+
+            {feedback ? <Text style={styles.feedbackText}>{feedback}</Text> : null}
+
+            <View style={styles.dividerRow}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>OU CADASTRE-SE COM</Text>
+              <View style={styles.dividerLine} />
+            </View>
+
+            <SocialAuthButtons
+              onSuccess={handleSocialSuccess}
+              onMessage={setFeedback}
+            />
+
+            <View style={styles.loginRow}>
+              <Text style={styles.loginText}>Já tem uma conta? </Text>
+              <TouchableOpacity onPress={() => router.replace("/")}>
+                <Text style={styles.loginLink}>Entre aqui</Text>
+              </TouchableOpacity>
             </View>
           </View>
 
-          {/* Submit */}
-          <TouchableOpacity
-            style={styles.primaryBtn}
-            activeOpacity={0.85}
-            onPress={() => {}}
-          >
-            <Text style={styles.primaryBtnText}>Criar conta</Text>
-            <MaterialIcons name="arrow-forward" size={20} color={COLORS.onPrimary} />
-          </TouchableOpacity>
-
-          {/* Divider */}
-          <View style={styles.dividerRow}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>OU CADASTRE-SE COM</Text>
-            <View style={styles.dividerLine} />
+          <View style={styles.footer}>
+            <Text style={styles.footerCopy}>© 2024 CONDOMINIO.</Text>
+            <View style={styles.footerLinks}>
+              <Text style={styles.footerLink}>TERMOS</Text>
+              <Text style={styles.footerLink}>PRIVACIDADE</Text>
+              <Text style={styles.footerLink}>AJUDA</Text>
+            </View>
           </View>
-
-          {/* Social buttons */}
-          <View style={styles.socialRow}>
-            <TouchableOpacity style={styles.socialBtn} activeOpacity={0.8}>
-              <Image
-                source={{
-                  uri: "https://developers.google.com/static/identity/images/g-logo.png",
-                }}
-                style={styles.googleIcon}
-              />
-              <Text style={styles.socialBtnText}>Google</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.socialBtn} activeOpacity={0.8}>
-              <MaterialIcons name="apple" size={20} color={COLORS.onSecondaryContainer} />
-              <Text style={styles.socialBtnText}>Apple</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Login link */}
-          <View style={styles.loginRow}>
-            <Text style={styles.loginText}>Já tem uma conta? </Text>
-            <TouchableOpacity onPress={() => router.replace("/")}>
-              <Text style={styles.loginLink}>Entre aqui</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Footer */}
-        <View style={styles.footer}>
-          <Text style={styles.footerCopy}>© 2024 CONDOMINIO.</Text>
-          <View style={styles.footerLinks}>
-            <Text style={styles.footerLink}>TERMOS</Text>
-            <Text style={styles.footerLink}>PRIVACIDADE</Text>
-            <Text style={styles.footerLink}>AJUDA</Text>
-          </View>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
@@ -316,11 +349,21 @@ const styles = StyleSheet.create({
     shadowRadius: 20,
     elevation: 4,
   },
+  primaryBtnDisabled: {
+    opacity: 0.72,
+  },
   primaryBtnText: {
     fontSize: 14,
     fontWeight: "600",
     color: COLORS.onPrimary,
     letterSpacing: 0.5,
+  },
+  feedbackText: {
+    marginTop: 12,
+    fontSize: 12,
+    lineHeight: 18,
+    color: "#B42318",
+    textAlign: "center",
   },
   dividerRow: {
     flexDirection: "row",
@@ -355,10 +398,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.secondaryContainer + "80",
     borderWidth: 1,
     borderColor: COLORS.outlineVariant + "33",
-  },
-  googleIcon: {
-    width: 20,
-    height: 20,
   },
   socialBtnText: {
     fontSize: 14,
@@ -405,3 +444,137 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
 });
+
+type SocialAuthButtonsProps = {
+  onSuccess: () => void;
+  onMessage: (message: string) => void;
+};
+
+function SocialAuthButtons({ onSuccess, onMessage }: SocialAuthButtonsProps) {
+  const [isBusy, setIsBusy] = useState(false);
+
+  const googleConfig = useMemo(() => {
+    if (!GOOGLE_CLIENT_ID) {
+      return null;
+    }
+
+    return {
+      clientId: GOOGLE_CLIENT_ID,
+      webClientId: GOOGLE_CLIENT_ID,
+      iosClientId: GOOGLE_CLIENT_ID,
+      androidClientId: GOOGLE_CLIENT_ID,
+      responseType: AuthSession.ResponseType.Code,
+      shouldAutoExchangeCode: false,
+      scopes: ["openid", "profile", "email"],
+      redirectUri: AuthSession.makeRedirectUri({
+        scheme: "condominio",
+        path: "oauthredirect",
+      }),
+    };
+  }, []);
+
+  const [request, response, promptAsync] = Google.useAuthRequest(
+    googleConfig ?? {
+      clientId: "placeholder-google-client-id",
+      webClientId: "placeholder-google-client-id",
+      responseType: AuthSession.ResponseType.Code,
+      shouldAutoExchangeCode: false,
+      scopes: ["openid", "profile", "email"],
+      redirectUri: AuthSession.makeRedirectUri({
+        scheme: "condominio",
+        path: "oauthredirect",
+      }),
+    },
+  );
+
+  useEffect(() => {
+    if (response?.type !== "success") {
+      if (response?.type === "dismiss" || response?.type === "cancel") {
+        setIsBusy(false);
+      }
+      return;
+    }
+
+    const code = response.params.code;
+    if (!code) {
+      onMessage("O provedor social não retornou o código de autorização.");
+      setIsBusy(false);
+      return;
+    }
+
+    if (!request?.codeVerifier) {
+      onMessage("Não foi possível gerar o verificador de segurança do login social.");
+      setIsBusy(false);
+      return;
+    }
+
+    exchangeSocialCode({
+      provider: "google",
+      code,
+      codeVerifier: request.codeVerifier,
+      redirectUri: request.redirectUri,
+    })
+      .then((result) => {
+        setAuthToken(result.token);
+        onMessage("");
+        onSuccess();
+      })
+      .catch((error) => {
+        onMessage(error instanceof Error ? error.message : "Falha no login social do Google.");
+      })
+      .finally(() => {
+        setIsBusy(false);
+      });
+  }, [onMessage, onSuccess, request?.codeVerifier, request?.redirectUri, response]);
+
+  async function handleGooglePress() {
+    if (!GOOGLE_CLIENT_ID) {
+      onMessage("Configure EXPO_PUBLIC_GOOGLE_CLIENT_ID para usar login social do Google.");
+      return;
+    }
+
+    if (!request) {
+      onMessage("Carregando configuração do Google... tente novamente em instantes.");
+      return;
+    }
+
+    setIsBusy(true);
+    onMessage("");
+
+    try {
+      await promptAsync();
+    } catch (error) {
+      setIsBusy(false);
+      onMessage(error instanceof Error ? error.message : "Não foi possível iniciar o login do Google.");
+    }
+  }
+
+  function handleApplePress() {
+    onMessage("Login com Apple ainda não está configurado no backend.");
+  }
+
+  return (
+    <View style={styles.socialRow}>
+      <TouchableOpacity
+        style={styles.socialBtn}
+        activeOpacity={0.8}
+        onPress={handleGooglePress}
+        disabled={isBusy}
+      >
+        {isBusy ? (
+          <ActivityIndicator size="small" color={COLORS.onSecondaryContainer} />
+        ) : (
+          <>
+            <Ionicons name="logo-google" size={20} color={COLORS.onSecondaryContainer} />
+            <Text style={styles.socialBtnText}>Google</Text>
+          </>
+        )}
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.socialBtn} activeOpacity={0.8} onPress={handleApplePress}>
+        <Ionicons name="logo-apple" size={20} color={COLORS.onSecondaryContainer} />
+        <Text style={styles.socialBtnText}>Apple</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
