@@ -17,7 +17,7 @@
 | 20/04 - 26/04 | Computação Ubíqua e Pervasiva e IoT - Unidade 2 | ✅ | Início da documentação do frontend web | Escolha das tecnologias a serem utilizadas no frontend. Documentação das tecnologias escolhidas no frontend. |
 | 27/04 - 03/05 | Desenvolvimento de Aplicações Móveis - Unidade 1 | ✅ | Estruturação do fluxo de dados do frontend web | Estruturação e implementação do fluxo de dados do frontend web. Setup inicial do código-fonte do frontend web |
 | 04/05 - 10/05 | Desenvolvimento de Aplicações Móveis - Unidade 2 | ✅ | Configuração do frontend web de Delivery com o backend | Integração dos dados da interface do frontend web com o backend da aplicação |
-| 11/05 - 17/05 | Desenvolvimento de Aplicações Móveis - Unidade 2 | ⬜ |  |  |
+| 11/05 - 17/05 | Desenvolvimento de Aplicações Móveis - Unidade 2 | ✅ | Setup inicial do app mobile | Setup inicial do app mobile e integração das encomendas |
 | 18/05 - 24/05 | Fundamentos de Projeto e Análise de Algoritmos - Unidade 1 | ⬜ |  |  |
 | 25/05 - 31/05 | Fundamentos de Projeto e Análise de Algoritmos - Unidade 2 | ⬜ |  |  |
 | 01/06 - 07/06 |  | ⬜ |  |  |
