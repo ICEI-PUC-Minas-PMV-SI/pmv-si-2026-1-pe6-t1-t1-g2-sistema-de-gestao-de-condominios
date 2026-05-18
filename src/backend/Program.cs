@@ -3,6 +3,7 @@ using backend.Models;
 using backend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
@@ -10,9 +11,10 @@ using Microsoft.OpenApi;
 using Npgsql;
 using Resend;
 using System.Text;
-using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
+
+LoadEnvironmentFile(Path.Combine(Directory.GetCurrentDirectory(), ".env"));
 
 // Configuração inicial para inciar serviço de email (Resend).
 builder.Services.AddOptions();
@@ -76,6 +78,13 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
+
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
 
 // Configurar CORS
 builder.Services.AddCors(options =>
@@ -157,6 +166,8 @@ app.Lifetime.ApplicationStarted.Register(() =>
 
 // --- CONFIGURAÇÃO DO PIPELINE DE REQUISIÇÕES ---
 
+app.UseForwardedHeaders();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -171,10 +182,12 @@ else
 }
 
 app.UseStaticFiles();
+var uploadsPath = Path.Combine(builder.Environment.ContentRootPath, "uploads");
+Directory.CreateDirectory(uploadsPath);
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
-        Path.Combine(builder.Environment.ContentRootPath, "uploads")),
+        uploadsPath),
     RequestPath = "/uploads"
 });
 app.UseCors("AllowAll");
@@ -192,5 +205,43 @@ app.MapControllerRoute(
 app.MapControllers();
 
 app.Run();
+
+static void LoadEnvironmentFile(string filePath)
+{
+    if (!File.Exists(filePath))
+    {
+        return;
+    }
+
+    foreach (var rawLine in File.ReadAllLines(filePath))
+    {
+        var line = rawLine.Trim();
+        if (line.Length == 0 || line.StartsWith('#') || !line.Contains('='))
+        {
+            continue;
+        }
+
+        var separatorIndex = line.IndexOf('=');
+        if (separatorIndex <= 0)
+        {
+            continue;
+        }
+
+        var key = line[..separatorIndex].Trim();
+        var value = line[(separatorIndex + 1)..].Trim();
+
+        if (string.IsNullOrWhiteSpace(key) || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable(key)))
+        {
+            continue;
+        }
+
+        if (value.Length >= 2 && value[0] == '"' && value[^1] == '"')
+        {
+            value = value[1..^1];
+        }
+
+        Environment.SetEnvironmentVariable(key, value);
+    }
+}
 
 public partial class Program { }

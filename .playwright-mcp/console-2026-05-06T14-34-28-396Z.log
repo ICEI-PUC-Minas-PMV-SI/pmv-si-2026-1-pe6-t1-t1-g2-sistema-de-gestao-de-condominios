@@ -1,0 +1,13 @@
+[    2035ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3001/:0
+[    4740ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=e44abd50:14336
+[    4758ms] [WARNING] [tanstack-router] These exports from "C:/Users/Usuario/pmv-si-2026-1-pe6-t1-t1-g2-sistema-de-gestao-de-condominios/src/frontend-web/src/routes/occurrences.tsx" will not be code-split and will increase your bundle size:
+- OccurrencesPage
+For the best optimization, these items should either have their export statements removed, or be imported from another location that is not a route file. @ http://localhost:3001/src/routes/occurrences.tsx:3
+[   55013ms] [LOG] SocialAuthButton clicked social @ http://localhost:3001/src/pages/auth/components/SocialAuthButton.tsx:8
+[   56637ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:5219/api/Users/exchange:0
+[   56640ms] [ERROR] Social login failed Error: Erro ao processar login social: 23502: null value in column "username" of relation "users" violates not-null constraint
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+    at apiRequest (http://localhost:3001/src/services/api-client.ts:25:9)
+    at async Module.exchangeSocial (http://localhost:3001/src/services/auth-service.ts:61:19)
+    at async handleClick (http://localhost:3001/src/pages/auth/components/SocialAuthButton.tsx:51:19) @ http://localhost:3001/src/pages/auth/components/SocialAuthButton.tsx:58

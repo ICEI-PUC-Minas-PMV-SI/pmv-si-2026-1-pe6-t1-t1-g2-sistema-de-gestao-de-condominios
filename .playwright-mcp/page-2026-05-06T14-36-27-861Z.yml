@@ -1,0 +1,4 @@
+- main [ref=e2]:
+  - generic [ref=e3]:
+    - heading "Concluindo autenticação" [level=1] [ref=e4]
+    - paragraph [ref=e5]: Finalizando login com o Supabase...

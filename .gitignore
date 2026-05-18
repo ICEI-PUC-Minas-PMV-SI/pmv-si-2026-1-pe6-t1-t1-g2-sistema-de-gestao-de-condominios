@@ -24,6 +24,7 @@ src/frontend-web/node_modules
 
 # Segredos locais (User Secrets)
 src/backend/secrets.json
+src/backend/.env
 
 # Configurações de ambiente
 src/backend/appsettings.Development.json
