@@ -148,10 +148,24 @@ export async function apiRequest<TResponse>(
 
     return response.json() as Promise<TResponse>;
   } catch (error) {
-    if (error instanceof Error && error.name === "AbortError") {
-      throw new Error(
-        `A API não respondeu em tempo hábil em ${API_BASE_URL}. Verifique se o backend está ativo e acessível pelo emulador ou dispositivo.`,
-      );
+    if (error instanceof Error) {
+      if (error.name === "AbortError") {
+        throw new Error(
+          `A API não respondeu em tempo hábil em ${API_BASE_URL}. Verifique se o backend está ativo e acessível pelo emulador ou dispositivo.`,
+        );
+      }
+
+      if (
+        error.message.startsWith("Falha ao conectar em ") ||
+        error.message.startsWith("Network request failed") ||
+        error.message.startsWith("fetch failed")
+      ) {
+        throw new Error(
+          `Falha ao conectar em ${API_BASE_URL}. Verifique se o backend está em execução e se o dispositivo consegue acessar esse endereço.`,
+        );
+      }
+
+      throw error;
     }
 
     throw new Error(
