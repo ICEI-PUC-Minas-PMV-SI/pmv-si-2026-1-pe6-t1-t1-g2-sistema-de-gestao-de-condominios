@@ -1,31 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Usuario\\pmv-si-2026-1-pe6-t1-t1-g2-sistema-de-gestao-de-condominios\\src\\backend\\backend.csproj": {}
+    "/Users/matheus/pmv-si-2026-1-pe6-t1-t1-g2-sistema-de-gestao-de-condominios/src/backend/backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Usuario\\pmv-si-2026-1-pe6-t1-t1-g2-sistema-de-gestao-de-condominios\\src\\backend\\backend.csproj": {
+    "/Users/matheus/pmv-si-2026-1-pe6-t1-t1-g2-sistema-de-gestao-de-condominios/src/backend/backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Usuario\\pmv-si-2026-1-pe6-t1-t1-g2-sistema-de-gestao-de-condominios\\src\\backend\\backend.csproj",
+        "projectUniqueName": "/Users/matheus/pmv-si-2026-1-pe6-t1-t1-g2-sistema-de-gestao-de-condominios/src/backend/backend.csproj",
         "projectName": "backend",
-        "projectPath": "C:\\Users\\Usuario\\pmv-si-2026-1-pe6-t1-t1-g2-sistema-de-gestao-de-condominios\\src\\backend\\backend.csproj",
-        "packagesPath": "C:\\Users\\Usuario\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Usuario\\pmv-si-2026-1-pe6-t1-t1-g2-sistema-de-gestao-de-condominios\\src\\backend\\obj\\",
+        "projectPath": "/Users/matheus/pmv-si-2026-1-pe6-t1-t1-g2-sistema-de-gestao-de-condominios/src/backend/backend.csproj",
+        "packagesPath": "/Users/matheus/.nuget/packages/",
+        "outputPath": "/Users/matheus/pmv-si-2026-1-pe6-t1-t1-g2-sistema-de-gestao-de-condominios/src/backend/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Usuario\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/matheus/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -98,7 +92,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.201/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

@@ -4,7 +4,9 @@ import {
   ActivityIndicator,
   FlatList,
   KeyboardAvoidingView,
+  Modal,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -14,6 +16,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { useAuth } from "@/contexts/AuthContext";
 import { apiRequest } from "@/services/auth";
 import { getAuthToken } from "@/services/authSession";
 
@@ -156,12 +159,72 @@ function mapDelivery(item: ApiDelivery): DeliveryItem {
   };
 }
 
+type NewDeliveryForm = {
+  description: string;
+  recipientEmail: string;
+  arrivalDate: string;
+};
+
+const EMPTY_FORM: NewDeliveryForm = {
+  description: "",
+  recipientEmail: "",
+  arrivalDate: "",
+};
+
 export default function DeliveriesScreen() {
+  const { user } = useAuth();
+  const isAdmin = user?.profile === "Administrador";
   const [searchQuery, setSearchQuery] = useState("");
   const [deliveries, setDeliveries] = useState<DeliveryItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const [reloadKey, setReloadKey] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const [form, setForm] = useState<NewDeliveryForm>(EMPTY_FORM);
+  const [formError, setFormError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  async function handleAddDelivery() {
+    if (!form.description.trim()) {
+      setFormError("Informe a descrição da encomenda.");
+      return;
+    }
+    if (!form.recipientEmail.trim()) {
+      setFormError("Informe o e-mail do destinatário.");
+      return;
+    }
+
+    setFormError("");
+    setIsSubmitting(true);
+
+    try {
+      const token = getAuthToken();
+      await apiRequest("/api/deliveries", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: JSON.stringify({
+          description: form.description.trim(),
+          recipient_email: form.recipientEmail.trim(),
+          arrival_date: form.arrivalDate.trim() || new Date().toISOString(),
+          status: "Aguardando",
+        }),
+      });
+
+      setShowModal(false);
+      setForm(EMPTY_FORM);
+      setReloadKey((k) => k + 1);
+    } catch (error) {
+      setFormError(error instanceof Error ? error.message : "Não foi possível registrar a entrega.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  function handleCloseModal() {
+    setShowModal(false);
+    setForm(EMPTY_FORM);
+    setFormError("");
+  }
 
   useEffect(() => {
     let isActive = true;
@@ -380,10 +443,76 @@ export default function DeliveriesScreen() {
           </View>
         </ScrollView>
 
-        <TouchableOpacity style={styles.fab}>
-          <Ionicons name="add" size={32} color={COLORS.white} />
-        </TouchableOpacity>
+        {isAdmin && (
+          <TouchableOpacity style={styles.fab} onPress={() => setShowModal(true)}>
+            <Ionicons name="add" size={32} color={COLORS.white} />
+          </TouchableOpacity>
+        )}
       </KeyboardAvoidingView>
+
+      <Modal
+        visible={showModal}
+        animationType="slide"
+        transparent
+        onRequestClose={handleCloseModal}
+      >
+        <Pressable style={styles.modalOverlay} onPress={handleCloseModal}>
+          <Pressable style={styles.modalSheet} onPress={() => {}}>
+            <View style={styles.modalHandle} />
+            <Text style={styles.modalTitle}>Nova Encomenda</Text>
+            <Text style={styles.modalSubtitle}>Preencha os dados para registrar uma entrega.</Text>
+
+            <View style={styles.fieldGroup}>
+              <Text style={styles.fieldLabel}>Descrição *</Text>
+              <TextInput
+                style={styles.fieldInput}
+                placeholder="Ex: Caixa Amazon, encomenda Correios..."
+                placeholderTextColor="#94A3B8"
+                value={form.description}
+                onChangeText={(v) => setForm((f) => ({ ...f, description: v }))}
+              />
+            </View>
+
+            <View style={styles.fieldGroup}>
+              <Text style={styles.fieldLabel}>E-mail do destinatário *</Text>
+              <TextInput
+                style={styles.fieldInput}
+                placeholder="morador@email.com"
+                placeholderTextColor="#94A3B8"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                value={form.recipientEmail}
+                onChangeText={(v) => setForm((f) => ({ ...f, recipientEmail: v }))}
+              />
+            </View>
+
+            <View style={styles.fieldGroup}>
+              <Text style={styles.fieldLabel}>Data de chegada (opcional)</Text>
+              <TextInput
+                style={styles.fieldInput}
+                placeholder="Ex: 2025-05-19T10:00:00"
+                placeholderTextColor="#94A3B8"
+                value={form.arrivalDate}
+                onChangeText={(v) => setForm((f) => ({ ...f, arrivalDate: v }))}
+              />
+            </View>
+
+            {formError ? <Text style={styles.formError}>{formError}</Text> : null}
+
+            <TouchableOpacity
+              style={[styles.submitButton, isSubmitting && styles.submitDisabled]}
+              onPress={handleAddDelivery}
+              disabled={isSubmitting}
+              activeOpacity={0.85}
+            >
+              {isSubmitting
+                ? <ActivityIndicator color={COLORS.white} />
+                : <Text style={styles.submitText}>Registrar entrega</Text>
+              }
+            </TouchableOpacity>
+          </Pressable>
+        </Pressable>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -649,5 +778,73 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 12,
     elevation: 6,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.4)",
+    justifyContent: "flex-end",
+  },
+  modalSheet: {
+    backgroundColor: COLORS.white,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
+    padding: 28,
+    paddingBottom: 40,
+    gap: 16,
+  },
+  modalHandle: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: "#E2E8F0",
+    alignSelf: "center",
+    marginBottom: 4,
+  },
+  modalTitle: {
+    fontSize: 22,
+    fontWeight: "800",
+    color: COLORS.text,
+  },
+  modalSubtitle: {
+    fontSize: 13,
+    color: COLORS.secondary,
+    marginTop: -8,
+  },
+  fieldGroup: {
+    gap: 6,
+  },
+  fieldLabel: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: COLORS.text,
+  },
+  fieldInput: {
+    height: 48,
+    borderRadius: 12,
+    backgroundColor: COLORS.inputBg,
+    paddingHorizontal: 14,
+    fontSize: 14,
+    color: COLORS.text,
+  },
+  formError: {
+    fontSize: 12,
+    color: COLORS.red700,
+    textAlign: "center",
+  },
+  submitButton: {
+    height: 52,
+    borderRadius: 16,
+    backgroundColor: COLORS.primary,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 4,
+  },
+  submitDisabled: {
+    opacity: 0.7,
+  },
+  submitText: {
+    color: COLORS.white,
+    fontSize: 15,
+    fontWeight: "700",
   },
 });

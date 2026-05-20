@@ -6,6 +6,7 @@ src/backend.tests/obj/
 
 # Visual Studio / usuário
 .vs/
+.vscode/
 src/backend/.vs/
 src/backend/*.user
 src/backend/*.rsuser
@@ -32,6 +33,8 @@ src/frontend-web/.env
 
 src/backend/bin/
 src/backend/obj/
-src/frontend-web/node_modules/
+src/frontend-mobile/node_modules/
+src/frontend-mobile/.expo/
 src/frontend-web/dist/
+src/frontend-web/.netlify
 

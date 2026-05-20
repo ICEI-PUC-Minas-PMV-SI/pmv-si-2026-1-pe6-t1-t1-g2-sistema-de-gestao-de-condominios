@@ -1,8 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
-import * as AuthSession from "expo-auth-session";
-import * as Google from "expo-auth-session/providers/google";
 import { useRouter } from "expo-router";
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -17,10 +15,8 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { exchangeSocialCode, loginUser, registerUser } from "@/services/auth";
+import { loginUser, registerUser } from "@/services/auth";
 import { setAuthToken } from "@/services/authSession";
-
-const GOOGLE_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID?.trim() ?? "";
 
 const COLORS = {
   primary: "#40557b",
@@ -80,10 +76,6 @@ export default function CadastroScreen() {
     }
   }
 
-  const handleSocialSuccess = () => {
-    router.replace("/(tabs)");
-  };
-
   return (
     <SafeAreaView style={styles.root}>
       <KeyboardAvoidingView
@@ -100,7 +92,7 @@ export default function CadastroScreen() {
               <Ionicons name="business-outline" size={24} color={COLORS.primary} />
               <Text style={styles.logoText}>Condominio</Text>
             </View>
-            <TouchableOpacity onPress={() => router.replace("/")}>
+            <TouchableOpacity onPress={() => router.replace("/login")}>
               <Text style={styles.entrarBtn}>Entrar</Text>
             </TouchableOpacity>
           </View>
@@ -200,20 +192,9 @@ export default function CadastroScreen() {
 
             {feedback ? <Text style={styles.feedbackText}>{feedback}</Text> : null}
 
-            <View style={styles.dividerRow}>
-              <View style={styles.dividerLine} />
-              <Text style={styles.dividerText}>OU CADASTRE-SE COM</Text>
-              <View style={styles.dividerLine} />
-            </View>
-
-            <SocialAuthButtons
-              onSuccess={handleSocialSuccess}
-              onMessage={setFeedback}
-            />
-
             <View style={styles.loginRow}>
               <Text style={styles.loginText}>Já tem uma conta? </Text>
-              <TouchableOpacity onPress={() => router.replace("/")}>
+              <TouchableOpacity onPress={() => router.replace("/login")}>
                 <Text style={styles.loginLink}>Entre aqui</Text>
               </TouchableOpacity>
             </View>
@@ -365,45 +346,6 @@ const styles = StyleSheet.create({
     color: "#B42318",
     textAlign: "center",
   },
-  dividerRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 24,
-    gap: 12,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: COLORS.outlineVariant,
-    opacity: 0.3,
-  },
-  dividerText: {
-    fontSize: 12,
-    fontWeight: "500",
-    color: COLORS.onSurfaceVariant,
-    letterSpacing: 1.5,
-  },
-  socialRow: {
-    flexDirection: "row",
-    gap: 16,
-  },
-  socialBtn: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-    height: 48,
-    borderRadius: 12,
-    backgroundColor: COLORS.secondaryContainer + "80",
-    borderWidth: 1,
-    borderColor: COLORS.outlineVariant + "33",
-  },
-  socialBtnText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: COLORS.onSecondaryContainer,
-  },
   loginRow: {
     flexDirection: "row",
     justifyContent: "center",
@@ -445,136 +387,3 @@ const styles = StyleSheet.create({
   },
 });
 
-type SocialAuthButtonsProps = {
-  onSuccess: () => void;
-  onMessage: (message: string) => void;
-};
-
-function SocialAuthButtons({ onSuccess, onMessage }: SocialAuthButtonsProps) {
-  const [isBusy, setIsBusy] = useState(false);
-
-  const googleConfig = useMemo(() => {
-    if (!GOOGLE_CLIENT_ID) {
-      return null;
-    }
-
-    return {
-      clientId: GOOGLE_CLIENT_ID,
-      webClientId: GOOGLE_CLIENT_ID,
-      iosClientId: GOOGLE_CLIENT_ID,
-      androidClientId: GOOGLE_CLIENT_ID,
-      responseType: AuthSession.ResponseType.Code,
-      shouldAutoExchangeCode: false,
-      scopes: ["openid", "profile", "email"],
-      redirectUri: AuthSession.makeRedirectUri({
-        scheme: "condominio",
-        path: "oauthredirect",
-      }),
-    };
-  }, []);
-
-  const [request, response, promptAsync] = Google.useAuthRequest(
-    googleConfig ?? {
-      clientId: "placeholder-google-client-id",
-      webClientId: "placeholder-google-client-id",
-      responseType: AuthSession.ResponseType.Code,
-      shouldAutoExchangeCode: false,
-      scopes: ["openid", "profile", "email"],
-      redirectUri: AuthSession.makeRedirectUri({
-        scheme: "condominio",
-        path: "oauthredirect",
-      }),
-    },
-  );
-
-  useEffect(() => {
-    if (response?.type !== "success") {
-      if (response?.type === "dismiss" || response?.type === "cancel") {
-        setIsBusy(false);
-      }
-      return;
-    }
-
-    const code = response.params.code;
-    if (!code) {
-      onMessage("O provedor social não retornou o código de autorização.");
-      setIsBusy(false);
-      return;
-    }
-
-    if (!request?.codeVerifier) {
-      onMessage("Não foi possível gerar o verificador de segurança do login social.");
-      setIsBusy(false);
-      return;
-    }
-
-    exchangeSocialCode({
-      provider: "google",
-      code,
-      codeVerifier: request.codeVerifier,
-      redirectUri: request.redirectUri,
-    })
-      .then((result) => {
-        setAuthToken(result.token);
-        onMessage("");
-        onSuccess();
-      })
-      .catch((error) => {
-        onMessage(error instanceof Error ? error.message : "Falha no login social do Google.");
-      })
-      .finally(() => {
-        setIsBusy(false);
-      });
-  }, [onMessage, onSuccess, request?.codeVerifier, request?.redirectUri, response]);
-
-  async function handleGooglePress() {
-    if (!GOOGLE_CLIENT_ID) {
-      onMessage("Configure EXPO_PUBLIC_GOOGLE_CLIENT_ID para usar login social do Google.");
-      return;
-    }
-
-    if (!request) {
-      onMessage("Carregando configuração do Google... tente novamente em instantes.");
-      return;
-    }
-
-    setIsBusy(true);
-    onMessage("");
-
-    try {
-      await promptAsync();
-    } catch (error) {
-      setIsBusy(false);
-      onMessage(error instanceof Error ? error.message : "Não foi possível iniciar o login do Google.");
-    }
-  }
-
-  function handleApplePress() {
-    onMessage("Login com Apple ainda não está configurado no backend.");
-  }
-
-  return (
-    <View style={styles.socialRow}>
-      <TouchableOpacity
-        style={styles.socialBtn}
-        activeOpacity={0.8}
-        onPress={handleGooglePress}
-        disabled={isBusy}
-      >
-        {isBusy ? (
-          <ActivityIndicator size="small" color={COLORS.onSecondaryContainer} />
-        ) : (
-          <>
-            <Ionicons name="logo-google" size={20} color={COLORS.onSecondaryContainer} />
-            <Text style={styles.socialBtnText}>Google</Text>
-          </>
-        )}
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.socialBtn} activeOpacity={0.8} onPress={handleApplePress}>
-        <Ionicons name="logo-apple" size={20} color={COLORS.onSecondaryContainer} />
-        <Text style={styles.socialBtnText}>Apple</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
