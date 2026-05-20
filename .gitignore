@@ -37,4 +37,5 @@ src/frontend-mobile/node_modules/
 src/frontend-mobile/.expo/
 src/frontend-web/dist/
 src/frontend-web/.netlify
+src/frontend-mobile/.env
 
