@@ -19,7 +19,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { exchangeSocialCode, loginUser } from "@/services/auth";
-import { setAuthToken } from "@/services/authSession";
+import { setAuthToken, setAuthUserId } from "@/services/authSession";
 
 const GOOGLE_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID?.trim() ?? "";
 
@@ -69,6 +69,7 @@ export default function LoginScreen() {
       });
 
       setAuthToken(authResult.token);
+      setAuthUserId(authResult.user?.id ?? null);
 
       router.replace("/(tabs)");
     } catch (error) {
@@ -576,6 +577,7 @@ function SocialAuthButtons({ mode, onSuccess, onMessage }: SocialAuthButtonsProp
     })
       .then((result) => {
         setAuthToken(result.token);
+        setAuthUserId(result.user?.id ?? null);
         onMessage("");
         onSuccess();
       })

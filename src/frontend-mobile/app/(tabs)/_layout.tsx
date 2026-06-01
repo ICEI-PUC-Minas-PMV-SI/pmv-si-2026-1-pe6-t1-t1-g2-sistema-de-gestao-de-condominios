@@ -45,9 +45,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="deliveries"
         options={{
-          title: 'Entregas',
-          tabBarIcon: ({ color }) => <Ionicons name="cube-outline" size={24} color={color} />,
-          tabBarLabel: 'Entregas',
+          title: 'Reservas',
+          tabBarIcon: ({ color }) => <Ionicons name="calendar-outline" size={24} color={color} />,
+          tabBarLabel: 'Reservas',
         }}
       />
       <Tabs.Screen

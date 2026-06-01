@@ -54,8 +54,8 @@ export default function DashboardScreen() {
             style={styles.actionButton}
             onPress={() => router.push("/deliveries")}
           >
-            <Ionicons name="cube-outline" size={20} color={COLORS.white} />
-            <Text style={styles.actionText}>Abrir entregas</Text>
+            <Ionicons name="calendar-outline" size={20} color={COLORS.white} />
+            <Text style={styles.actionText}>Abrir reservas</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
