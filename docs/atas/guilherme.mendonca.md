@@ -17,10 +17,10 @@
 | **20/04 - 26/04** | Computação Ubíqua e Pervasiva e IoT - Unidade 2 | ✅ | Elaboração dos wireframes das telas principais da aplicação web. | - Produzi os wireframes de Login, Dashboard, Reservas, Ocorrências e Gestão de Usuários. |
 | **27/04 - 03/05** | Desenvolvimento de Aplicações Móveis - Unidade 1 | ✅ | Apoio ao time na implementação das telas com base no material de UX/UI. | - Apoiei a implementação visual das telas, alinhando componentes e layout ao design definido. |
 | **04/05 - 10/05** | Desenvolvimento de Aplicações Móveis - Unidade 2 | ✅ | Atualização da documentação do front-end com wireframes e descrição visual. | - Atualizei a documentação da Etapa 3 com wireframes, descrição do design e ajustes de coerência textual. |
-| **11/05 - 17/05** | Desenvolvimento de Aplicações Móveis - Unidade 2 | ⬜ | | |
-| **18/05 - 24/05** | Fundamentos de Projeto e Análise de Algoritmos - Unidade 1 | ⬜ | | |
-| **25/05 - 31/05** | Fundamentos de Projeto e Análise de Algoritmos - Unidade 2 | ⬜ | | |
-| **01/06 - 07/06** | | ⬜ | | |
+| **11/05 - 17/05** | Desenvolvimento de Aplicações Móveis - Unidade 2 | ✅ | Consolidar estrutura inicial do front-end mobile e alinhar setup técnico com o restante do projeto. | - Participei da consolidação da base mobile e do alinhamento de dependências para manter compatibilidade com o stack do projeto.<br>- Apoiei a organização da estrutura de pastas e scripts para continuidade da implementação das telas. |
+| **18/05 - 24/05** | Fundamentos de Projeto e Análise de Algoritmos - Unidade 1 | ✅ | Evoluir setup do mobile e revisar documentação da etapa para refletir o estado atual da implementação. | - Contribuí em ajustes de configuração e integração da branch de setup mobile (incluindo limpeza de arquivos sensíveis/versionados indevidamente).<br>- Atualizei a documentação do front-end móvel para manter coerência com o desenvolvimento em andamento. |
+| **25/05 - 31/05** | Fundamentos de Projeto e Análise de Algoritmos - Unidade 2 | ✅ | Refinar a documentação mobile e remover conteúdos desatualizados ou fora do padrão definido pela equipe. | - Realizei revisão de conteúdo em `docs/frontend-mobile.md`, removendo seção de tecnologia não aderente ao escopo final do app.<br>- Apoiei a manutenção da qualidade documental para preparar a entrega da etapa mobile. |
+| **01/06 - 07/06** | Fundamentos de Projeto e Análise de Algoritmos - Unidade 2 | ✅ | Atualizar documentos de acompanhamento e planejar próximos incrementos funcionais do front-end móvel. | - Validei o relatório automático de contribuições da equipe atualizado em 01/06.<br>- Registrei o planejamento das próximas entregas mobile (wireframes finalizados, descrição visual e avanço para implementação das telas e fluxos). |
 | **08/06 - 14/06** | | ⬜ | | |
 
 **Legenda:** ✅ Estudou | ⬜ Não estudou
