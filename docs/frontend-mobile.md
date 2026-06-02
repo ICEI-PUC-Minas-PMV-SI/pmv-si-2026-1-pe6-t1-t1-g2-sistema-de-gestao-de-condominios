@@ -53,6 +53,14 @@ Para filtrar encomendas é exibida uma barra de pesquisa, que permite ao usuári
 
 Abaixo da barra de pesquisa existe um menu de atividade recente que mostra as informações das encomendas. As encomendas registradas há mais tempo ficam no topo da lista e as mais recentes ficam mais próximas ao fim da lista.
 
+![Tela Editar Entrega](img/mobile/entregas/editar-entrega.png)
+
+Para usuários com cargo de Administrador é possível editar informações de entregas. Para isso basta o usuário pressionar o botão azul com ícone de lápis localizado na parte direita das informações sobre uma entrega. Ao pressionar este botão será aberto um menu contendo as informações atuais da entrega. Para efetivar uma alteração basta pressionar o botão "Salvar alterações".
+
+![Tela Excluir Entrega](img/mobile/entregas/excluir-entrega.png)
+
+Para usuários com cargo de Administrador é possível excluir informações sobre uma entrega. Para isso basta o usuário pressionar o botão vermelho com ícone de lixeira localizado à direita do ícone de edição. Ao pressionar este botão será mostrada uma modal de confirmação para a exclusão da informação. Caso o usuário deseje realmente excluir basta pressionar o botão "Excluir", mas se clicou por acidente ou deseja cancelar a operação basta pressionar o botão "Cancelar" para voltar à tela normal e manter as informações da entrega.
+
 ![Tela Nova Entrega](img/mobile/entregas/nova-entrega.png)
 
 Para usuários com cargo de Administrador é disponibilizado um botão no canto inferior direito da tela de entregas. Esse botão, ao ser clicado, abre um menu que permite registrar uma nova encomenda no sistema. Para isso, devem ser preenchidos os campos de descrição do produto, morador destinatário e status da entrega. 
