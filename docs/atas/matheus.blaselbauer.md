@@ -18,8 +18,8 @@
 | 27/04 - 03/05 | Desenvolvimento de Aplicações Móveis - Unidade 1 | ✅ | Estruturação do fluxo de dados do frontend web | Estruturação e implementação do fluxo de dados do frontend web. Setup inicial do código-fonte do frontend web |
 | 04/05 - 10/05 | Desenvolvimento de Aplicações Móveis - Unidade 2 | ✅ | Configuração do frontend web de Delivery com o backend | Integração dos dados da interface do frontend web com o backend da aplicação |
 | 11/05 - 17/05 | Desenvolvimento de Aplicações Móveis - Unidade 2 | ✅ | Setup inicial do app mobile | Setup inicial do app mobile e integração das encomendas |
-| 18/05 - 24/05 | Fundamentos de Projeto e Análise de Algoritmos - Unidade 1 | ⬜ |  |  |
-| 25/05 - 31/05 | Fundamentos de Projeto e Análise de Algoritmos - Unidade 2 | ⬜ |  |  |
+| 18/05 - 24/05 | Fundamentos de Projeto e Análise de Algoritmos - Unidade 1 | ✅ | Adição da tela de delivery ao app mobile | Adição da tela de delivery no app mobile e aprimoramento do gerenciamento das variáveis de ambiente para não serem mostradas no versionamento do código |
+| 25/05 - 31/05 | Fundamentos de Projeto e Análise de Algoritmos - Unidade 2 | ✅ | Reorganização das tecnologias utilizadas na construção do app mobile | Remoção do NativeWind da stack e reestruturação do código para utilizar CSS nativo do Stylesheet |
 | 01/06 - 07/06 |  | ⬜ |  |  |
 | 08/06 - 14/06 |  | ⬜ |  |  |
 
