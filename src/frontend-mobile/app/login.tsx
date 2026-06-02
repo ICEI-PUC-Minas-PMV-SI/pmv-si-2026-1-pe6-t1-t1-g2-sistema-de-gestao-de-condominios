@@ -1,8 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
-import * as AuthSession from "expo-auth-session";
-import * as Google from "expo-auth-session/providers/google";
 import { useRouter } from "expo-router";
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import {
   ActivityIndicator,
     Image,
@@ -18,10 +16,8 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { exchangeSocialCode, loginUser } from "@/services/auth";
-import { setAuthToken } from "@/services/authSession";
-
-const GOOGLE_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID?.trim() ?? "";
+import { useAuth } from "@/contexts/AuthContext";
+import { loginUser } from "@/services/auth";
 
 const COLORS = {
   bg: "#F8FAFC",
@@ -41,15 +37,12 @@ const TRUST_AVATARS = [
 
 export default function LoginScreen() {
   const router = useRouter();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [senhaVisivel, setSenhaVisivel] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedback, setFeedback] = useState("");
-
-  const handleSocialSuccess = () => {
-    router.replace("/(tabs)");
-  };
 
   async function handleLogin() {
     const normalizedEmail = email.trim();
@@ -68,7 +61,7 @@ export default function LoginScreen() {
         password: senha,
       });
 
-      setAuthToken(authResult.token);
+      login(authResult.token, authResult.user);
 
       router.replace("/(tabs)");
     } catch (error) {
@@ -197,18 +190,6 @@ export default function LoginScreen() {
             </TouchableOpacity>
 
             {feedback ? <Text style={styles.feedbackText}>{feedback}</Text> : null}
-
-            <View style={styles.dividerRow}>
-              <View style={styles.dividerLine} />
-              <Text style={styles.dividerText}>OU CONTINUE COM</Text>
-              <View style={styles.dividerLine} />
-            </View>
-
-            <SocialAuthButtons
-              mode="login"
-              onSuccess={handleSocialSuccess}
-              onMessage={setFeedback}
-            />
 
             <View style={styles.signupRow}>
               <Text style={styles.signupMuted}>Novo por aqui? </Text>
@@ -435,35 +416,6 @@ const styles = StyleSheet.create({
     color: "#B42318",
     textAlign: "center",
   },
-  dividerRow: {
-    marginVertical: 24,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: COLORS.line,
-  },
-  dividerText: {
-    fontSize: 10,
-    letterSpacing: 1.2,
-    color: "#94A3B8",
-    fontWeight: "700",
-  },
-  socialGrid: {
-    flexDirection: "row",
-    gap: 12,
-  },
-  socialButton: {
-    flex: 1,
-    height: 52,
-    borderRadius: 16,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: COLORS.inputBg,
-  },
   signupRow: {
     marginTop: 24,
     flexDirection: "row",
@@ -507,129 +459,3 @@ const styles = StyleSheet.create({
 });
 
 
-type SocialAuthButtonsProps = {
-  mode: "login" | "signup";
-  onSuccess: () => void;
-  onMessage: (message: string) => void;
-};
-
-function SocialAuthButtons({ mode, onSuccess, onMessage }: SocialAuthButtonsProps) {
-  const [isBusy, setIsBusy] = useState(false);
-
-  const googleConfig = useMemo(() => {
-    if (!GOOGLE_CLIENT_ID) {
-      return null;
-    }
-
-    return {
-      clientId: GOOGLE_CLIENT_ID,
-      webClientId: GOOGLE_CLIENT_ID,
-      iosClientId: GOOGLE_CLIENT_ID,
-      androidClientId: GOOGLE_CLIENT_ID,
-      responseType: AuthSession.ResponseType.Code,
-      shouldAutoExchangeCode: false,
-      scopes: ["openid", "profile", "email"],
-      redirectUri: AuthSession.makeRedirectUri({
-        scheme: "condominio",
-        path: "oauthredirect",
-      }),
-    };
-  }, []);
-
-  const [request, response, promptAsync] = Google.useAuthRequest(
-    googleConfig ?? {
-      clientId: "placeholder-google-client-id",
-      webClientId: "placeholder-google-client-id",
-      responseType: AuthSession.ResponseType.Code,
-      shouldAutoExchangeCode: false,
-      scopes: ["openid", "profile", "email"],
-      redirectUri: AuthSession.makeRedirectUri({ scheme: "condominio", path: "oauthredirect" }),
-    },
-  );
-
-  useEffect(() => {
-    if (response?.type !== "success") {
-      if (response?.type === "dismiss" || response?.type === "cancel") {
-        setIsBusy(false);
-      }
-      return;
-    }
-
-    const code = response.params.code;
-    if (!code) {
-      onMessage("O provedor social não retornou o código de autorização.");
-      setIsBusy(false);
-      return;
-    }
-
-    if (!request?.codeVerifier) {
-      onMessage("Não foi possível gerar o verificador de segurança do login social.");
-      setIsBusy(false);
-      return;
-    }
-
-    exchangeSocialCode({
-      provider: "google",
-      code,
-      codeVerifier: request.codeVerifier,
-      redirectUri: request.redirectUri,
-    })
-      .then((result) => {
-        setAuthToken(result.token);
-        onMessage("");
-        onSuccess();
-      })
-      .catch((error) => {
-        onMessage(error instanceof Error ? error.message : "Falha no login social do Google.");
-      })
-      .finally(() => {
-        setIsBusy(false);
-      });
-  }, [onMessage, onSuccess, request?.codeVerifier, request?.redirectUri, response]);
-
-  async function handleGooglePress() {
-    if (!GOOGLE_CLIENT_ID) {
-      onMessage("Configure EXPO_PUBLIC_GOOGLE_CLIENT_ID para usar login social do Google.");
-      return;
-    }
-
-    if (!request) {
-      onMessage("Carregando configuração do Google... tente novamente em instantes.");
-      return;
-    }
-
-    setIsBusy(true);
-    onMessage("");
-
-    try {
-      await promptAsync();
-    } catch (error) {
-      setIsBusy(false);
-      onMessage(error instanceof Error ? error.message : "Não foi possível iniciar o login do Google.");
-    }
-  }
-
-  function handleApplePress() {
-    onMessage("Login com Apple ainda não está configurado no backend.");
-  }
-
-  return (
-    <View style={mode === "login" ? styles.socialGrid : styles.socialGrid}>
-      <TouchableOpacity
-        style={styles.socialButton}
-        activeOpacity={0.88}
-        onPress={handleGooglePress}
-        disabled={isBusy}
-      >
-        {isBusy ? (
-          <ActivityIndicator size="small" color="#334155" />
-        ) : (
-          <Ionicons name="logo-google" size={20} color="#334155" />
-        )}
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.socialButton} activeOpacity={0.88} onPress={handleApplePress}>
-        <Ionicons name="logo-apple" size={20} color="#334155" />
-      </TouchableOpacity>
-    </View>
-  );
-}
