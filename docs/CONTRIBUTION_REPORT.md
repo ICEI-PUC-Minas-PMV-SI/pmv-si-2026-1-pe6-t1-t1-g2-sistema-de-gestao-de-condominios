@@ -1,6 +1,6 @@
 # 📊 Relatório de Contribuições do Projeto
 
-**Última atualização:** 02/06/2026 17:09
+**Última atualização:** 02/06/2026 17:52
 
 ---
 
@@ -17,10 +17,10 @@
 | Isaac Samuel           |        14 |        89 |        76 |          6 |             12 |               5 |
 | Mathbkj                |        48 |     54860 |   5267966 |      35158 |              3 |               1 |
 | Mukimiw4a              |        38 |      1327 |       235 |         31 |             28 |               9 |
-| Worst Javascript User  |        15 |        58 |   5260294 |      34868 |              9 |               3 |
+| Worst Javascript User  |        18 |        67 |   5260295 |      34872 |             12 |               3 |
 | YanGuimaraesMartins    |        15 |      1240 |       451 |         10 |             10 |               5 |
 | copilot-swe-agent[bot] |         1 |         0 |         0 |          0 |              0 |               0 |
-| github-actions[bot]    |       110 |       874 |       846 |          3 |            110 |               1 |
+| github-actions[bot]    |       111 |       893 |       865 |          3 |            111 |               1 |
 | github-classroom[bot]  |         1 |      2152 |         0 |         45 |              1 |              13 |
 | guigsmendonca          |        22 |       178 |       150 |          9 |             16 |               4 |
 | tuxego                 |         1 |   5263498 |         1 |      34971 |              0 |               0 |
@@ -28,7 +28,7 @@
 
 ## 📅 Contribuições Semanais (Todo o Semestre)
 
-**2026-05-26**: Guilherme Mendonça: 2, Worst Javascript User: 6, github-actions[bot]: 3, guigsmendonca: 1
+**2026-05-26**: Guilherme Mendonça: 2, Worst Javascript User: 9, github-actions[bot]: 4, guigsmendonca: 1
 
 **2026-05-19**: Mathbkj: 2, github-actions[bot]: 1
 
@@ -48,9 +48,9 @@
 
 **2026-03-24**: Mathbkj: 2, Mukimiw4a: 3, github-actions[bot]: 5, guigsmendonca: 1
 
-**2026-03-17**: Bruno Alfeu: 3, Gabriel: 2, Gabriel Oliveira: 5, Guilherme Mendonca: 7, Isaac: 2, Isaac Samuel: 3, Mathbkj: 1, YanGuimaraesMartins: 3, github-actions[bot]: 17, guigsmendonca: 6
+**2026-03-17**: Bruno Alfeu: 3, Gabriel: 2, Gabriel Oliveira: 5, Guilherme Mendonca: 7, Isaac: 2, Isaac Samuel: 3, YanGuimaraesMartins: 3, github-actions[bot]: 17, guigsmendonca: 6
 
-**2026-03-10**: Bruno Alfeu: 2, Gabriel: 3, Gabriel Oliveira: 5, Isaac Samuel: 1, Mathbkj: 7, Mukimiw4a: 3, github-actions[bot]: 2, guigsmendonca: 1
+**2026-03-10**: Bruno Alfeu: 2, Gabriel: 3, Gabriel Oliveira: 5, Isaac Samuel: 1, Mathbkj: 8, Mukimiw4a: 3, github-actions[bot]: 2, guigsmendonca: 1
 
 **2026-03-03**: Bruno Alfeu: 4, Gabriel Oliveira: 5, Isaac Samuel: 5, Mukimiw4a: 5, YanGuimaraesMartins: 5, guigsmendonca: 5
 
