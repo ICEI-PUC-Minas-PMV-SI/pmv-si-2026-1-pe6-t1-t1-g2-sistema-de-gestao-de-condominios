@@ -48,7 +48,7 @@ Ao acessar a tela de login, o usuário deverá inserir suas credenciais de email
 ### Cadastro
 ![Tela Cadastro](img/tela-cadastro.png)
 
-Ao acessar a tela de cadastro, o usuário deverá registar suas credenciais de nome, email e senha. Ao clicar em "Criar Conta", o usuário será redirecionado para a tela de login. Há as opções para cadastrar-se pelos provedores da Google ou Apple. Ao clicar para se cadastrar com o Google o usuário será encaminhado para a página de autenticação da Google. Ao clicar para se cadastrar com a Apple, o usuário será redirecionado para o site da Apple.
+Ao acessar a tela de cadastro, o usuário deverá registar suas credenciais de nome, email e senha. Ao clicar em "Criar Conta", o usuário será redirecionado para a tela de login.
 
 É possível ao usuário clicar na parte "Entrar" para ser redirecionado diretamente à página de Login.
 
