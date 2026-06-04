@@ -15,9 +15,12 @@ function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
   const { user } = useAuth();
 
-  const visibleRoutes = state.routes.filter(
-    (r) => ['index', 'explore', 'deliveries'].includes(r.name),
-  );
+  const isAdmin = user?.profile === 'Administrador';
+
+  const visibleRoutes = state.routes.filter((r) => {
+    if (r.name === 'explore' && !isAdmin) return false;
+    return ['index', 'explore', 'deliveries', 'occurrences', 'reservations', 'notifications'].includes(r.name);
+  });
 
   const profileRouteIndex = state.routes.findIndex((r) => r.name === 'profile');
   const isProfileFocused = profileRouteIndex !== -1 && state.index === profileRouteIndex;
@@ -108,9 +111,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Residents',
+          title: 'Residentes',
           tabBarIcon: ({ color }) => <Ionicons name="people-outline" size={24} color={color} />,
-          tabBarLabel: 'Residents',
+          tabBarLabel: 'Residentes',
         }}
       />
       <Tabs.Screen
@@ -119,6 +122,30 @@ export default function TabLayout() {
           title: 'Entregas',
           tabBarIcon: ({ color }) => <Ionicons name="cube-outline" size={24} color={color} />,
           tabBarLabel: 'Entregas',
+        }}
+      />
+      <Tabs.Screen
+        name="occurrences"
+        options={{
+          title: 'Ocorrências',
+          tabBarIcon: ({ color }) => <Ionicons name="alert-circle-outline" size={24} color={color} />,
+          tabBarLabel: 'Ocorrências',
+        }}
+      />
+      <Tabs.Screen
+        name="reservations"
+        options={{
+          title: 'Reservas',
+          tabBarIcon: ({ color }) => <Ionicons name="calendar-outline" size={24} color={color} />,
+          tabBarLabel: 'Reservas',
+        }}
+      />
+      <Tabs.Screen
+        name="notifications"
+        options={{
+          title: 'Notificações',
+          tabBarIcon: ({ color }) => <Ionicons name="notifications-outline" size={24} color={color} />,
+          tabBarLabel: 'Avisos',
         }}
       />
       <Tabs.Screen
