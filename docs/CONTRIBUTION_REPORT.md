@@ -1,6 +1,6 @@
 # 📊 Relatório de Contribuições do Projeto
 
-**Última atualização:** 02/06/2026 18:48
+**Última atualização:** 04/06/2026 02:14
 
 ---
 
@@ -10,7 +10,7 @@
 |------------------------|-----------|-----------|-----------|------------|----------------|-----------------|
 | Bruno Alfeu            |        36 |      1967 |       659 |         45 |             17 |               6 |
 | Gabriel                |        14 |    101429 |       359 |        174 |              0 |               0 |
-| Gabriel Oliveira       |        39 |       517 |        93 |         14 |             32 |               6 |
+| Gabriel Oliveira       |        40 |       520 |        96 |         14 |             33 |               6 |
 | Guilherme Mendonca     |        11 |      1079 |       362 |         20 |              9 |               3 |
 | Guilherme Mendonça     |         4 |      1329 |       553 |         28 |              2 |               3 |
 | Isaac                  |         6 |      1732 |       582 |         31 |              0 |               0 |
@@ -20,7 +20,7 @@
 | Worst Javascript User  |        19 |        69 |   5260297 |      34872 |             13 |               3 |
 | YanGuimaraesMartins    |        15 |      1240 |       451 |         10 |             10 |               5 |
 | copilot-swe-agent[bot] |         1 |         0 |         0 |          0 |              0 |               0 |
-| github-actions[bot]    |       112 |       899 |       871 |          3 |            112 |               1 |
+| github-actions[bot]    |       113 |       905 |       877 |          3 |            113 |               1 |
 | github-classroom[bot]  |         1 |      2152 |         0 |         45 |              1 |              13 |
 | guigsmendonca          |        22 |       178 |       150 |          9 |             16 |               4 |
 | tuxego                 |         1 |   5263498 |         1 |      34971 |              0 |               0 |
@@ -28,35 +28,35 @@
 
 ## 📅 Contribuições Semanais (Todo o Semestre)
 
-**2026-05-26**: Guilherme Mendonça: 2, Worst Javascript User: 10, github-actions[bot]: 5, guigsmendonca: 1
+**2026-05-28**: Gabriel Oliveira: 1, Guilherme Mendonça: 2, Worst Javascript User: 10, github-actions[bot]: 6, guigsmendonca: 1
 
-**2026-05-19**: Mathbkj: 2, github-actions[bot]: 1
+**2026-05-21**: github-actions[bot]: 1
 
-**2026-05-12**: Mathbkj: 7, Worst Javascript User: 7, github-actions[bot]: 3
+**2026-05-14**: Mathbkj: 9, Worst Javascript User: 7, github-actions[bot]: 3
 
-**2026-05-05**: Bruno Alfeu: 4, Gabriel: 1, Gabriel Oliveira: 4, Guilherme Mendonça: 2, Isaac: 4, Isaac Samuel: 2, Mathbkj: 14, Mukimiw4a: 1, Worst Javascript User: 2, YanGuimaraesMartins: 5, github-actions[bot]: 20, guigsmendonca: 1, tuxego: 1
+**2026-05-07**: Bruno Alfeu: 3, Gabriel: 1, Gabriel Oliveira: 4, Guilherme Mendonça: 2, Isaac: 4, Isaac Samuel: 2, Mathbkj: 5, Mukimiw4a: 1, Worst Javascript User: 2, YanGuimaraesMartins: 5, github-actions[bot]: 19, guigsmendonca: 1, tuxego: 1
 
-**2026-04-28**: Bruno Alfeu: 6, Gabriel: 3, Gabriel Oliveira: 4, Mathbkj: 5, Mukimiw4a: 6, copilot-swe-agent[bot]: 1, github-actions[bot]: 11
+**2026-04-30**: Bruno Alfeu: 7, Gabriel: 3, Gabriel Oliveira: 4, Mathbkj: 14, Mukimiw4a: 6, copilot-swe-agent[bot]: 1, github-actions[bot]: 12
 
-**2026-04-21**: Mukimiw4a: 2, github-actions[bot]: 2
+**2026-04-23**: Mukimiw4a: 2, github-actions[bot]: 2
 
-**2026-04-14**: Bruno Alfeu: 5, Gabriel Oliveira: 7, Isaac Samuel: 1, Mukimiw4a: 9, github-actions[bot]: 17
+**2026-04-16**: Mukimiw4a: 5, github-actions[bot]: 6
 
-**2026-04-07**: Bruno Alfeu: 9, Gabriel: 5, Gabriel Oliveira: 7, Guilherme Mendonca: 4, Isaac Samuel: 1, Mathbkj: 10, Mukimiw4a: 7, github-actions[bot]: 27, guigsmendonca: 1
+**2026-04-09**: Bruno Alfeu: 14, Gabriel: 5, Gabriel Oliveira: 14, Guilherme Mendonca: 4, Isaac Samuel: 2, Mathbkj: 7, Mukimiw4a: 7, github-actions[bot]: 34, guigsmendonca: 1
 
-**2026-03-31**: Bruno Alfeu: 1, github-actions[bot]: 2
+**2026-04-02**: Bruno Alfeu: 1, Mathbkj: 3, Mukimiw4a: 4, github-actions[bot]: 6
 
-**2026-03-24**: Mathbkj: 2, Mukimiw4a: 3, github-actions[bot]: 5, guigsmendonca: 1
+**2026-03-26**: Mukimiw4a: 1, github-actions[bot]: 3, guigsmendonca: 1
 
-**2026-03-17**: Bruno Alfeu: 3, Gabriel: 2, Gabriel Oliveira: 5, Guilherme Mendonca: 7, Isaac: 2, Isaac Samuel: 3, YanGuimaraesMartins: 3, github-actions[bot]: 17, guigsmendonca: 6
+**2026-03-19**: Bruno Alfeu: 3, Gabriel: 2, Gabriel Oliveira: 3, Guilherme Mendonca: 5, Isaac: 2, Isaac Samuel: 3, Mathbkj: 2, Mukimiw4a: 2, YanGuimaraesMartins: 3, github-actions[bot]: 17, guigsmendonca: 6
 
-**2026-03-10**: Bruno Alfeu: 2, Gabriel: 3, Gabriel Oliveira: 5, Isaac Samuel: 1, Mathbkj: 8, Mukimiw4a: 2, github-actions[bot]: 2, guigsmendonca: 1
+**2026-03-12**: Gabriel: 3, Gabriel Oliveira: 3, Guilherme Mendonca: 2, Isaac Samuel: 1, Mathbkj: 8, Mukimiw4a: 2, github-actions[bot]: 4
 
-**2026-03-03**: Bruno Alfeu: 4, Gabriel Oliveira: 5, Isaac Samuel: 5, Mukimiw4a: 6, YanGuimaraesMartins: 5, guigsmendonca: 5
+**2026-03-05**: Bruno Alfeu: 6, Gabriel Oliveira: 9, Isaac Samuel: 5, Mukimiw4a: 6, YanGuimaraesMartins: 5, guigsmendonca: 6
 
-**2026-02-24**: Bruno Alfeu: 2, Gabriel Oliveira: 2, Isaac Samuel: 1, Mukimiw4a: 2, YanGuimaraesMartins: 2, guigsmendonca: 6
+**2026-02-26**: Bruno Alfeu: 2, Gabriel Oliveira: 2, Isaac Samuel: 1, Mukimiw4a: 2, YanGuimaraesMartins: 2, guigsmendonca: 6
 
-**2026-02-17**: github-classroom[bot]: 1
+**2026-02-19**: github-classroom[bot]: 1
 
 
 
