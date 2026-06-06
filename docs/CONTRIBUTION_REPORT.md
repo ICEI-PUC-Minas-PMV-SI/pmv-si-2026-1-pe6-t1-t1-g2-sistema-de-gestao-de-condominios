@@ -1,6 +1,6 @@
 # 📊 Relatório de Contribuições do Projeto
 
-**Última atualização:** 06/06/2026 14:38
+**Última atualização:** 06/06/2026 14:39
 
 ---
 
@@ -18,9 +18,9 @@
 | Mathbkj                |        48 |     54860 |   5267966 |      35158 |              3 |               1 |
 | Mukimiw4a              |        38 |      1327 |       235 |         31 |             28 |               9 |
 | Worst Javascript User  |        19 |        69 |   5260297 |      34872 |             13 |               3 |
-| YanGuimaraesMartins    |        16 |      1286 |       458 |         11 |             11 |               6 |
+| YanGuimaraesMartins    |        17 |      1289 |       461 |         11 |             12 |               6 |
 | copilot-swe-agent[bot] |         1 |         0 |         0 |          0 |              0 |               0 |
-| github-actions[bot]    |       115 |       929 |       901 |          3 |            115 |               1 |
+| github-actions[bot]    |       116 |       947 |       919 |          3 |            116 |               1 |
 | github-classroom[bot]  |         1 |      2152 |         0 |         45 |              1 |              13 |
 | guigsmendonca          |        22 |       178 |       150 |          9 |             16 |               4 |
 | tuxego                 |         1 |   5263498 |         1 |      34971 |              0 |               0 |
@@ -28,7 +28,7 @@
 
 ## 📅 Contribuições Semanais (Todo o Semestre)
 
-**2026-05-30**: Gabriel Oliveira: 1, Guilherme Mendonça: 2, Isaac Samuel: 2, Worst Javascript User: 9, YanGuimaraesMartins: 1, github-actions[bot]: 7, guigsmendonca: 1
+**2026-05-30**: Gabriel Oliveira: 1, Guilherme Mendonça: 2, Isaac Samuel: 2, Worst Javascript User: 9, YanGuimaraesMartins: 2, github-actions[bot]: 8, guigsmendonca: 1
 
 **2026-05-23**: Worst Javascript User: 1, github-actions[bot]: 2
 
