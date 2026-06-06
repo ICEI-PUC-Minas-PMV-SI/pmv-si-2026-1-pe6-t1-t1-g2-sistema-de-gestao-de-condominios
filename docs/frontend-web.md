@@ -281,14 +281,58 @@ npm run test
 
 ## Testes
 
-[Descreva a estratégia de teste, incluindo os tipos de teste a serem realizados (unitários, integração, carga, etc.) e as ferramentas a serem utilizadas.]
+### 1. Login
 
-1. Crie casos de teste para cobrir todos os requisitos funcionais e não funcionais da aplicação.
-2. Implemente testes unitários para testar unidades individuais de código, como funções e classes.
-3. Realize testes de integração para verificar a interação correta entre os componentes da aplicação.
-4. Execute testes de carga para avaliar o desempenho da aplicação sob carga significativa.
-5. Utilize ferramentas de teste adequadas, como frameworks de teste e ferramentas de automação de teste, para agilizar o processo de teste.
+| ID     | Caso de teste                                 | Dados                            | Resultado esperado                                                   | Resultado obtido                                                     |                                
+| ------ | --------------------------------------------- | -------------------------------- | -------------------------------------------------------------------- |--------------------------------------------------------------------- |
+| CT-001 | Login com credenciais válidas                 | Usuário e senha corretos         | Login realizado com sucesso e redirecionamento para a página inicial | Login realizado com sucesso e redirecionamento para a página inicial |
+| CT-002 | Login com usuário inválido                    | Usuário inexistente              | Mensagem de erro informando credenciais inválidas                    | Exibição da mensagem "Usuário ou senha inválidos"                    |
+| CT-003 | Login com senha inválida                      | Usuário válido e senha incorreta | Mensagem de erro informando credenciais inválidas                    | Exibição da mensagem "Usuário ou senha inválidos"                    |
+| CT-004 | Login com usuário vazio                       | Campo usuário em branco          | Validação impedindo o login                                          | Exibição da mensagem "Informe e-mail e senha para continuar"         |                                            
+| CT-005 | Login com senha vazia                         | Campo senha em branco            | Validação impedindo o login                                          | Exibição da mensagem "Informe e-mail e senha para continuar"         |
+| CT-006 | Login com ambos os campos vazios              | Usuário e senha em branco        | Exibição das mensagens de obrigatoriedade                            | Exibição da mensagem "Usuário ou senha inválidos"                    |                           
+
+### 2. Dashboard
+
+| ID     | Caso de teste                                 | Dados                                                           | Resultado esperado                                   | Resultado obtido                                     |                                
+| ------ | --------------------------------------------- | --------------------------------------------------------------- | ---------------------------------------------------- |----------------------------------------------------- |
+| CT-001 | Acessar dashboard após login                  | usuário: Matheus / perfil: Administrador                        | Dashboard carregado corretamente                     | Dashboard carregado corretamente                     |
+| CT-002 | Verificar exibição dos widgets                | Wigets esperados : Encomendas, reservas, ocorrências e entregas | Todos os widgets são exibidos conforme especificação | Todos os widgets são exibidos conforme especificação |
+| CT-003 | Validar dados dos indicadores                 | Dados das outras abas são apresentados no dashboard             | Valores apresentados correspondem aos dados da base  | Valores apresentados correspondem aos dados da base  |
+| CT-004 | Atualizar dashboard                           | Atualizar dados nas outras abas modificam o dashboard           | Dados são atualizados corretamente                   | Dados não são atualizados corretamente               |                                            
+               
+### 3. Reservas
+
+| ID     | Caso de teste          | Dados                                                     | Resultado esperado                 | Resultado obtido                    |                                
+| ------ | ---------------------- | --------------------------------------------------------- | ---------------------------------- |------------------------------------ |
+| CT-001 | Acessar a aba reservas | Acessar reservas após login                               | Reservas carregada corretamente    | Reservas carregada corretamente     |
+| CT-002 | Criar uma reserva      | Iniciar o processo de criar reserva                       | Reserva criada com sucesso         | Reserva criada com sucesso          |
+| CT-003 | Aprovar uma reserva    | Aprovar uma reserva por um Administrador                  | Reserva foi aprovada com sucesso   | Reserva foi aprovada com sucesso    |
+| CT-004 | Editar uma reserva     | Editar reserva do salão dia 13/06 23:00-01:00/16:00-19:00 | Dados são atualizados corretamente | Dados  são atualizados corretamente |  
+| CT-005 | Excluir uma reserva    |Excluir reserva do salão dia 13/06 16:00-19:00             | Dados são excluídos                | Dados não são excluidos             |  
+
+### 4. Entregas
+
+| ID     | Caso de teste             | Dados                                     | Resultado esperado                 | Resultado obtido                    |                                
+| ------ | ------------------------- | ----------------------------------------- | ---------------------------------- |------------------------------------ |
+| CT-001 | Acessar a aba entregas    | Acessar entregas após login               | Entregas carregada corretamente    | Entregas carregada corretamente     |
+| CT-002 | Criar uma entrega         | Iniciar o processo de solicitar retirada  | Entrega criada com sucesso         | Entrega criada com sucesso          |
+| CT-003 | Entrega no perfil morador | Retirada aparece no perfil morador        | Entrega criada com sucesso         | Entrega criada com sucesso          |
+| CT-004 | Aprovar uma reserva       | Aprovar uma retirada por um Administrador | Retirada foi aprovada com sucesso  | Retirada foi aprovada com sucesso   |
+| CT-005 | Editar uma reserva        | Editar entrega de uma panela              | Dados são atualizados corretamente | Dados  são atualizados corretamente |  
+| CT-006 | Excluir uma reserva       |Excluirencomenda do Mercado Livre          | Dados são excluídos                | Dados não são excluidos             |  
 
 # Referências
 
-Inclua todas as referências (livros, artigos, sites, etc) utilizados no desenvolvimento do trabalho.
+AMAZON WEB SERVICES (AWS). **AWS Documentation**. Disponível em: <https://docs.aws.amazon.com/>. Acesso em: 20 maio 2026.
+
+EXPO. **Expo Documentation**. Disponível em: <https://docs.expo.dev/>. Acesso em: 01 jun. 2026.
+
+META. **React Documentation**. Disponível em: <https://react.dev/reference/react>. Acesso em: 12 maio 2026.
+
+META. **React Native Documentation**. Disponível em: <https://reactnative.dev/docs/getting-started>. Acesso em: 28 maio 2026.
+
+MICROSOFT. **.NET Documentation**. Disponível em: <https://learn.microsoft.com/pt-br/dotnet/>. Acesso em: 15 maio 2026.
+
+SUPABASE. **Supabase Documentation**. Disponível em: <https://supabase.com/docs>. Acesso em: 04 jun. 2026.
+
