@@ -426,96 +426,46 @@ caso acesse `dashboard` diretamente e dê erro 404, deve-se configurar redirects
 
 ## Testes
 
-# Estratégia de Testes Frontend
+Esta seção detalha os cenários de teste manuais, divididos por perfil de usuário. As demonstrações em vídeo servem como evidência de execução dos fluxos.
 
-## 1. Testes Unitários
-
-### Objetivo
-Validar o comportamento de partes isoladas do código (funções, componentes e hooks), assegurando que cada unidade funcione corretamente sem dependências externas.
-
-### O que testar
-- Funções utilitárias (ex.: formatação de dados)
-- Componentes React isolados (renderização e lógica interna)
-- Estados e chamadas internas
-
-### Ferramentas recomendadas
-- **Vitest** – executor moderno de testes para projetos com Vite (que o frontend já usa); rápido e com suporte nativo a TypeScript.
-- **Jest** – tradicional no ecossistema JavaScript/React, com ampla comunidade e fácil integração com mocks.
-- **@testing-library/react** – biblioteca para testar componentes React com foco no comportamento visível para o usuário.
-- **Sinon.js (ou similares)** – para spies/mocks/stubs quando necessário simular dependências.
+### Demonstração Visual:
+* **[Vídeo: Jornada do Morador (Web)](https://youtu.be/ipq_iu5p_N4)**
+* **[Vídeo: Jornada do Administrador (Web)](https://youtu.be/lDwdY9wy4IM)**
 
 ---
 
-## 2. Testes de Integração
+### 5.1. Jornada do Morador
 
-### Objetivo
-Verificar a interação entre múltiplos componentes ou entre frontend e APIs (mockadas/estágios controlados), garantindo que as integrações estejam funcionando.
-
-### O que testar
-- Formulários que enviam dados e lidam com respostas
-- Fluxos completos envolvendo múltiplos componentes trabalhando juntos
-- Comunicação com o backend (usando mocks para simular endpoints)
-
-### Ferramentas recomendadas
-- **Vitest + @testing-library/react** – usando renderização real de componentes que interagem entre si.
-- **Mock Service Worker (MSW)** – para interceptar chamadas de rede e simular respostas de API sem depender de servidores reais.
-- **React Testing Library** – foco na experiência do usuário e interação entre componentes.
+| Ação | Cenário / Teste | Critério de Aceite (Resultado Esperado) | Referência |
+| :--- | :--- | :--- | :--- |
+| **Ocorrências** | Listar Ocorrências | Exibir apenas as ocorrências criadas pelo usuário logado. | [Vídeo: Morador](https://youtu.be/ipq_iu5p_N4) |
+| **Ocorrências** | Criar Ocorrência | Validar persistência no BD e atualização imediata na lista. | [Vídeo: Morador](https://youtu.be/ipq_iu5p_N4) |
+| **Ocorrências** | Editar Ocorrência | Permitir edição de títulos/descrições antes da resolução. | [Vídeo: Morador](https://youtu.be/ipq_iu5p_N4) |
+| **Ocorrências** | Excluir Ocorrência | Remover o registro da lista e do banco de dados. | [Vídeo: Morador](https://youtu.be/ipq_iu5p_N4) |
+| **Notificações** | Listar Notificações | Exibir feed exclusivo das notificações do morador. | [Vídeo: Morador](https://youtu.be/ipq_iu5p_N4) |
+| **Perfil** | Atualizar Dados | Validar edição de dados pessoais e persistência no perfil. | *Segurança* |
 
 ---
 
-## 3. Testes End-to-End (E2E)
+### 5.2. Jornada do Administrador
 
-### Objetivo
-Validar o sistema completo como um usuário real faria, navegando na interface, realizando cadastros/login e verificando respostas visuais e de lógica.
-
-### O que testar
-- Fluxos críticos (login, logout, navegação entre páginas)
-- Cenários complexos de UI
-- Interação com backend real ou ambiente de staging
-
-### Ferramentas recomendadas
-- **Playwright** – suporte a múltiplos navegadores, fácil de configurar e integração com CI.
-- **Cypress** – muito utilizado para E2E em aplicações web, possui painel visual e bom suporte a testes interativos.
-
----
-
-## 4. Testes de Carga / Performance
-
-### Objetivo
-Avaliar como a aplicação se comporta sob alta carga ou com muitos usuários simultâneos.
-
-### O que testar
-- Tempo de carregamento de telas com grande número de elementos
-- Requisições simultâneas de API em painéis/dashboards
-- Impacto de recursos pesados (listas, gráficos)
-
-### Ferramentas recomendadas
-- **k6** – open source para testes de carga em APIs e aplicações web.
-- **Lighthouse** – análise de performance, acessibilidade e boas práticas (especialmente útil para frontend).
-- **WebPageTest** – ferramenta externa para medir performance real em diferentes condições de conexão.
-
----
-
-## 5. Testes Visuais / Regressão de UI
-
-### Objetivo
-Detectar mudanças indesejadas na interface antes de uma entrega.
-
-### Ferramentas recomendadas
-- **Chromatic** – baseado em Storybook, compara snapshots visuais para detectar diferenças.
-- **Percy** – ferramenta de visual testing integrada com pipelines de CI.
-
----
-
-## 6. Testes de Segurança Básicos
-
-### Objetivo
-Identificar vulnerabilidades comuns (XSS, CSRF, acessos indevidos).
-
-### Ferramentas recomendadas
-- **ESLint com plugins de segurança** (ex.: `eslint-plugin-security`)
-- **Snyk / Dependabot** – para detecção de vulnerabilidades em dependências
+| Ação | Cenário / Teste | Critério de Aceite (Resultado Esperado) | Referência |
+| :--- | :--- | :--- | :--- |
+| **Ocorrências** | Listar Todas | Exibir feed global de todas as ocorrências do condomínio. | [Vídeo: Admin](https://youtu.be/lDwdY9wy4IM) |
+| **Ocorrências** | Alterar Status | Atualizar status (Pendente/Resolvido) e refletir na visão do morador. | [Vídeo: Admin](https://youtu.be/lDwdY9wy4IM) |
+| **Residentes** | CRUD Completo | Criar, Editar e Excluir registros de usuários no sistema. | [Vídeo: Admin](https://youtu.be/lDwdY9wy4IM) |
+| **Notificações** | Listar Global | Exibir todas as notificações do sistema (sem filtro de usuário). | [Vídeo: Admin](https://youtu.be/lDwdY9wy4IM) |
+| **Notificações** | Filtros | Aplicar filtros de status (Todas, Lidas, Não Lidas) com precisão. | [Vídeo: Admin](https://youtu.be/lDwdY9wy4IM) |
+| **Autenticação** | Controle de Acesso | Bloquear rotas admin para usuários com perfil de morador. | *Segurança* |
 
 # Referências
 
-Inclua todas as referências (livros, artigos, sites, etc) utilizados no desenvolvimento do trabalho.
+AMAZON WEB SERVICES (AWS). **AWS Documentation**. Disponível em: <https://docs.aws.amazon.com/>. Acesso em: 20 maio 2026.
+
+EXPO. **Expo Documentation**. Disponível em: <https://docs.expo.dev/>. Acesso em: 01 jun. 2026.
+
+META. **React Documentation**. Disponível em: <https://react.dev/reference/react>. Acesso em: 12 maio 2026.
+
+MICROSOFT. **.NET Documentation**. Disponível em: <https://learn.microsoft.com/pt-br/dotnet/>. Acesso em: 15 maio 2026.
+
+SUPABASE. **Supabase Documentation**. Disponível em: <https://supabase.com/docs>. Acesso em: 04 jun. 2026.

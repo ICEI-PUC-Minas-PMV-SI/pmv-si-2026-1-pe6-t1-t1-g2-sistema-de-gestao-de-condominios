@@ -21,19 +21,19 @@ As interações priorizam toques únicos, feedback visual imediato e componentes
 Os wireframes abaixo representam as páginas principais da experiência móvel e a disposição dos elementos de interface:
 
 #### Login
-![Wireframe - Login](../assets/c__Users_djgui_AppData_Roaming_Cursor_User_workspaceStorage_9066c7e4e49715e03f03b1909e52befb_images_login-f25d6d96-ce74-4dd5-ba6e-dc245699d192.png)
+![Wireframe - Login](/docs/img/wireframes/mobile/wireframe-login.jpeg)
 
 #### Dashboard
-![Wireframe - Dashboard](../assets/c__Users_djgui_AppData_Roaming_Cursor_User_workspaceStorage_9066c7e4e49715e03f03b1909e52befb_images_dashboard-04886cc0-e037-4ab2-8691-7cce4ec85a80.png)
+![Wireframe - Dashboard](/docs/img/wireframes/mobile/wireframe-dashboard.jpeg)
 
 #### Reservas
-![Wireframe - Reservas](../assets/c__Users_djgui_AppData_Roaming_Cursor_User_workspaceStorage_9066c7e4e49715e03f03b1909e52befb_images_reservas-93fdd40f-1cc8-45da-a64b-6a609d451304.png)
+![Wireframe - Reservas](/docs/img/wireframes/mobile/reservas.jpeg)
 
 #### Ocorrências
-![Wireframe - Ocorrências](../assets/c__Users_djgui_AppData_Roaming_Cursor_User_workspaceStorage_9066c7e4e49715e03f03b1909e52befb_images_ocorrencias-e4a470a9-d3ff-4abc-a6f6-c3e20ca36ce8.png)
+![Wireframe - Ocorrências](/docs/img/wireframes/mobile/wireframe-ocorrencias.jpeg)
 
 #### Gestão de Usuários
-![Wireframe - Gestão](../assets/c__Users_djgui_AppData_Roaming_Cursor_User_workspaceStorage_9066c7e4e49715e03f03b1909e52befb_images_gestao-fd08474c-4a19-4ab6-8eed-489941a5d59c.png)
+![Wireframe - Gestão](/docs/img/wireframes/mobile/wireframe-residentes.jpeg)
 
 ### Design Visual
 
@@ -108,6 +108,98 @@ Para selecionar o morador existe um menu de dropdown que ao ser pressionado most
 O campo de  data de chegada é opcional por ser preenchido automaticamente com o horário atual caso seja deixado em branco. Ao pressionar o botão "Registrar entrega" a encomenda é registrada no sistema e o menu se fecha.
 
 
+### Ocorrências (Morador)
+
+Na tela de ocorrências, o morador pode visualizar a listagem de todos os chamados que ele abriu no condomínio. No topo, há cartões informativos com o total de ocorrências, a quantidade de abertas e em andamento. Caso queira registrar um novo problema, o usuário deve pressionar o botão flutuante "+", que abrirá o formulário de "Nova Ocorrência".
+
+![Minhas Ocorrências](/docs/img/mobile/minhas-ocorrencias.jpeg)
+
+### Nova Ocorrência
+
+Ao abrir o formulário de nova ocorrência, o usuário deve preencher os campos obrigatórios de "Título" e "Descrição" para detalhar o problema para a administração do condomínio. Após inserir os dados, basta pressionar o botão "Registrar ocorrência" para enviar as informações para o sistema e salvar o chamado.
+
+![Nova Ocorrência](/docs/img/mobile/nova-ocorrencia.jpeg)
+
+### Confirmação de Ocorrência
+
+Após pressionar o botão de registro, o sistema processa os dados e exibe na tela a confirmação de que a ocorrência foi aberta com sucesso, atualizando imediatamente os contadores e adicionando o novo chamado na lista de pendências.
+
+![Ocorrência Criada](/docs/img/mobile/ocorrencia%20criada.jpeg)
+
+### Detalhes e Exclusão de Ocorrência
+
+Ao tocar em qualquer ocorrência na listagem, um menu inferior é exibido mostrando os detalhes do chamado, como a data de abertura e a descrição completa. Nesta tela, o morador tem as opções de "Editar" as informações ou pressionar o botão "Excluir" para remover permanentemente o registro caso o problem já tenha sido resolvido de outra forma.
+
+![Editar ou Excluir Ocorrência](/docs/img/mobile/editar-excluir.jpeg)
+
+![Ocorrência Excluída](/docs/img/mobile/ocorrencia-excluida.jpeg)
+
+### Notificações e Avisos (Morador)
+
+Na aba de "Avisos", o morador acessa a sua central pessoal de mensagens. Quando não há comunicados ou alertas pendentes direcionados à sua unidade habitacional, a interface exibe de forma limpa o estado padrão com a ilustração e o texto informativo de "Nenhuma notificação".
+
+![Central de Avisos do Morador](/docs/img/mobile/notificações-morador.jpeg)
+
+### Perfil do Usuário
+
+Na aba "Perfil", o morador consegue visualizar suas informações cadastrais básicas, como e-mail de acesso e nome. Para fazer alterações em suas credenciais ou atualizar a senha de acesso, basta que o usuário pressione o botão "Editar" localizado no canto superior direito da tela. Caso deseje encerrar a sessão no dispositivo, o usuário deve pressionar o botão "Sair da conta".
+
+![Perfil do Morador](/docs/img/mobile/tela-perfil.jpeg)
+
+### Editar Perfil
+
+Na tela de edição de perfil, os campos de Nome e E-mail aparecem preenchidos com os dados atuais. O usuário pode atualizar essas informações ou digitar uma nova credencial no campo opcional "Nova senha". Após realizar as alterações desejadas, basta pressionar o botão "Salvar alterações" para atualizar as credenciais no sistema.
+
+![Editar Perfil](/docs/img/mobile/editar-perfil.jpeg)
+
+---
+
+## Fluxos Exclusivos do Administrador
+
+Se o usuário estiver logado com um perfil de Administrador, ele terá acesso a telas de gerenciamento exclusivas para controle global do condomínio.
+
+### Gestão de Residentes (Admin)
+
+Na aba de Residentes, o administrador visualiza a listagem completa de todas as pessoas cadastradas no sistema, divididas entre moradores e outros administradores. É possível utilizar a barra de pesquisa para buscar um usuário por nome, e-mail ou perfil. Para adicionar um novo usuário, o administrador deve pressionar o botão flutuante "+". Cada cartão de residente possui botões diretos para editar ou excluir o cadastro.
+
+![Gestão de Residentes](/docs/img/mobile/tela-residentes.jpeg)
+
+### Cadastro de Novo Residente
+
+Ao abrir o formulário de novo residente, o administrador deve preencher obrigatoriamente os campos de "Nome", "E-mail" e "Senha", além de selecionar o tipo de perfil do usuário ("Morador" ou "Administrador"). Após preencher todas as informações, basta pressionar o botão "Cadastrar residente" para efetivar a inclusão no banco de dados.
+
+![Cadastrar Residente](/docs/img/mobile/criar-residente.jpeg)
+
+### Editar Residente
+
+Ao pressionar o ícone de edição de um residente específico, os dados atuais são carregados na tela. O administrador pode alterar o nome, o e-mail cadastrado, modificar o nível de permissão (Perfil) ou preencher o campo opcional de nova senha. Para consolidar os novos dados, basta pressionar o botão "Salvar alterações".
+
+![Editar Dados do Residente](/docs/img/mobile/editar-residentes.jpeg)
+
+### Gestão de Ocorrências (Admin)
+
+Diferente da tela do morador, o administrador visualiza todos os chamados abertos no condomínio na tela de Gestão de Ocorrências. O painel superior exibe o consolidado total de ocorrências abertas e em andamento. Ao selecionar uma ocorrência, o administrador pode verificar os detalhes, como a descrição ou identificar se o relato foi anônimo ("Nome não informado").
+
+![Gestão Geral de Ocorrências](/docs/img/mobile/telaOcorrencias-admin.jpeg)
+
+![Detalhes da Ocorrência sob Visão Admin](/docs/img/mobile/editar_excluir-notificação.jpeg)
+
+### Alterar Status da Ocorrência
+
+Na tela de gerenciamento de chamados, o administrador pode atualizar o andamento do problema pressionando o botão "Alterar status". Um menu inferior se abre com as opções de "Aberto", "Em Andamento", "Resolvido" ou "Cancelado". Basta selecionar a opção desejada para atualizar o fluxo operacional do condomínio.
+
+![Alterar Status da Ocorrência](/docs/img/mobile/admin-alterarStatus.jpeg)
+
+### Gestão de Notificações e Avisos (Admin)
+
+O painel de controle do Administrador possui uma interface dedicada para gerenciar a distribuição de comunicados do condomínio. Através deste módulo, o administrador consegue monitorar o fluxo total de avisos emitidos e realizar a filtragem estrita dos registros em três abas funcionais:"Todos", "Não lidas" e "Lidas". Esse sistema de segmentação por abas permite acompanhar em tempo real as métricas de leitura e engajamento dos moradores com os avisos oficiais da gestão.
+
+![Painel Geral de Notificações Admin](/docs/img/mobile/telaNotificações-admin.jpeg)
+
+![Filtro de Mensagens Não Lidas](/docs/img/mobile/notificações-naoLidas.jpeg)
+
+![Filtro de Mensagens Lidas](/docs/img/mobile/notificaçoes-lidas.jpeg)
+
 ## Tecnologias Utilizadas
 
 Para o desenvolvimento da interface do aplicativo para dispositivo móvel, tanto em sistemas IOS como Android, e de acordo com a proposta do projeto, foram selecionadas as seguintes tecnologias:
@@ -117,8 +209,25 @@ Framework baseado na tecnologia React Native para desenvolvimento de aplicaçõe
 
 ## Considerações de Segurança
 
-[Discuta as considerações de segurança relevantes para a aplicação distribuída, como autenticação, autorização, proteção contra ataques, etc.]
+A segurança do lado do cliente (mobile) foi projetada para garantir a integridade dos dados do usuário e proteger a comunicação com o backend em um ambiente de dispositivo móvel.
 
+1. Autenticação e Persistência de Sessão
+Gerenciamento de Sessão: O aplicativo utiliza o contexto de autenticação (AuthContext.tsx) para gerenciar o estado da sessão. O sistema não mantém credenciais sensíveis (como senha em texto limpo) no estado da aplicação após a autenticação bem-sucedida.
+
+Armazenamento Seguro: A persistência do token de sessão obtido via Supabase é realizada utilizando mecanismos de armazenamento seguro oferecidos pelo ambiente Expo, garantindo que o token de autenticação não seja facilmente acessível por outros processos do dispositivo ou extraído via backup inseguro.
+
+2. Controle de Acesso e UX Segura
+Rotas Protegidas: A navegação do aplicativo (app/_layout.tsx e app/(tabs)/_layout.tsx) implementa uma camada de verificação de autenticação. Usuários não autenticados são redirecionados automaticamente para a tela de login.tsx, impedindo o acesso à interface administrativa ou de moradores sem o token válido.
+
+Feedback de Autenticação: A interface utiliza componentes dedicados (AuthFeedbackMessage.tsx) para exibir erros de login ou cadastro, garantindo que o usuário receba feedback visual imediato em caso de falha, sem expor detalhes técnicos da exceção que poderiam ser explorados.
+
+3. Proteção de Privacidade e Segurança de Tela
+Restrição de Captura (FLAG_SECURE): O aplicativo implementa a diretiva de segurança FLAG_SECURE em telas que processam dados sensíveis (Login, Cadastro e Edição de Perfil). Esta medida impede que o sistema operacional execute capturas de tela (screenshots) ou gravações de vídeo (screen recording) nestas rotas, mitigando riscos de screen logging e garantindo que dados pessoais não sejam expostos em gravações não autorizadas.
+
+4. Integridade de Dados
+Validação de Formulários (Frontend): Todos os formulários (Login, Cadastro e Nova Ocorrência) realizam validações síncronas antes da submissão dos dados. Isso evita o envio de payloads malformados ou incompletos para a API, reduzindo a carga desnecessária e protegendo o endpoint de possíveis ataques de injeção de dados via inputs.
+
+Comunicação Criptografada: Toda a integração com o Supabase (services/supabase.ts) é feita via protocolo HTTPS, garantindo que o tráfego de dados entre o smartphone e os servidores de nuvem ocorra sob criptografia TLS, protegendo os dados contra ataques de Man-in-the-Middle (MitM) em redes Wi-Fi públicas.
 ## Implantação
 
 [Instruções para implantar a aplicação distribuída em um ambiente de produção.]
@@ -131,14 +240,46 @@ Framework baseado na tecnologia React Native para desenvolvimento de aplicaçõe
 
 ## Testes
 
-[Descreva a estratégia de teste, incluindo os tipos de teste a serem realizados (unitários, integração, carga, etc.) e as ferramentas a serem utilizadas.]
+Os testes manuais validam se a jornada do usuário no aplicativo segue as regras de negócio. Para uma demonstração visual do fluxo completo, disponibilizamos vídeos demonstrativos das funcionalidades públicas.
 
-1. Crie casos de teste para cobrir todos os requisitos funcionais e não funcionais da aplicação.
-2. Implemente testes unitários para testar unidades individuais de código, como funções e classes.
-3. Realize testes de integração para verificar a interação correta entre os componentes da aplicação.
-4. Execute testes de carga para avaliar o desempenho da aplicação sob carga significativa.
-5. Utilize ferramentas de teste adequadas, como frameworks de teste e ferramentas de automação de teste, para agilizar o processo de teste.
+> **Nota sobre Segurança:** Telas que processam dados sensíveis (Login, Cadastro, Edição de Perfil) implementam a diretiva `FLAG_SECURE`. Esta medida de segurança impede a gravação de tela e *screenshots* para evitar *screen logging*. Por este motivo, tais fluxos não possuem gravação de vídeo, sendo verificados via inspeção direta em ambiente de homologação.
+
+### Demonstração Prática (Vídeos)
+* **[Vídeo: Fluxo do Morador](https://youtube.com/shorts/IJ2besR8dTA?feature=share)**
+* **[Vídeo: Fluxo do Administrador](https://youtube.com/shorts/2I2czB93lvw?feature=share)**
+
+---
+
+### 1. Procedimentos de Teste (Jornada do Morador)
+
+| ID | Ação | Passo a Passo | Resultado Esperado | Referência |
+|:---|:---|:---|:---|:---|
+| **TM-M01** | Criar Ocorrência | 1. Clicar em '+' <br> 2. Preencher título/descrição <br> 3. Clicar em 'Registrar' | Sistema deve exibir tela de confirmação e redirecionar para lista. | [Vídeo: Fluxo do Morador](https://youtube.com/shorts/IJ2besR8dTA?feature=share) |
+| **TM-M02** | Editar Ocorrência | 1. Tocar em ocorrência <br> 2. Clicar em 'Editar' <br> 3. Salvar alterações | Dados devem ser atualizados na tela de detalhes. | [Vídeo: Fluxo do Morador](https://youtube.com/shorts/IJ2besR8dTA?feature=share) |
+| **TM-M03** | Excluir Ocorrência | 1. Tocar em ocorrência <br> 2. Clicar em 'Excluir' <br> 3. Confirmar ação | Ocorrência deve sumir da lista sem erros. | [Vídeo: Fluxo do Morador](https://youtube.com/shorts/IJ2besR8dTA?feature=share) |
+| **TM-M04** | Ler Notificação | 1. Acessar aba 'Avisos' <br> 2. Tocar em notificação | O contador de não lidas deve ser decrementado. | [Vídeo: Fluxo do Morador](https://youtube.com/shorts/IJ2besR8dTA?feature=share) |
+| **TM-M05** | Login / Autenticação | 1. Inserir credenciais <br> 2. Clicar em 'Entrar' | Acesso concedido e redirecionamento para o Dashboard. | Restrição de Segurança (`FLAG_SECURE`) |
+| **TM-M06** | Editar Perfil | 1. Acessar aba 'Perfil' <br> 2. Alterar dados <br> 3. Salvar | Dados do usuário atualizados na base. | Restrição de Segurança (`FLAG_SECURE`) |
+
+### 2. Procedimentos de Teste (Jornada do Administrador)
+
+| ID | Ação | Passo a Passo | Resultado Esperado | Referência |
+|:---|:---|:---|:---|:---|
+| **TM-A01** | Cadastrar Residente | 1. Clicar em '+' na tela Residentes <br> 2. Preencher dados <br> 3. Salvar | Novo usuário deve aparecer na tabela de residentes. | [Vídeo: Fluxo do Administrador](https://youtube.com/shorts/2I2czB93lvw?feature=share) |
+| **TM-A02** | Editar Residente | 1. Clicar no ícone de edição <br> 2. Alterar perfil <br> 3. Salvar | Nível de permissão deve ser atualizado no sistema. | [Vídeo: Fluxo do Administrador](https://youtube.com/shorts/2I2czB93lvw?feature=share) |
+| **TM-A03** | Mudar Status Ocorrência | 1. Abrir Ocorrência <br> 2. Clicar em 'Alterar Status' <br> 3. Selecionar 'Resolvido' | Status deve atualizar instantaneamente. | [Vídeo: Fluxo do Administrador](https://youtube.com/shorts/2I2czB93lvw?feature=share) |
+| **TM-A04** | Gerenciar Notificações | 1. Acessar aba 'Notificações' <br> 2. Alternar entre filtros: 'Todas', 'Lidas' e 'Não Lidas' | O sistema deve exibir o feed global (todas ocorrências) e atualizar a lista conforme o filtro aplicado. | [Vídeo: Fluxo do Administrador](https://youtube.com/shorts/2I2czB93lvw?feature=share) |
 
 # Referências
 
-Inclua todas as referências (livros, artigos, sites, etc) utilizados no desenvolvimento do trabalho.
+AMAZON WEB SERVICES (AWS). **AWS Documentation**. Disponível em: <https://docs.aws.amazon.com/>. Acesso em: 20 maio 2026.
+
+EXPO. **Expo Documentation**. Disponível em: <https://docs.expo.dev/>. Acesso em: 01 jun. 2026.
+
+META. **React Documentation**. Disponível em: <https://react.dev/reference/react>. Acesso em: 12 maio 2026.
+
+META. **React Native Documentation**. Disponível em: <https://reactnative.dev/docs/getting-started>. Acesso em: 28 maio 2026.
+
+MICROSOFT. **.NET Documentation**. Disponível em: <https://learn.microsoft.com/pt-br/dotnet/>. Acesso em: 15 maio 2026.
+
+SUPABASE. **Supabase Documentation**. Disponível em: <https://supabase.com/docs>. Acesso em: 04 jun. 2026.
