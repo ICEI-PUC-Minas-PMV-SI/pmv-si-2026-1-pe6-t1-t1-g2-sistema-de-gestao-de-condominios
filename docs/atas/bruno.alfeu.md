@@ -17,10 +17,10 @@
 | 20/04 - 26/04 | Computação Ubíqua e Pervasiva e IoT - Unidade 2 | ✅ | terminar a tela esteticamete | finalizei a parte de estetica da tela |
 | 27/04 - 03/05 | Desenvolvimento de Aplicações Móveis - Unidade 1 | ✅ | fazer a tela funcionar conectanto ao back-end | finalizei a tela de manutenção(Ocorrencias) |
 | 04/05 - 10/05 | Desenvolvimento de Aplicações Móveis - Unidade 2 | ✅ |documentar no fluxo de dados a tela responsavel  | documentei a tela referente a tela de ocorrencias |
-| 11/05 - 17/05 | Desenvolvimento de Aplicações Móveis - Unidade 2 | ⬜ |  |  |
-| 18/05 - 24/05 | Fundamentos de Projeto e Análise de Algoritmos - Unidade 1 | ⬜ |  |  |
-| 25/05 - 31/05 | Fundamentos de Projeto e Análise de Algoritmos - Unidade 2 | ⬜ |  |  |
-| 01/06 - 07/06 |  | ⬜ |  |  |
-| 08/06 - 14/06 |  | ⬜ |  |  |
+| 11/05 - 17/05 | Desenvolvimento de Aplicações Móveis - Unidade 2 | ✅ |estudar os mricrofundamentos e inicar as documentaçoes do front web  | iniciei as documentaçao do front |
+| 18/05 - 24/05 | Fundamentos de Projeto e Análise de Algoritmos - Unidade 1 | ✅ |fazer o fluxo de dados das telas de ocorrencia e notificação e residentes  | fiz o fluxo de dados dos residentes e ocorrencias  |
+| 25/05 - 31/05 | Fundamentos de Projeto e Análise de Algoritmos - Unidade 2 | ✅ |fazer o fluxo de dados de notificação e caso de teste do front web  | fiz o fluxo de dados de notificações e os testes do front web  |
+| 01/06 - 07/06 |  | ✅ | fazer o casos de teste do front mobile | fazer os casos de teste do front mobile  |
+| 08/06 - 14/06 |  | ✅ |  |  |
 
 **Legenda:** ✅ Estudou | ⬜ Não estudou
