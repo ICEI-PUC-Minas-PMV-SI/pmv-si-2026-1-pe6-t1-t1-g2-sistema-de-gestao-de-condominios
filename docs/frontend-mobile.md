@@ -337,6 +337,47 @@ Os testes manuais validam se a jornada do usuário no aplicativo segue as regras
 | **TM-A03** | Mudar Status Ocorrência | 1. Abrir Ocorrência <br> 2. Clicar em 'Alterar Status' <br> 3. Selecionar 'Resolvido' | Status deve atualizar instantaneamente. | [Vídeo: Fluxo do Administrador](https://youtube.com/shorts/2I2czB93lvw?feature=share) |
 | **TM-A04** | Gerenciar Notificações | 1. Acessar aba 'Notificações' <br> 2. Alternar entre filtros: 'Todas', 'Lidas' e 'Não Lidas' | O sistema deve exibir o feed global (todas ocorrências) e atualizar a lista conforme o filtro aplicado. | [Vídeo: Fluxo do Administrador](https://youtube.com/shorts/2I2czB93lvw?feature=share) |
 
+### 3. Login
+
+| ID     | Caso de teste                                 | Dados                            | Resultado esperado                                                   | Resultado obtido                                                     |                                
+| ------ | --------------------------------------------- | -------------------------------- | -------------------------------------------------------------------- |--------------------------------------------------------------------- |
+| CT-001 | Login com credenciais válidas                 | Usuário e senha corretos         | Login realizado com sucesso e redirecionamento para a página inicial | Login realizado com sucesso e redirecionamento para a página inicial |
+| CT-002 | Login com usuário inválido                    | Usuário inexistente              | Mensagem de erro informando credenciais inválidas                    | Exibição da mensagem "Usuário ou senha inválidos"                    |
+| CT-003 | Login com senha inválida                      | Usuário válido e senha incorreta | Mensagem de erro informando credenciais inválidas                    | Exibição da mensagem "Usuário ou senha inválidos"                    |
+| CT-004 | Login com usuário vazio                       | Campo usuário em branco          | Validação impedindo o login                                          | Exibição da mensagem "Informe e-mail e senha para continuar"         |                                            
+| CT-005 | Login com senha vazia                         | Campo senha em branco            | Validação impedindo o login                                          | Exibição da mensagem "Informe e-mail e senha para continuar"         |
+| CT-006 | Login com ambos os campos vazios              | Usuário e senha em branco        | Exibição das mensagens de obrigatoriedade                            | Exibição da mensagem "Usuário ou senha inválidos"                    |                           
+
+### 4. Dashboard
+
+| ID     | Caso de teste                                 | Dados                                                           | Resultado esperado                                   | Resultado obtido                                     |                                
+| ------ | --------------------------------------------- | --------------------------------------------------------------- | ---------------------------------------------------- |----------------------------------------------------- |
+| CT-001 | Acessar dashboard após login                  | usuário: Matheus / perfil: Administrador                        | Dashboard carregado corretamente                     | Dashboard carregado corretamente                     |
+| CT-002 | Verificar exibição dos widgets                | Wigets esperados : Encomendas, reservas, ocorrências e entregas | Todos os widgets são exibidos conforme especificação | Todos os widgets são exibidos conforme especificação |
+| CT-003 | Validar dados dos indicadores                 | Dados das outras abas são apresentados no dashboard             | Valores apresentados correspondem aos dados da base  | Valores apresentados correspondem aos dados da base  |
+| CT-004 | Atualizar dashboard                           | Atualizar dados nas outras abas modificam o dashboard           | Dados são atualizados corretamente                   | Dados não são atualizados corretamente               |                                            
+               
+### 5. Reservas
+
+| ID     | Caso de teste          | Dados                                                     | Resultado esperado                 | Resultado obtido                    |                                
+| ------ | ---------------------- | --------------------------------------------------------- | ---------------------------------- |------------------------------------ |
+| CT-001 | Acessar a aba reservas | Acessar reservas após login                               | Reservas carregada corretamente    | Reservas carregada corretamente     |
+| CT-002 | Criar uma reserva      | Iniciar o processo de criar reserva                       | Reserva criada com sucesso         | Reserva criada com sucesso          |
+| CT-003 | Aprovar uma reserva    | Aprovar uma reserva por um Administrador                  | Reserva foi aprovada com sucesso   | Reserva foi aprovada com sucesso    |
+| CT-004 | Editar uma reserva     | Editar reserva do salão dia 13/06 23:00-01:00/16:00-19:00 | Dados são atualizados corretamente | Dados  são atualizados corretamente |  
+| CT-005 | Excluir uma reserva    |Excluir reserva do salão dia 13/06 16:00-19:00             | Dados são excluídos                | Dados não são excluidos             |  
+
+### 6. Entregas
+
+| ID     | Caso de teste             | Dados                                     | Resultado esperado                 | Resultado obtido                    |                                
+| ------ | ------------------------- | ----------------------------------------- | ---------------------------------- |------------------------------------ |
+| CT-001 | Acessar a aba entregas    | Acessar entregas após login               | Entregas carregada corretamente    | Entregas carregada corretamente     |
+| CT-002 | Criar uma entrega         | Iniciar o processo de solicitar retirada  | Entrega criada com sucesso         | Entrega criada com sucesso          |
+| CT-003 | Entrega no perfil morador | Retirada aparece no perfil morador        | Entrega criada com sucesso         | Entrega criada com sucesso          |
+| CT-004 | Aprovar uma reserva       | Aprovar uma retirada por um Administrador | Retirada foi aprovada com sucesso  | Retirada foi aprovada com sucesso   |
+| CT-005 | Editar uma reserva        | Editar entrega de uma panela              | Dados são atualizados corretamente | Dados  são atualizados corretamente |  
+| CT-006 | Excluir uma reserva       |Excluirencomenda do Mercado Livre          | Dados são excluídos                | Dados não são excluidos             |  
+
 # Referências
 
 AMAZON WEB SERVICES (AWS). **AWS Documentation**. Disponível em: <https://docs.aws.amazon.com/>. Acesso em: 20 maio 2026.
