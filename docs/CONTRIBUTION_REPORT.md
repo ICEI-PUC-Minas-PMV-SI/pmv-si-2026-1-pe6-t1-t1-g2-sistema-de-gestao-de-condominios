@@ -1,6 +1,6 @@
 # 📊 Relatório de Contribuições do Projeto
 
-**Última atualização:** 06/06/2026 14:43
+**Última atualização:** 06/06/2026 16:32
 
 ---
 
@@ -8,7 +8,7 @@
 
 | Aluno                  |   Commits |   Linhas+ |   Linhas- |   Arquivos |   Docs Commits |   Docs Arquivos |
 |------------------------|-----------|-----------|-----------|------------|----------------|-----------------|
-| Bruno Alfeu            |        36 |      1967 |       659 |         45 |             17 |               6 |
+| Bruno Alfeu            |        38 |      2158 |       756 |         69 |             19 |               7 |
 | Gabriel                |        14 |    101429 |       359 |        174 |              0 |               0 |
 | Gabriel Oliveira       |        40 |       520 |        96 |         14 |             33 |               6 |
 | Guilherme Mendonca     |        11 |      1079 |       362 |         20 |              9 |               3 |
@@ -18,9 +18,9 @@
 | Mathbkj                |        48 |     54860 |   5267966 |      35158 |              3 |               1 |
 | Mukimiw4a              |        38 |      1327 |       235 |         31 |             28 |               9 |
 | Worst Javascript User  |        19 |        69 |   5260297 |      34872 |             13 |               3 |
-| YanGuimaraesMartins    |        18 |      1345 |       489 |         11 |             13 |               6 |
+| YanGuimaraesMartins    |        19 |      1345 |       489 |         11 |             13 |               6 |
 | copilot-swe-agent[bot] |         1 |         0 |         0 |          0 |              0 |               0 |
-| github-actions[bot]    |       117 |       951 |       923 |          3 |            117 |               1 |
+| github-actions[bot]    |       118 |       955 |       927 |          3 |            118 |               1 |
 | github-classroom[bot]  |         1 |      2152 |         0 |         45 |              1 |              13 |
 | guigsmendonca          |        22 |       178 |       150 |          9 |             16 |               4 |
 | tuxego                 |         1 |   5263498 |         1 |      34971 |              0 |               0 |
@@ -28,7 +28,7 @@
 
 ## 📅 Contribuições Semanais (Todo o Semestre)
 
-**2026-05-30**: Gabriel Oliveira: 1, Guilherme Mendonça: 2, Isaac Samuel: 2, Worst Javascript User: 9, YanGuimaraesMartins: 3, github-actions[bot]: 9, guigsmendonca: 1
+**2026-05-30**: Bruno Alfeu: 2, Gabriel Oliveira: 1, Guilherme Mendonça: 2, Isaac Samuel: 2, Worst Javascript User: 9, YanGuimaraesMartins: 4, github-actions[bot]: 10, guigsmendonca: 1
 
 **2026-05-23**: Worst Javascript User: 1, github-actions[bot]: 2
 
