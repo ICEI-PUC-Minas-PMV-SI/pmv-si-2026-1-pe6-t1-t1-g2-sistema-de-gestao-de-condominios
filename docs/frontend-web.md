@@ -205,13 +205,79 @@ Autenticação O sistema utiliza JWT (JSON Web Token) com algoritmo HMAC-SHA256 
 
 ## Implantação
 
-[Instruções para implantar a aplicação distribuída em um ambiente de produção.]
+### 1. Requisitos de hardware e software
 
-1. Defina os requisitos de hardware e software necessários para implantar a aplicação em um ambiente de produção.
-2. Escolha uma plataforma de hospedagem adequada, como um provedor de nuvem ou um servidor dedicado.
-3. Configure o ambiente de implantação, incluindo a instalação de dependências e configuração de variáveis de ambiente.
-4. Faça o deploy da aplicação no ambiente escolhido, seguindo as instruções específicas da plataforma de hospedagem.
-5. Realize testes para garantir que a aplicação esteja funcionando corretamente no ambiente de produção.
+**Desenvolvimento:**
+
+- Node.js 18+ e npm ou pnpm
+- Sistema operacional: Windows, macOS ou Linux
+- Editor de código com suporte a TypeScript (recomendado: VS Code)
+
+**Produção (build final):**
+
+- Conta na plataforma **Netlify** (já configurada via `@netlify/vite-plugin-tanstack-start`)
+- Ou qualquer serviço de hospedagem de arquivos estáticos (Vercel, Cloudflare Pages, etc.)
+
+### 2. Plataforma de hospedagem
+
+O frontend web é uma aplicação **React 19** com **Vite 8** e **TanStack Router**, configurada com suporte nativo ao Netlify via plugin `@netlify/vite-plugin-tanstack-start`. O build gera arquivos estáticos que podem ser servidos por qualquer CDN, sem necessidade de servidor dedicado.
+
+### 3. Configuração do ambiente
+
+Instalar dependências:
+
+```bash
+cd src/frontend-web
+npm install
+```
+
+Configurar a variável de ambiente com a URL do backend no arquivo `.env`:
+
+```
+VITE_BACKEND_URL=https://sua-api.com
+```
+
+### 4. Deploy
+
+Iniciar ambiente de desenvolvimento local:
+
+```bash
+npm run dev
+```
+
+O servidor sobe em `http://localhost:3000`.
+
+Gerar build de produção:
+
+```bash
+npm run build
+```
+
+Pré-visualizar o build localmente antes de publicar:
+
+```bash
+npm run preview
+```
+
+Deploy no Netlify via CLI:
+
+```bash
+npm install -g netlify-cli
+netlify deploy --prod
+```
+
+### 5. Testes pós-implantação
+
+- Verificar login com perfis Administrador e Morador
+- Confirmar que `VITE_BACKEND_URL` aponta para o backend de produção
+- Testar dashboard separado por perfil (visão Admin vs Morador)
+- Testar fluxo completo de encomendas, reservas e notificações
+- Validar autenticação social via Google (Supabase)
+- Executar testes automatizados antes do deploy:
+
+```bash
+npm run test
+```
 
 ## Testes
 
