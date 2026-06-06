@@ -144,14 +144,14 @@ O frontend mobile é distribuído como aplicativo nativo gerado pelo Expo SDK 54
 Instalar dependências:
 bashcd src/frontend-mobile
 npm install
-Configurar a variável de ambiente com a URL do backend no arquivo expo-env.d ou .env:
+Configurar a variável de ambiente com a URL do backend no arquivo .env:
 EXPO_PUBLIC_API_URL=https://sua-api.com
 Instalar o CLI do EAS:
 bashnpm install -g eas-cli
 eas login
 
 4. Deploy
-Testes locais (Expo Go):
+Testes locais via Expo Go:
 bashnpx expo start
 Build de produção Android:
 basheas build --platform android
@@ -165,7 +165,7 @@ basheas update --branch production
 Verificar login com perfis Administrador e Morador
 Confirmar que as chamadas à API estão apontando para o backend de produção
 Testar fluxo de encomendas, reservas e notificações
-Validar autenticação social via Google (@react-native-google-signin/google-signin)
+Validar autenticação social via Google
 Testar em dispositivos Android e iOS reais antes da publicação nas lojas
 
 ## Testes
