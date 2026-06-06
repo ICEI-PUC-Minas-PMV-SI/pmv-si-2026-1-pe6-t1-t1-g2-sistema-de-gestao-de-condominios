@@ -121,53 +121,81 @@ Framework baseado na tecnologia React Native para desenvolvimento de aplicaçõe
 
 ## Implantação
 
-1. Requisitos de hardware e software
-Desenvolvimento:
+### 1. Requisitos de hardware e software
 
-Node.js 18+ e npm
-Sistema operacional: Windows, macOS ou Linux
-Para iOS: macOS com Xcode instalado
-Para Android: Android Studio com emulador configurado, ou dispositivo físico
-App Expo Go instalado no dispositivo para testes rápidos
+**Desenvolvimento:**
 
-Produção (build final):
+- Node.js 18+ e npm
+- Sistema operacional: Windows, macOS ou Linux
+- Para iOS: macOS com Xcode instalado
+- Para Android: Android Studio com emulador configurado, ou dispositivo físico
+- App **Expo Go** instalado no dispositivo para testes rápidos
 
-Conta na plataforma EAS (Expo Application Services)
-Para publicar na Play Store: conta Google Play Developer
-Para publicar na App Store: conta Apple Developer
+**Produção (build final):**
 
+- Conta na plataforma **EAS (Expo Application Services)**
+- Para publicar na Play Store: conta Google Play Developer
+- Para publicar na App Store: conta Apple Developer
 
-2. Plataforma de hospedagem
-O frontend mobile é distribuído como aplicativo nativo gerado pelo Expo SDK 54 com React Native 0.81.5. O build e distribuição são feitos via EAS Build (serviço em nuvem da Expo), eliminando a necessidade de servidor dedicado para o app em si. O backend ASP.NET permanece hospedado separadamente.
+### 2. Plataforma de hospedagem
 
-3. Configuração do ambiente
+O frontend mobile é distribuído como aplicativo nativo gerado pelo **Expo SDK 54** com **React Native 0.81.5**. O build e distribuição são feitos via **EAS Build** (serviço em nuvem da Expo), eliminando a necessidade de servidor dedicado para o app em si. O backend ASP.NET permanece hospedado separadamente.
+
+### 3. Configuração do ambiente
+
 Instalar dependências:
-bashcd src/frontend-mobile
+
+```bash
+cd src/frontend-mobile
 npm install
-Configurar a variável de ambiente com a URL do backend no arquivo .env:
+```
+
+Configurar a variável de ambiente com a URL do backend no arquivo `.env`:
+
+```
 EXPO_PUBLIC_API_URL=https://sua-api.com
+```
+
 Instalar o CLI do EAS:
-bashnpm install -g eas-cli
+
+```bash
+npm install -g eas-cli
 eas login
+```
 
-4. Deploy
+### 4. Deploy
+
 Testes locais via Expo Go:
-bashnpx expo start
+
+```bash
+npx expo start
+```
+
 Build de produção Android:
-basheas build --platform android
+
+```bash
+eas build --platform android
+```
+
 Build de produção iOS:
-basheas build --platform ios
+
+```bash
+eas build --platform ios
+```
+
 Publicar atualização over-the-air (sem novo build):
-basheas update --branch production
 
-5. Testes pós-implantação
+```bash
+eas update --branch production
+```
 
-Verificar login com perfis Administrador e Morador
-Confirmar que as chamadas à API estão apontando para o backend de produção
-Testar fluxo de encomendas, reservas e notificações
-Validar autenticação social via Google
-Testar em dispositivos Android e iOS reais antes da publicação nas lojas
+### 5. Testes pós-implantação
 
+- Verificar login com perfis Administrador e Morador
+- Confirmar que as chamadas à API estão apontando para o backend de produção
+- Testar fluxo de encomendas, reservas e notificações
+- Validar autenticação social via Google
+- Testar em dispositivos Android e iOS reais antes da publicação nas lojas
 ## Testes
 
 [Descreva a estratégia de teste, incluindo os tipos de teste a serem realizados (unitários, integração, carga, etc.) e as ferramentas a serem utilizadas.]
