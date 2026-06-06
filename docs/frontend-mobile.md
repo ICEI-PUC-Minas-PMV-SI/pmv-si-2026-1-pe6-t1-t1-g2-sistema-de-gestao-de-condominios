@@ -230,14 +230,81 @@ Validação de Formulários (Frontend): Todos os formulários (Login, Cadastro e
 Comunicação Criptografada: Toda a integração com o Supabase (services/supabase.ts) é feita via protocolo HTTPS, garantindo que o tráfego de dados entre o smartphone e os servidores de nuvem ocorra sob criptografia TLS, protegendo os dados contra ataques de Man-in-the-Middle (MitM) em redes Wi-Fi públicas.
 ## Implantação
 
-[Instruções para implantar a aplicação distribuída em um ambiente de produção.]
+### 1. Requisitos de hardware e software
 
-1. Defina os requisitos de hardware e software necessários para implantar a aplicação em um ambiente de produção.
-2. Escolha uma plataforma de hospedagem adequada, como um provedor de nuvem ou um servidor dedicado.
-3. Configure o ambiente de implantação, incluindo a instalação de dependências e configuração de variáveis de ambiente.
-4. Faça o deploy da aplicação no ambiente escolhido, seguindo as instruções específicas da plataforma de hospedagem.
-5. Realize testes para garantir que a aplicação esteja funcionando corretamente no ambiente de produção.
+**Desenvolvimento:**
 
+- Node.js 18+ e npm
+- Sistema operacional: Windows, macOS ou Linux
+- Para iOS: macOS com Xcode instalado
+- Para Android: Android Studio com emulador configurado, ou dispositivo físico
+- App **Expo Go** instalado no dispositivo para testes rápidos
+
+**Produção (build final):**
+
+- Conta na plataforma **EAS (Expo Application Services)**
+- Para publicar na Play Store: conta Google Play Developer
+- Para publicar na App Store: conta Apple Developer
+
+### 2. Plataforma de hospedagem
+
+O frontend mobile é distribuído como aplicativo nativo gerado pelo **Expo SDK 54** com **React Native 0.81.5**. O build e distribuição são feitos via **EAS Build** (serviço em nuvem da Expo), eliminando a necessidade de servidor dedicado para o app em si. O backend ASP.NET permanece hospedado separadamente.
+
+### 3. Configuração do ambiente
+
+Instalar dependências:
+
+```bash
+cd src/frontend-mobile
+npm install
+```
+
+Configurar a variável de ambiente com a URL do backend no arquivo `.env`:
+
+```
+EXPO_PUBLIC_API_URL=https://sua-api.com
+```
+
+Instalar o CLI do EAS:
+
+```bash
+npm install -g eas-cli
+eas login
+```
+
+### 4. Deploy
+
+Testes locais via Expo Go:
+
+```bash
+npx expo start
+```
+
+Build de produção Android:
+
+```bash
+eas build --platform android
+```
+
+Build de produção iOS:
+
+```bash
+eas build --platform ios
+```
+
+Publicar atualização over-the-air (sem novo build):
+
+```bash
+eas update --branch production
+```
+
+### 5. Testes pós-implantação
+
+- Verificar login com perfis Administrador e Morador
+- Confirmar que as chamadas à API estão apontando para o backend de produção
+- Testar fluxo de encomendas, reservas e notificações
+- Validar autenticação social via Google
+- Testar em dispositivos Android e iOS reais antes da publicação nas lojas
 ## Testes
 
 Os testes manuais validam se a jornada do usuário no aplicativo segue as regras de negócio. Para uma demonstração visual do fluxo completo, disponibilizamos vídeos demonstrativos das funcionalidades públicas.
