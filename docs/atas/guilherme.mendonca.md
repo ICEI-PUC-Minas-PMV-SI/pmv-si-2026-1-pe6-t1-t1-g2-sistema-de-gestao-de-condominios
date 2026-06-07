@@ -21,6 +21,4 @@
 | **18/05 - 24/05** | Fundamentos de Projeto e Análise de Algoritmos - Unidade 1 | ✅ | Evoluir setup do mobile e revisar documentação da etapa para refletir o estado atual da implementação. | - Contribuí em ajustes de configuração e integração da branch de setup mobile (incluindo limpeza de arquivos sensíveis/versionados indevidamente).<br>- Atualizei a documentação do front-end móvel para manter coerência com o desenvolvimento em andamento. |
 | **25/05 - 31/05** | Fundamentos de Projeto e Análise de Algoritmos - Unidade 2 | ✅ | Refinar a documentação mobile e remover conteúdos desatualizados ou fora do padrão definido pela equipe. | - Realizei revisão de conteúdo em `docs/frontend-mobile.md`, removendo seção de tecnologia não aderente ao escopo final do app.<br>- Apoiei a manutenção da qualidade documental para preparar a entrega da etapa mobile. |
 | **01/06 - 07/06** | Fundamentos de Projeto e Análise de Algoritmos - Unidade 2 | ✅ | Atualizar documentos de acompanhamento e planejar próximos incrementos funcionais do front-end móvel. | - Validei o relatório automático de contribuições da equipe atualizado em 01/06.<br>- Registrei o planejamento das próximas entregas mobile (wireframes finalizados, descrição visual e avanço para implementação das telas e fluxos). |
-| **08/06 - 14/06** | | ⬜ | | |
-
-**Legenda:** ✅ Estudou | ⬜ Não estudou
+| **08/06 - 14/06** | | ✅ | | - Colaborei na preparação da apresentação do projeto para o dia 10/06. |
