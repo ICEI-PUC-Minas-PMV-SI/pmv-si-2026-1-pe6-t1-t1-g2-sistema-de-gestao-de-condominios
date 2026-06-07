@@ -20,7 +20,7 @@
 | 11/05 - 17/05 | Desenvolvimento de Aplicações Móveis - Unidade 2 | ✅ | Planejamento na montagem da arquitetura mobile | Feito a montagem base do projeto, auxiliando o time |
 | 18/05 - 24/05 | Fundamentos de Projeto e Análise de Algoritmos - Unidade 1 | ✅ | Integração back + mobile e montagem das telas | Auxilio nas integrações e documentação |
 | 25/05 - 31/05 | Fundamentos de Projeto e Análise de Algoritmos - Unidade 2 | ✅ | Finalização da doc | Finalizando a doc e auxilio no time |
-| 01/06 - 07/06 |  | ⬜ |  |  |
-| 08/06 - 14/06 |  | ⬜ |  |  |
+| 01/06 - 07/06 |  | ✅ |  |  |
+| 08/06 - 14/06 |  | ✅ |  |  |
 
 **Legenda:** ✅ Estudou | ⬜ Não estudou
