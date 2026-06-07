@@ -1,6 +1,6 @@
 # 📊 Relatório de Contribuições do Projeto
 
-**Última atualização:** 07/06/2026 16:24
+**Última atualização:** 07/06/2026 16:25
 
 ---
 
@@ -20,15 +20,15 @@
 | Worst Javascript User  |        19 |        69 |   5260297 |      34872 |             13 |               3 |
 | YanGuimaraesMartins    |        22 |      1511 |       504 |         11 |             16 |               6 |
 | copilot-swe-agent[bot] |         1 |         0 |         0 |          0 |              0 |               0 |
-| github-actions[bot]    |       120 |       966 |       938 |          3 |            120 |               1 |
+| github-actions[bot]    |       121 |       985 |       957 |          3 |            121 |               1 |
 | github-classroom[bot]  |         1 |      2152 |         0 |         45 |              1 |              13 |
-| guigsmendonca          |        23 |       179 |       153 |          9 |             17 |               4 |
+| guigsmendonca          |        24 |       180 |       155 |         10 |             18 |               5 |
 | tuxego                 |         1 |   5263498 |         1 |      34971 |              0 |               0 |
 
 
 ## 📅 Contribuições Semanais (Todo o Semestre)
 
-**2026-05-31**: Bruno Alfeu: 2, Gabriel Oliveira: 1, Guilherme Mendonça: 2, Isaac Samuel: 2, Worst Javascript User: 9, YanGuimaraesMartins: 7, github-actions[bot]: 12, guigsmendonca: 2
+**2026-05-31**: Bruno Alfeu: 2, Gabriel Oliveira: 1, Guilherme Mendonça: 2, Isaac Samuel: 2, Worst Javascript User: 9, YanGuimaraesMartins: 7, github-actions[bot]: 13, guigsmendonca: 3
 
 **2026-05-24**: Worst Javascript User: 1, github-actions[bot]: 2
 
