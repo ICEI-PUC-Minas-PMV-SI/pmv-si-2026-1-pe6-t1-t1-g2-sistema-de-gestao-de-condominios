@@ -1,6 +1,6 @@
 # Front-end Móvel
 
-O Front-end Móvel do projeto **Gestão Integrada de Condomínios (Modernidade Soft)** foi planejado para oferecer uma experiência prática e intuitiva para moradores e perfis administrativos em contexto de uso diário no smartphone. O objetivo é centralizar, em uma navegação simples, os fluxos essenciais do condomínio: autenticação, acompanhamento de avisos e atualizações, registro de ocorrências, realização de reservas e gestão de usuários.
+O Front-end Móvel do projeto **Gestão Integrada de Condomínios** foi planejado para oferecer uma experiência prática e intuitiva para moradores e perfis administrativos em contexto de uso diário no smartphone. O objetivo é centralizar, em uma navegação simples, os fluxos essenciais do condomínio: autenticação, acompanhamento de avisos e atualizações, registro de ocorrências, realização de reservas e gestão de usuários.
 
 A proposta mobile prioriza rapidez nas tarefas mais frequentes e clareza na leitura de informações operacionais. Com isso, o aplicativo reduz a dependência de canais informais (mensagens e comunicados dispersos), melhora a comunicação entre administração e condôminos e aumenta a visibilidade sobre solicitações e serviços do condomínio.
 
@@ -9,7 +9,6 @@ O projeto da interface móvel foi estruturado com foco em **usabilidade em telas
 
 As páginas seguem um padrão visual baseado em cards, blocos de ação e indicadores de status, facilitando o escaneamento rápido. O fluxo foi desenhado para refletir o dia a dia condominial:
 - **Login:** entrada segura na plataforma com foco em acesso rápido.
-- **Dashboard:** visão geral de atalhos e atualizações recentes.
 - **Reservas:** seleção de ambiente, data e faixa de horário com validações de disponibilidade.
 - **Ocorrências:** acompanhamento de chamados por status, data e categoria.
 - **Gestão:** controle de usuários ativos/inativos e permissões de acesso.
