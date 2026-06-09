@@ -116,7 +116,7 @@ export function useOccurrencesPage() {
         return {
             totalAberto: records.filter((r) => getS(r) === "Aberto").length,
             emAnalise: records.filter((r) => getS(r) === "Em Andamento").length,
-            resolvidos: records.filter((r) => getS(r) === "Resolvido" || getS(r) === "Fechado").length,
+            resolvidos: records.filter((r) => getS(r) === "Resolvido" || getS(r) === "Cancelado").length,
         };
     }, [occurrencesQuery.data]);
 

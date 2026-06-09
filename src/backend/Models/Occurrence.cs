@@ -11,6 +11,14 @@ namespace backend.Models
         [JsonPropertyName("user_id")]
         public int? UserId { get; set; }
 
+        [JsonPropertyName("user_username")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? UserUsername { get; set; }
+
+        [JsonPropertyName("user_email")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? UserEmail { get; set; }
+
         [JsonPropertyName("title")]
         public string? Title { get; set; }
 

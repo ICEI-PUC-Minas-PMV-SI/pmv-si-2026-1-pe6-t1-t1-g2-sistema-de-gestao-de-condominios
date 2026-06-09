@@ -9,22 +9,13 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Npgsql;
-using Resend;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 LoadEnvironmentFile(Path.Combine(Directory.GetCurrentDirectory(), ".env"));
 
-// Configuração inicial para inciar serviço de email (Resend).
-builder.Services.AddOptions();
-builder.Services.AddHttpClient<ResendClient>();
-builder.Services.Configure<ResendClientOptions>(opts =>
-{
-    opts.ApiToken = Environment.GetEnvironmentVariable("RESEND_API_KEY") ?? throw new InvalidOperationException("RESEND_API_KEY environment variable is not set.");
-});
-builder.Services.AddTransient<IResend, ResendClient>();
-builder.Services.AddTransient<EmailService>();
+builder.Services.AddHttpClient<EmailService>();
 
 // Configuração de Conexão com o Banco
 var defaultConnection = builder.Configuration.GetConnectionString("DefaultConnection");

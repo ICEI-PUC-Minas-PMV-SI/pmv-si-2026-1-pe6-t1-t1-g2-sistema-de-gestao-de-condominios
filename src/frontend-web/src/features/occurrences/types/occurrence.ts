@@ -1,4 +1,4 @@
-export type OccurrenceStatus = 'Aberto' | 'Em Andamento' | 'Resolvido' | 'Fechado';
+export type OccurrenceStatus = 'Aberto' | 'Em Andamento' | 'Resolvido' | 'Cancelado';
 
 export type OccurrenceApiRecord = {
   id: number;

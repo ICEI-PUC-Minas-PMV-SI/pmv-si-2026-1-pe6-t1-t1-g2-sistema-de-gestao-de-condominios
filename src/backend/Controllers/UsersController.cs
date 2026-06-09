@@ -22,6 +22,66 @@ namespace backend.Controllers
             _configuration = configuration;
         }
 
+        public class UpdateMeRequest
+        {
+            public string? Username { get; set; }
+            public string? Email { get; set; }
+            public string? Password { get; set; }
+        }
+
+        [HttpPut("me")]
+        [Authorize]
+        public async Task<ActionResult<User>> UpdateMe([FromBody] UpdateMeRequest body, CancellationToken cancellationToken)
+        {
+            var rawUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(rawUserId, out var userId))
+                return Unauthorized("Token de autenticação inválido.");
+
+            if (string.IsNullOrWhiteSpace(body.Username) && string.IsNullOrWhiteSpace(body.Email))
+                return BadRequest("Informe ao menos nome ou e-mail para atualizar.");
+
+            var (connectionString, errorResult) = GetConnectionString();
+            if (errorResult is not null) return errorResult;
+
+            try
+            {
+                await using var connection = new NpgsqlConnection(connectionString);
+                await connection.OpenAsync(cancellationToken);
+
+                var passwordHash = string.IsNullOrWhiteSpace(body.Password)
+                    ? null
+                    : HashPassword(body.Password);
+
+                const string sql = @"
+                    UPDATE public.users
+                    SET username = COALESCE(@username, username),
+                        email    = COALESCE(@email,    email),
+                        password_hash = COALESCE(@password_hash, password_hash),
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE id = @id
+                    RETURNING id, username, password_hash, email, profile, created_at, updated_at;";
+
+                await using var command = new NpgsqlCommand(sql, connection);
+                command.Parameters.AddWithValue("id", userId);
+                command.Parameters.AddWithValue("username",      string.IsNullOrWhiteSpace(body.Username) ? DBNull.Value : body.Username.Trim());
+                command.Parameters.AddWithValue("email",         string.IsNullOrWhiteSpace(body.Email)    ? DBNull.Value : body.Email.Trim());
+                command.Parameters.AddWithValue("password_hash", passwordHash is null ? DBNull.Value : passwordHash);
+
+                await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+                if (!await reader.ReadAsync(cancellationToken)) return NotFound();
+
+                return Ok(ToSafeUser(MapUser(reader)));
+            }
+            catch (PostgresException ex) when (ex.SqlState == "23505")
+            {
+                return Conflict("E-mail já cadastrado.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro ao atualizar perfil: {ex.Message}");
+            }
+        }
+
         [HttpGet("me")]
         public async Task<ActionResult<User>> GetCurrentUser(CancellationToken cancellationToken)
         {

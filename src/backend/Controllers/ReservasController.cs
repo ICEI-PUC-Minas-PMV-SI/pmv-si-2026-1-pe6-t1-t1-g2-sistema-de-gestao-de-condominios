@@ -150,7 +150,7 @@ namespace backend.Controllers
                     return Conflict("Já existe reserva ativa (não cancelada) neste horário para esta área comum.");
                 }
 
-                var now = DateTime.UtcNow;
+                var now = DateTime.Now;
                 var dbConnection = _context.Database.GetDbConnection();
                 if (dbConnection is not NpgsqlConnection connection)
                 {
@@ -195,11 +195,35 @@ namespace backend.Controllers
                     if (entity.Status == ReservationStatus.Aprovada)
                     {
                         var notificationId = await CreateNotificationAsync(connection, entity, "Reserva Confirmada", cancellationToken);
-                        if (notificationId > 0)
-                        {
-                            await SendNotificationAsync(notificationId);
-                        }
+                        if (notificationId > 0) await SendNotificationAsync(notificationId);
                     }
+
+                    // Busca nome da área para mensagem mais clara
+                    string areaNameForAdmin = "área comum";
+                    try
+                    {
+                        const string areaForAdminSql = "SELECT name FROM public.common_areas WHERE id = @id LIMIT 1;";
+                        await using var areaForAdminCmd = new NpgsqlCommand(areaForAdminSql, connection);
+                        areaForAdminCmd.Parameters.AddWithValue("id", entity.AreaComumId);
+                        var areaForAdminResult = await areaForAdminCmd.ExecuteScalarAsync(cancellationToken);
+                        if (areaForAdminResult is string n && !string.IsNullOrWhiteSpace(n))
+                            areaNameForAdmin = n;
+                    }
+                    catch { /* ignora erros ao buscar nome da área */ }
+
+                    // Notifica admins sobre nova reserva do morador
+                    try
+                    {
+                        await NotifyAdminsAsync(
+                            connection,
+                            "Nova Reserva",
+                            $"Nova reserva solicitada para {areaNameForAdmin} em {entity.DataHoraInicio:dd/MM/yyyy 'às' HH:mm}.",
+                            reservationId: entity.Id,
+                            occurrenceId: null,
+                            deliveryId: null,
+                            cancellationToken);
+                    }
+                    catch { /* falha na notificação não interrompe a reserva */ }
 
                     return CreatedAtAction(nameof(GetById), new { id = entity.Id }, entity);
                 }
@@ -308,7 +332,7 @@ namespace backend.Controllers
                     command.Parameters.AddWithValue("start_time", dataHoraInicio);
                     command.Parameters.AddWithValue("end_time", dataHoraFim);
                     command.Parameters.AddWithValue("status", requestBody.Status.ToString());
-                    command.Parameters.AddWithValue("updated_at", DateTime.UtcNow);
+                    command.Parameters.AddWithValue("updated_at", DateTime.Now);
 
                     ReservaAreaComum entity;
                     await using (var reader = await command.ExecuteReaderAsync(cancellationToken))
@@ -431,6 +455,43 @@ namespace backend.Controllers
             };
         }
 
+        private static async Task NotifyAdminsAsync(
+            NpgsqlConnection connection,
+            string type,
+            string message,
+            int? reservationId,
+            int? occurrenceId,
+            int? deliveryId,
+            CancellationToken cancellationToken)
+        {
+            const string adminsSql = "SELECT id FROM public.users WHERE profile = 'Administrador';";
+            await using var adminsCmd = new NpgsqlCommand(adminsSql, connection);
+            await using var adminsReader = await adminsCmd.ExecuteReaderAsync(cancellationToken);
+
+            var adminIds = new List<int>();
+            while (await adminsReader.ReadAsync(cancellationToken))
+                adminIds.Add(adminsReader.GetInt32(0));
+            await adminsReader.CloseAsync();
+
+            foreach (var adminId in adminIds)
+            {
+                const string insertSql = @"
+                    INSERT INTO public.notifications
+                        (user_id, type, message, is_read, reservation_id, occurrence_id, delivery_id)
+                    VALUES
+                        (@user_id, @type::notification_type, @message, false, @res_id, @occ_id, @del_id);";
+
+                await using var cmd = new NpgsqlCommand(insertSql, connection);
+                cmd.Parameters.AddWithValue("user_id", adminId);
+                cmd.Parameters.AddWithValue("type", type);
+                cmd.Parameters.AddWithValue("message", message);
+                cmd.Parameters.Add("res_id", NpgsqlTypes.NpgsqlDbType.Integer).Value = reservationId.HasValue ? reservationId.Value : DBNull.Value;
+                cmd.Parameters.Add("occ_id", NpgsqlTypes.NpgsqlDbType.Integer).Value = occurrenceId.HasValue ? occurrenceId.Value : DBNull.Value;
+                cmd.Parameters.Add("del_id", NpgsqlTypes.NpgsqlDbType.Integer).Value = deliveryId.HasValue ? deliveryId.Value : DBNull.Value;
+                await cmd.ExecuteNonQueryAsync(cancellationToken);
+            }
+        }
+
         private static ReservaAreaComum MapReserva(NpgsqlDataReader reader)
         {
             var statusText = reader.GetString(5);
@@ -441,12 +502,12 @@ namespace backend.Controllers
                 AreaComumId = reader.GetInt32(1),
                 MoradorId = reader.GetInt32(2),
                 DataHoraInicio = reader.GetDateTime(3),
-                DataHoraFim = reader.GetDateTime(4),
+                DataHoraFim    = reader.GetDateTime(4),
                 Status = Enum.TryParse<ReservationStatus>(statusText, true, out var status)
                     ? status
                     : ReservationStatus.Pendente,
                 CreatedAt = reader.IsDBNull(6) ? null : reader.GetDateTime(6),
-                UpdatedAt = reader.IsDBNull(7) ? null : reader.GetDateTime(7)
+                UpdatedAt = reader.IsDBNull(7) ? null : reader.GetDateTime(7),
             };
         }
 
@@ -494,7 +555,7 @@ namespace backend.Controllers
                     SELECT 1
                     FROM public.reservations
                     WHERE common_area_id = @common_area_id
-                      AND status <> 'Cancelada'::reservation_status
+                      AND status = 'Aprovada'::reservation_status
                       AND (@exclude_id IS NULL OR id <> @exclude_id)
                       AND start_time < @fim
                       AND end_time > @inicio
@@ -541,17 +602,9 @@ namespace backend.Controllers
 
         private static DateTime NormalizeToUtc(DateTime value)
         {
-            if (value.Kind == DateTimeKind.Utc)
-            {
-                return value;
-            }
-
-            if (value.Kind == DateTimeKind.Local)
-            {
-                return value.ToUniversalTime();
-            }
-
-            return DateTime.SpecifyKind(value, DateTimeKind.Local).ToUniversalTime();
+            // Trata todos os datetimes como horário local sem conversão.
+            // O sistema roda em ambiente local — sem necessidade de normalização UTC.
+            return value;
         }
 
 
@@ -562,7 +615,7 @@ namespace backend.Controllers
             CancellationToken cancellationToken)
         {
             // Busca o nome da área comum
-            string areaName = $"área comum (ID: {reservation.AreaComumId})"; // fallback
+            string areaName = "área comum";
             const string areaSql = @"
                 SELECT name FROM public.common_areas
                 WHERE id = @area_id LIMIT 1;";
@@ -571,13 +624,13 @@ namespace backend.Controllers
             areaCommand.Parameters.AddWithValue("area_id", reservation.AreaComumId);
             var areaResult = await areaCommand.ExecuteScalarAsync(cancellationToken);
             if (areaResult is string name && !string.IsNullOrWhiteSpace(name))
-            {
                 areaName = name;
-            }
+
+            var dataFormatada = reservation.DataHoraInicio.ToString("dd/MM/yyyy 'às' HH:mm");
 
             var message = type == "Reserva Cancelada"
-                ? $"Sua reserva da área comum {areaName} foi cancelada."
-                : $"Sua reserva da área comum {areaName} foi confirmada.";
+                ? $"Sua reserva de {areaName} em {dataFormatada} foi cancelada."
+                : $"Sua reserva de {areaName} em {dataFormatada} foi confirmada.";
 
             const string sql = @"
                 INSERT INTO public.notifications
@@ -642,7 +695,7 @@ namespace backend.Controllers
                         ocupados.Add(new
                         {
                             inicio = reader.GetDateTime(0),
-                            fim = reader.GetDateTime(1)
+                            fim    = reader.GetDateTime(1),
                         });
                     }
 

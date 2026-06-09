@@ -111,7 +111,7 @@ export function CreateOccurrenceModal({
               <option value="Aberto">Aberto</option>
               <option value="Em Andamento">Em Andamento</option>
               <option value="Resolvido">Resolvido</option>
-              <option value="Fechado">Fechado</option>
+              <option value="Cancelado">Cancelado</option>
             </select>
           </div>
         )}

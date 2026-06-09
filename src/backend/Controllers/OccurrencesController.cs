@@ -35,9 +35,12 @@ namespace backend.Controllers
 
                 // Query com subquery para trazer a imagem junto
                 const string sql = @"
-                    SELECT o.*, 
-                           (SELECT file_path FROM public.occurrence_images WHERE occurrence_id = o.id LIMIT 1) as file_path 
-                    FROM public.occurrences o 
+                    SELECT o.*,
+                           (SELECT file_path FROM public.occurrence_images WHERE occurrence_id = o.id LIMIT 1) as file_path,
+                           u.username as user_username,
+                           u.email    as user_email
+                    FROM public.occurrences o
+                    LEFT JOIN public.users u ON u.id = o.user_id
                     ORDER BY o.id DESC;";
 
                 await using var command = new NpgsqlCommand(sql, connection);
@@ -72,10 +75,13 @@ namespace backend.Controllers
                 await connection.OpenAsync(ct);
 
                 const string sql = @"
-                    SELECT o.*, 
-                           (SELECT file_path FROM public.occurrence_images WHERE occurrence_id = o.id LIMIT 1) as file_path 
-                    FROM public.occurrences o 
-                    WHERE o.user_id = @u 
+                    SELECT o.*,
+                           (SELECT file_path FROM public.occurrence_images WHERE occurrence_id = o.id LIMIT 1) as file_path,
+                           u.username as user_username,
+                           u.email    as user_email
+                    FROM public.occurrences o
+                    LEFT JOIN public.users u ON u.id = o.user_id
+                    WHERE o.user_id = @u
                     ORDER BY o.id DESC;";
 
                 await using var command = new NpgsqlCommand(sql, connection);
@@ -160,6 +166,12 @@ namespace backend.Controllers
                 await reader.ReadAsync(ct);
 
                 var result = MapOccurrence(reader);
+                await reader.CloseAsync();
+
+                // Notifica admins sobre nova ocorrência do morador
+                try { await NotifyAdminsAboutOccurrenceAsync(connection, result, ct); }
+                catch { /* falha na notificação não interrompe o registro da ocorrência */ }
+
                 return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
             }
             catch (Exception ex)
@@ -340,6 +352,39 @@ namespace backend.Controllers
             return MapOccurrenceImage(reader);
         }
 
+        private static async Task NotifyAdminsAboutOccurrenceAsync(
+            NpgsqlConnection connection,
+            Occurrence occurrence,
+            CancellationToken ct)
+        {
+            const string adminsSql = "SELECT id FROM public.users WHERE profile = 'Administrador';";
+            await using var adminsCmd = new NpgsqlCommand(adminsSql, connection);
+            await using var adminsReader = await adminsCmd.ExecuteReaderAsync(ct);
+
+            var adminIds = new List<int>();
+            while (await adminsReader.ReadAsync(ct))
+                adminIds.Add(adminsReader.GetInt32(0));
+            await adminsReader.CloseAsync();
+
+            var message = $"Nova ocorrência registrada: {occurrence.Title ?? "Sem título"}. Usuário ID: {occurrence.UserId}.";
+
+            foreach (var adminId in adminIds)
+            {
+                const string insertSql = @"
+                    INSERT INTO public.notifications
+                        (user_id, type, message, is_read, reservation_id, occurrence_id, delivery_id)
+                    VALUES
+                        (@user_id, @type::notification_type, @message, false, NULL, @occ_id, NULL);";
+
+                await using var cmd = new NpgsqlCommand(insertSql, connection);
+                cmd.Parameters.AddWithValue("user_id", adminId);
+                cmd.Parameters.AddWithValue("type", "Nova Ocorrência");
+                cmd.Parameters.AddWithValue("message", message);
+                cmd.Parameters.AddWithValue("occ_id", occurrence.Id);
+                await cmd.ExecuteNonQueryAsync(ct);
+            }
+        }
+
         private int GetCurrentUserId()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
@@ -367,10 +412,15 @@ namespace backend.Controllers
             Status = r.IsDBNull(r.GetOrdinal("status")) ? null : r.GetString(r.GetOrdinal("status")),
             CreatedAt = r.IsDBNull(r.GetOrdinal("created_at")) ? null : r.GetDateTime(r.GetOrdinal("created_at")),
             UpdatedAt = r.IsDBNull(r.GetOrdinal("updated_at")) ? null : r.GetDateTime(r.GetOrdinal("updated_at")),
-            // AQUI É A CHAVE DO SUCESSO:
             ImageUrl = r.HasColumn("file_path") && !r.IsDBNull(r.GetOrdinal("file_path"))
                        ? r.GetString(r.GetOrdinal("file_path"))
-                       : null
+                       : null,
+            UserUsername = r.HasColumn("user_username") && !r.IsDBNull(r.GetOrdinal("user_username"))
+                           ? r.GetString(r.GetOrdinal("user_username"))
+                           : null,
+            UserEmail = r.HasColumn("user_email") && !r.IsDBNull(r.GetOrdinal("user_email"))
+                        ? r.GetString(r.GetOrdinal("user_email"))
+                        : null,
         };
 
         private static OccurrenceImage MapOccurrenceImage(NpgsqlDataReader r) => new()

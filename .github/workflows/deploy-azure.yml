@@ -1,0 +1,35 @@
+name: Deploy Backend – Azure App Service
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/backend/**'
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.x'
+
+      - name: Publish (self-contained, linux-x64)
+        run: |
+          dotnet publish src/backend/backend.csproj \
+            -c Release \
+            -r linux-x64 \
+            --self-contained true \
+            -o ./publish
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: condominio-backend
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ./publish
