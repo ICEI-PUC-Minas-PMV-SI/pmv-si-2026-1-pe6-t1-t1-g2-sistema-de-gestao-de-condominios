@@ -1,0 +1,11 @@
+bin/
+obj/
+.env
+uploads/
+publish/
+artifacts/
+logs/
+*.log
+*.user
+.vs/
+tmp_social_payload.json

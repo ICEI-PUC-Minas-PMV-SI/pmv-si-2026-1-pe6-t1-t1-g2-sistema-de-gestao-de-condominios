@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: condominio-backend
+    runtime: docker
+    dockerfilePath: src/backend/Dockerfile
+    dockerContext: src/backend
+    healthCheckPath: /
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: RESEND_API_KEY
+        sync: false
+      - key: ConnectionStrings__DefaultConnection
+        sync: false

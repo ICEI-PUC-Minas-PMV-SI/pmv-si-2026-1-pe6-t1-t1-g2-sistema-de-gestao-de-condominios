@@ -168,16 +168,13 @@ app.Lifetime.ApplicationStarted.Register(() =>
 
 app.UseForwardedHeaders();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-else
+app.UseSwagger();
+app.UseSwaggerUI();
+
+if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
-    // Ativa o redirecionamento HTTPS apenas quando NÃO for ambiente de desenvolvimento
     app.UseHttpsRedirection();
 }
 
