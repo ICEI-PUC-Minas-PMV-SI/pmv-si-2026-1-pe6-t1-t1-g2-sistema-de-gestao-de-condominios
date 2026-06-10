@@ -5,6 +5,7 @@ import { Button, MaterialIcon } from "#/components/ui";
 import { useProfileModal } from "#/hooks/useProfileModal";
 import { CreateReservationModal } from "./components/CreateReservationModal";
 import { ReservationsList } from "./components/ReservationsList";
+import { ReservationsStatsGrid } from "./components/ReservationsStatsGrid";
 import { useReservationsPage } from "./hooks/useReservationsPage";
 
 export function ReservationsPage() {
@@ -38,7 +39,7 @@ export function ReservationsPage() {
         placeholder="Filtrar por status ou area..."
       />
 
-      <main className="ml-64 p-10 md:p-16 min-h-screen">
+      <main className="min-h-screen p-4 md:ml-64 md:p-10 lg:p-16">
         <div className="max-w-5xl mx-auto space-y-8">
           <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
@@ -60,6 +61,8 @@ export function ReservationsPage() {
               Nova reserva
             </Button>
           </header>
+
+          {page.isAdmin && <ReservationsStatsGrid stats={page.approvedStats} />}
 
           {page.isUsingMockAreas && (
             <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
@@ -92,6 +95,7 @@ export function ReservationsPage() {
         onClose={page.handleCloseModal}
         onSubmit={page.handleSubmit}
         onChange={page.handleFormChange}
+        onSlotChange={page.handleSlotChange}
       />
     </div>
   );

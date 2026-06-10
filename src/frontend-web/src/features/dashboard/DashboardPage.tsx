@@ -5,6 +5,7 @@ import { AdminTopbar } from "#/components/layout/AdminTopbar";
 import { ProfileConfigModal } from "#/components/modals/ProfileConfigModal";
 import { useProfileModal } from "#/hooks/useProfileModal";
 import { getAuthUser, getAuthToken, clearAuthSession } from "#/services/auth-service";
+import { getAvatarUrl } from "#/utils/user-formatters";
 
 // ─── Tipos locais ────────────────────────────────────────────────────────────
 
@@ -37,6 +38,12 @@ interface Reservation {
 interface CommonArea {
   id: number;
   name: string;
+}
+
+interface ResidentUser {
+  id: number;
+  username: string | null;
+  email: string | null;
 }
 
 interface Notice {
@@ -307,6 +314,9 @@ function AdminDashboard({
   reservations,
   loadingReservations,
   areas,
+  users,
+  occurrencesCount,
+  loadingOccurrences,
   navigate,
 }: {
   deliveries: Delivery[];
@@ -314,8 +324,14 @@ function AdminDashboard({
   reservations: Reservation[];
   loadingReservations: boolean;
   areas: CommonArea[];
+  users: ResidentUser[];
+  occurrencesCount: number;
+  loadingOccurrences: boolean;
   navigate: ReturnType<typeof useNavigate>;
 }) {
+  const usersMap = Object.fromEntries(
+    users.map((u) => [u.id, u.username ?? u.email ?? `#${u.id}`])
+  );
   const pending = deliveries.filter(
     (d) => d.status === "available_for_pickup" || d.status === "registered"
   );
@@ -338,7 +354,7 @@ function AdminDashboard({
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard label="Encomendas pendentes" value={loadingDeliveries ? "…" : pending.length}    icon="inventory_2" />
         <StatCard label="Reservas ativas"      value={loadingReservations ? "…" : upcoming.length} icon="event" />
-        <StatCard label="Ocorrências abertas"  value={0}                                            icon="report_problem" />
+        <StatCard label="Ocorrências abertas"  value={loadingOccurrences ? "…" : occurrencesCount} icon="report_problem" />
         <StatCard label="Entregas hoje"        value={loadingDeliveries ? "…" : today.length}      icon="local_shipping" highlight />
       </div>
 
@@ -421,7 +437,7 @@ function AdminDashboard({
                       <p className="text-sm font-medium text-slate-800">{spaceName}</p>
                       <p className="text-xs text-slate-400 mt-0.5">
                         {time}
-                        {r.residentName && <span className="ml-2 text-slate-500">· {r.residentName}</span>}
+                        {usersMap[r.user_id] && <span className="ml-2 text-slate-500">· {usersMap[r.user_id]}</span>}
                       </p>
                     </div>
                     <ReservationStatusBadge status={r.status} />
@@ -451,7 +467,7 @@ export function DashboardPage() {
 
   const displayName  = authUser?.username ?? authUser?.email ?? "Usuário";
   const profileLabel = authUser?.profile ?? "Morador";
-  const avatarUrl: string | undefined = undefined;
+  const avatarUrl = getAvatarUrl(displayName, authUser?.profile);
 
   // ── Estado ────────────────────────────────────────────────────────────────
   const [deliveries,          setDeliveries]          = useState<Delivery[]>([]);
@@ -461,6 +477,11 @@ export function DashboardPage() {
   const [loadingReservations, setLoadingReservations] = useState(true);
 
   const [areas, setAreas] = useState<CommonArea[]>([]);
+
+  const [users, setUsers] = useState<ResidentUser[]>([]);
+
+  const [occurrencesCount, setOccurrencesCount] = useState(0);
+  const [loadingOccurrences, setLoadingOccurrences] = useState(true);
 
   // ── Auth helpers ──────────────────────────────────────────────────────────
   const handleLogout = () => {
@@ -535,6 +556,40 @@ export function DashboardPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, isAdmin, userId]);
 
+  // ── Fetch ocorrências abertas + lista de usuários — apenas admin ──────────
+  useEffect(() => {
+    if (!token || !isAdmin) { setLoadingOccurrences(false); return; }
+
+    async function fetchAdminExtras() {
+      try {
+        const [resOccurrences, resUsers] = await Promise.all([
+          fetch(`${base}/api/Occurrences`, { headers }),
+          fetch(`${base}/api/Users`, { headers }),
+        ]);
+
+        if (resOccurrences.ok) {
+          const data: { status: string | null }[] = await resOccurrences.json();
+          const count = Array.isArray(data)
+            ? data.filter((o) => (o.status ?? "").toLowerCase() === "aberto").length
+            : 0;
+          setOccurrencesCount(count);
+        }
+
+        if (resUsers.ok) {
+          const data: ResidentUser[] = await resUsers.json();
+          setUsers(Array.isArray(data) ? data : []);
+        }
+      } catch {
+        setOccurrencesCount(0);
+      } finally {
+        setLoadingOccurrences(false);
+      }
+    }
+
+    void fetchAdminExtras();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token, isAdmin]);
+
   // ── Render ────────────────────────────────────────────────────────────────
   return (
     <div className="bg-[#FAFAFA] text-on-background min-h-screen font-sans">
@@ -563,7 +618,7 @@ export function DashboardPage() {
         placeholder="Buscar no condomínio..."
       />
 
-      <main className="ml-64 p-10 md:p-16 min-h-screen">
+      <main className="min-h-screen p-4 md:ml-64 md:p-10 lg:p-16">
         <div className="max-w-5xl mx-auto space-y-10">
 
           <header>
@@ -583,6 +638,9 @@ export function DashboardPage() {
               reservations={reservations}
               loadingReservations={loadingReservations}
               areas={areas}
+              users={users}
+              occurrencesCount={occurrencesCount}
+              loadingOccurrences={loadingOccurrences}
               navigate={navigate}
             />
           ) : (

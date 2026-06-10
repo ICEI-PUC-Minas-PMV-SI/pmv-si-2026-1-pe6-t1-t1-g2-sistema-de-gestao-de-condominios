@@ -26,7 +26,7 @@ export function AdminOccurrencesPage() {
         searchTerm={page.searchTerm}
       />
 
-      <main className="ml-64 p-10 md:p-16">
+      <main className="min-h-screen p-4 md:ml-64 md:p-10 lg:p-16">
         <div className="max-w-5xl mx-auto space-y-10">
           <header>
             <h1 className="text-3xl font-bold text-slate-800">Gestão de Ocorrências</h1>
@@ -36,6 +36,7 @@ export function AdminOccurrencesPage() {
           <OccurrencesList
             occurrences={page.occurrences}
             isLoading={page.occurrencesQuery.isLoading}
+            isAdmin={page.isAdmin}
             onEdit={page.openEditModal}
             onDelete={page.handleDelete}
           />

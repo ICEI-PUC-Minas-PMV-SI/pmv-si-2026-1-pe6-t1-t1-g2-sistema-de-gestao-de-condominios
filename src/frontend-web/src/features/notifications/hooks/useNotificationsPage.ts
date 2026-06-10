@@ -59,7 +59,11 @@ export function useNotificationsPage() {
 		retry: false,
 	});
 
-	const notifications = notificationsQuery.data ?? [];
+	const notifications = useMemo(() => {
+		const data = notificationsQuery.data ?? [];
+		// Admins acompanham apenas ocorrências e reservas, não encomendas dos moradores.
+		return isAdmin ? data.filter((item) => item.delivery_id === null) : data;
+	}, [notificationsQuery.data, isAdmin]);
 	const usersById = useMemo(
 		() => new Map((usersQuery.data ?? []).map((user) => [user.id, user])),
 		[usersQuery.data],

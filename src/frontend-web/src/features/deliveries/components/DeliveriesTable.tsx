@@ -49,7 +49,7 @@ export function DeliveriesTable({
 
 	return (
 		<div className="bg-white rounded-[2.5rem] soft-shadow border border-slate-50 overflow-hidden">
-			<div className="p-8 border-b border-slate-50 flex items-center justify-between">
+			<div className="flex flex-col gap-4 border-b border-slate-50 p-6 sm:flex-row sm:items-center sm:justify-between md:p-8">
 				<h3 className="font-bold text-slate-900">Entregas Recentes</h3>
 				<div className="flex items-center gap-2">
 					<Button color="secondary" size="md" onClick={onOpenFilterModal}>
@@ -214,7 +214,7 @@ export function DeliveriesTable({
 					</tbody>
 				</table>
 			</div>
-			<div className="p-6 bg-slate-50/50 border-t border-slate-50 flex items-center justify-between">
+			<div className="flex flex-col gap-2 border-t border-slate-50 bg-slate-50/50 p-6 sm:flex-row sm:items-center sm:justify-between">
 				<p className="text-xs text-slate-500 font-medium">
 					Mostrando {filteredDeliveries.length} de {deliveries.length}{" "}
 					encomendas

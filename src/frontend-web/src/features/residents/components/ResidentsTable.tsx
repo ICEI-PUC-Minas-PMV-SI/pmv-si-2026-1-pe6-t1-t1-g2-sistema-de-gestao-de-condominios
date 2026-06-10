@@ -236,7 +236,7 @@ export function ResidentsTable({
 					</tbody>
 				</table>
 			</div>
-			<div className="px-8 py-6 flex items-center justify-between border-t border-slate-100">
+			<div className="flex flex-col gap-4 border-t border-slate-100 px-4 py-6 sm:flex-row sm:items-center sm:justify-between md:px-8">
 				<p className="text-sm text-slate-500">
 					Mostrando{" "}
 					<span className="font-bold text-slate-800">
@@ -248,7 +248,7 @@ export function ResidentsTable({
 					</span>{" "}
 					residentes
 				</p>
-				<nav className="flex items-center gap-1">
+				<nav className="flex flex-wrap items-center gap-1">
 					<button
 						className="p-2 border border-slate-200 rounded-lg text-slate-400 hover:bg-slate-50"
 						type="button"

@@ -1,12 +1,13 @@
 import { Button, Modal } from "#/components/ui";
 import type { CommonArea } from "../types/common-area";
-import type { ReservationForm, ReservationStatus } from "../types/reservation";
+import type { ReservationDraft, ReservationStatus } from "../types/reservation";
+import { ReservationSlotPicker } from "./ReservationSlotPicker";
 
 type CreateReservationModalProps = {
   open: boolean;
   isPending: boolean;
   isAdmin: boolean;
-  form: ReservationForm;
+  form: ReservationDraft;
   areas: CommonArea[];
   errorMessage?: string;
   onClose: () => void;
@@ -14,6 +15,11 @@ type CreateReservationModalProps = {
   onChange: (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => void;
+  onSlotChange: (next: {
+    selectedDate?: string;
+    startHour?: number | null;
+    endHour?: number | null;
+  }) => void;
 };
 
 const statusOptions: ReservationStatus[] = ["Pendente", "Aprovada", "Cancelada"];
@@ -28,6 +34,7 @@ export function CreateReservationModal({
   onClose,
   onSubmit,
   onChange,
+  onSlotChange,
 }: CreateReservationModalProps) {
   return (
     <Modal open={open} onClose={onClose} title="Solicitar reserva">
@@ -47,75 +54,19 @@ export function CreateReservationModal({
             <option value="">Selecione uma area</option>
             {areas.map((area) => (
               <option key={area.id} value={area.id}>
-                {area.name} (capacidade: {area.capacity})
+                {area.name}
               </option>
             ))}
           </select>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700" htmlFor="dataInicio">
-              Data de início
-            </label>
-            <input
-              id="dataInicio"
-              name="dataInicio"
-              type="date"
-              value={form.dataInicio}
-              onChange={onChange}
-              required
-              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700" htmlFor="horaInicio">
-              Hora de início
-            </label>
-            <input
-              id="horaInicio"
-              name="horaInicio"
-              type="time"
-              value={form.horaInicio}
-              onChange={onChange}
-              required
-              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
-            />
-          </div>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700" htmlFor="dataFim">
-              Data de fim
-            </label>
-            <input
-              id="dataFim"
-              name="dataFim"
-              type="date"
-              value={form.dataFim}
-              onChange={onChange}
-              required
-              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700" htmlFor="horaFim">
-              Hora de fim
-            </label>
-            <input
-              id="horaFim"
-              name="horaFim"
-              type="time"
-              value={form.horaFim}
-              onChange={onChange}
-              required
-              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
-            />
-          </div>
-        </div>
+        <ReservationSlotPicker
+          areaComumId={form.areaComumId}
+          selectedDate={form.selectedDate}
+          startHour={form.startHour}
+          endHour={form.endHour}
+          onChange={onSlotChange}
+        />
 
         {isAdmin && (
           <div className="space-y-2">

@@ -11,28 +11,21 @@ import {
   fetchReservations,
   updateReservation,
 } from "../services/reservations-service";
-import type { Reservation, ReservationForm } from "../types/reservation";
+import type { Reservation, ReservationDraft } from "../types/reservation";
+import {
+  calculateApprovedReservationStats,
+  draftToForm,
+  getLocalTodayISO,
+  reservationToDraft,
+} from "../utils/reservation-slots";
 
-const EMPTY_FORM: ReservationForm = {
+const EMPTY_FORM: ReservationDraft = {
   areaComumId: "",
-  dataInicio: "",
-  horaInicio: "",
-  dataFim: "",
-  horaFim: "",
+  selectedDate: getLocalTodayISO(),
+  startHour: null,
+  endHour: null,
   status: "Pendente",
 };
-
-function toInputDateTime(isoDateTime: string) {
-  const date = new Date(isoDateTime);
-  // Extract UTC components to avoid timezone conversion issues
-  const year = date.getUTCFullYear();
-  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-  const day = String(date.getUTCDate()).padStart(2, "0");
-  const hours = String(date.getUTCHours()).padStart(2, "0");
-  const minutes = String(date.getUTCMinutes()).padStart(2, "0");
-
-  return `${year}-${month}-${day}T${hours}:${minutes}`;
-}
 
 function combineDateTime(date: string, time: string): string {
   const normalizedTime = time.substring(0, 5);
@@ -53,7 +46,7 @@ export function useReservationsPage() {
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
-  const [form, setForm] = useState<ReservationForm>(EMPTY_FORM);
+  const [form, setForm] = useState<ReservationDraft>(EMPTY_FORM);
   const [editingReservation, setEditingReservation] = useState<Reservation | null>(null);
   const [hydrated, setHydrated] = useState(false);
 
@@ -86,7 +79,7 @@ export function useReservationsPage() {
       if (!authUser?.id) {
         throw new Error("Usuário não autenticado.");
       }
-      return createReservation(form, authUser.id);
+      return createReservation(draftToForm(form), authUser.id);
     },
     onSuccess: () => {
       handleCloseModal();
@@ -100,12 +93,13 @@ const updateMutation = useMutation({
       throw new Error("Nenhuma reserva selecionada para edição.");
     }
 
+    const formData = draftToForm(form);
     const payload = {
       id: editingReservation.id,
       areaComumId: Number(form.areaComumId),
       moradorId: editingReservation.moradorId,
-      dataHoraInicio: combineDateTime(form.dataInicio, form.horaInicio),
-      dataHoraFim: combineDateTime(form.dataFim, form.horaFim),
+      dataHoraInicio: combineDateTime(formData.dataInicio, formData.horaInicio),
+      dataHoraFim: combineDateTime(formData.dataFim, formData.horaFim),
       status: form.status,
       createdAt: editingReservation.createdAt,
       updatedAt: editingReservation.updatedAt,
@@ -148,6 +142,11 @@ const updateMutation = useMutation({
     });
   }, [reservationsQuery.data, isAdmin, authUser?.id, searchTerm]);
 
+  const approvedStats = useMemo(
+    () => calculateApprovedReservationStats(reservationsQuery.data ?? []),
+    [reservationsQuery.data],
+  );
+
   function handleLogout() {
     clearAuthSession();
     navigate({ to: "/login", replace: true });
@@ -175,19 +174,17 @@ const updateMutation = useMutation({
   }
 
   function openEditModal(reservation: Reservation) {
-    const start = toInputDateTime(reservation.dataHoraInicio).split("T");
-    const end = toInputDateTime(reservation.dataHoraFim).split("T");
-
     setEditingReservation(reservation);
-    setForm({
-      areaComumId: String(reservation.areaComumId),
-      dataInicio: start[0],
-      horaInicio: start[1],
-      dataFim: end[0],
-      horaFim: end[1],
-      status: reservation.status,
-    });
+    setForm(reservationToDraft(reservation));
     setModalOpen(true);
+  }
+
+  function handleSlotChange(next: {
+    selectedDate?: string;
+    startHour?: number | null;
+    endHour?: number | null;
+  }) {
+    setForm((current) => ({ ...current, ...next }));
   }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -217,10 +214,12 @@ const updateMutation = useMutation({
     handleLogout,
     reservationsQuery,
     reservations,
+    approvedStats,
     commonAreasQuery,
     modalOpen,
     form,
     handleFormChange,
+    handleSlotChange,
     handleSubmit,
     openCreateModal,
     openEditModal,

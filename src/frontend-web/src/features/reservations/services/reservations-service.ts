@@ -5,6 +5,7 @@ import type {
   ReservationApiRecord,
   ReservationForm,
 } from "../types/reservation";
+import type { OccupiedSlot } from "../utils/reservation-slots";
 
 function getAuthHeaders(): HeadersInit {
   const token = getAuthToken();
@@ -72,6 +73,13 @@ export async function updateReservation(id: number, payload: Reservation) {
   });
 
   return mapReservation(response);
+}
+
+export function fetchReservationAvailability(areaId: number, date: string) {
+  return apiRequest<OccupiedSlot[]>(
+    `/api/reservas/disponibilidade?areaId=${areaId}&data=${date}`,
+    { headers: getAuthHeaders() },
+  );
 }
 
 export function deleteReservation(id: number) {

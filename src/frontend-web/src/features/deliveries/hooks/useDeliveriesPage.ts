@@ -8,7 +8,11 @@ import { getAvatarUrl, getProfileLabel } from "#/utils/user-formatters";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { type ChangeEvent, useEffect, useMemo, useState } from "react";
-import { EMPTY_DELIVERY_FORM, EMPTY_FILTER_FORM } from "../constants";
+import {
+  EMPTY_DELIVERY_FORM,
+  EMPTY_FILTER_FORM,
+  PICKED_UP_DELIVERY_STATUS,
+} from "../constants";
 import {
   createDelivery,
   deleteDelivery,
@@ -90,7 +94,10 @@ export function useDeliveriesPage() {
           authUser?.id && authUser.id > 0 ? authUser.id : undefined,
         description: form.description.trim(),
         arrival_date: arrivalDateTime,
-        pickup_date: null,
+        pickup_date:
+          form.status === PICKED_UP_DELIVERY_STATUS
+            ? new Date().toISOString()
+            : null,
         status: form.status,
       });
     },
@@ -207,6 +214,13 @@ export function useDeliveriesPage() {
       `${formData.arrivalDate}T${formData.arrivalTime}:00`,
     ).toISOString();
 
+    const pickupDate =
+      formData.status === PICKED_UP_DELIVERY_STATUS
+        ? (editingDelivery.pickup_date ?? new Date().toISOString())
+        : editingDelivery.status === PICKED_UP_DELIVERY_STATUS
+          ? null
+          : (editingDelivery.pickup_date ?? null);
+
     updateDeliveryMutation.mutate({
       id: editingDelivery.id,
       data: {
@@ -217,7 +231,7 @@ export function useDeliveriesPage() {
           authUser?.id && authUser.id > 0 ? authUser.id : undefined,
         description: formData.description.trim(),
         arrival_date: arrivalDateTime,
-        pickup_date: editingDelivery.pickup_date ?? null,
+        pickup_date: pickupDate,
         status: formData.status,
       },
     });

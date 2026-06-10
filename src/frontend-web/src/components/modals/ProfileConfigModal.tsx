@@ -100,7 +100,7 @@ export function ProfileConfigModal({
         type="button"
       />
       <main
-        className="relative flex w-full max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-[32px] bg-white shadow-2xl animate-in fade-in zoom-in duration-300 md:max-w-4xl"
+        className="relative flex w-full max-w-[calc(100vw-2rem)] max-h-[90vh] flex-col overflow-y-auto rounded-[32px] bg-white shadow-2xl animate-in fade-in zoom-in duration-300 md:max-w-4xl"
         data-purpose="settings-modal-container"
       >
         {/* Header */}

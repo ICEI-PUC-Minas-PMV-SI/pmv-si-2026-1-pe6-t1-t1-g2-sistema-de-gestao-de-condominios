@@ -27,10 +27,10 @@ export function AdminTopbar({
 
   return (
     <>
-      <header className="flex justify-between items-center px-6 py-3 sticky top-0 z-40 bg-white/90 backdrop-blur-md font-manrope text-sm antialiased shadow-sm border-b border-slate-100 ml-64 w-[calc(100%-16rem)]">
-        <div className="flex-1">
+      <header className="flex justify-between items-center gap-4 pl-20 pr-4 py-3 sticky top-0 z-40 bg-white/90 backdrop-blur-md font-manrope text-sm antialiased shadow-sm border-b border-slate-100 md:ml-64 md:w-[calc(100%-16rem)] md:px-6">
+        <div className="min-w-0 flex-1">
           {showSearch && (
-            <div className="flex items-center bg-slate-50 rounded-full px-4 py-1.5 w-96 border border-slate-100 transition-all focus-within:ring-2 focus-within:ring-primary/20">
+            <div className="flex w-full items-center bg-slate-50 rounded-full px-4 py-1.5 max-w-full border border-slate-100 transition-all focus-within:ring-2 focus-within:ring-primary/20 sm:max-w-xs md:max-w-sm lg:w-96 lg:max-w-none">
               <MaterialIcon
                 name="search"
                 className="text-slate-400 text-sm mr-2"

@@ -54,10 +54,10 @@ export function ReservationsList({
         return (
           <div
             key={reservation.id}
-            className="bg-white rounded-3xl border border-slate-100 px-5 py-4 shadow-sm flex items-center justify-between gap-4"
+            className="flex flex-col gap-4 rounded-3xl border border-slate-100 bg-white px-5 py-4 shadow-sm sm:flex-row sm:items-center sm:justify-between"
           >
             <div className="space-y-1">
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3">
                 <h3 className="text-slate-800 font-semibold">{areaName}</h3>
                 <span
                   className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusStyles(
@@ -76,7 +76,7 @@ export function ReservationsList({
             </div>
 
             {isAdmin && (
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 self-end sm:self-auto">
                 <button
                   type="button"
                   onClick={() => onEdit(reservation)}

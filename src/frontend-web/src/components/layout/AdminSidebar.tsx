@@ -133,34 +133,16 @@ function SidebarContent({
       </div>
       <nav className="space-y-1">
         {navItems.map((item) => {
+          if (item.label === "Residentes" && !isAdmin) {
+            return null;
+          }
+
           const isActive = item.to
             ? pathname === item.to || pathname.startsWith(`${item.to}/`)
             : false;
           const className = isActive
             ? "flex w-full items-center gap-3 rounded-lg border-l-4 border-primary bg-surface px-4 py-2 text-primary shadow-card transition-all duration-200 ease-in-out"
             : "flex w-full items-center gap-3 rounded-lg px-4 py-2 text-on-surface-variant transition-all duration-200 ease-in-out hover:bg-surface-container-low hover:text-on-surface";
-
-          if (item.label === "Residentes" && !isAdmin) {
-            return (
-              <div className="relative group" key={item.label}>
-                <button
-                  aria-disabled="true"
-                  className={`${className} cursor-not-allowed`}
-                  type="button"
-                >
-                  <MaterialIcon name={item.icon} />
-                  <span className="flex-1">{item.label}</span>
-                  <MaterialIcon
-                    name="lock"
-                    className="text-on-surface-variant"
-                  />
-                </button>
-                <div className="pointer-events-none absolute left-full top-1/2 z-10 ml-3 w-56 -translate-y-1/2 rounded-lg bg-slate-900 px-3 py-2 text-xs text-white opacity-0 shadow-lg transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100">
-                  Você não tem permissão para acessar essa informação.
-                </div>
-              </div>
-            );
-          }
 
           if (item.to) {
             return (

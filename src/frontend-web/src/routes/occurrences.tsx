@@ -45,7 +45,7 @@ export function OccurrencesPage() {
         searchTerm={page.searchTerm}
       />
 
-      <main className="ml-64 p-10 md:p-16 min-h-screen">
+      <main className="min-h-screen p-4 md:ml-64 md:p-10 lg:p-16">
         <div className="max-w-5xl mx-auto space-y-10">
           <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
@@ -76,6 +76,7 @@ export function OccurrencesPage() {
           <OccurrencesList
             occurrences={page.occurrences}
             isLoading={page.occurrencesQuery.isLoading}
+            isAdmin={page.isAdmin}
             onEdit={page.openEditModal}
             onDelete={page.handleDelete}
           />

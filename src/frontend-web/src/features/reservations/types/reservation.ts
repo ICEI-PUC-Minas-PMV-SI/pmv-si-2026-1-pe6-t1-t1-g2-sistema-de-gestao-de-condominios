@@ -46,3 +46,11 @@ export type ReservationForm = {
   horaFim: string;
   status: ReservationStatus;
 };
+
+export type ReservationDraft = {
+  areaComumId: string;
+  selectedDate: string;
+  startHour: number | null;
+  endHour: number | null;
+  status: ReservationStatus;
+};

@@ -28,7 +28,7 @@ export function NotificationsPage() {
 				searchTerm={page.searchTerm}
 			/>
 
-			<main className="ml-64 min-h-screen p-8">
+			<main className="min-h-screen p-4 md:ml-64 md:p-8">
 				<div className="mx-auto max-w-6xl space-y-8">
 					<NotificationsPageHeader
 						onCreateClick={() => page.setModalOpen(true)}

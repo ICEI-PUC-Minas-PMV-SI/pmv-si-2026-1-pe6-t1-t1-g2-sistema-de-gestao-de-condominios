@@ -1,6 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { AuthDivider } from "#/pages/auth/components/AuthDivider";
 import { AuthFeedbackMessage } from "#/pages/auth/components/AuthFeedbackMessage";
 import { PasswordVisibilityButton } from "#/pages/auth/components/PasswordVisibilityButton";
 import { Button } from "./Button";
@@ -68,11 +67,6 @@ describe("UI components", () => {
 	it("AuthFeedbackMessage aplica tom", () => {
 		render(<AuthFeedbackMessage tone="error">Falhou</AuthFeedbackMessage>);
 		expect(screen.getByText("Falhou").className).toContain("text-red-700");
-	});
-
-	it("AuthDivider renderiza texto", () => {
-		render(<AuthDivider label="ou continue com" />);
-		expect(screen.getByText("ou continue com")).toBeTruthy();
 	});
 
 	it("PasswordVisibilityButton dispara toggle", () => {

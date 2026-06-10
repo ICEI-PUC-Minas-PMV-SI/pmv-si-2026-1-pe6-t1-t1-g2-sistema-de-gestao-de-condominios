@@ -14,8 +14,7 @@ export function isWaitingPickup(status?: string | null) {
 
 	return (
 		normalizedStatus.includes("disponível") ||
-		normalizedStatus.includes("disponivel") ||
-		normalizedStatus.includes("retirada")
+		normalizedStatus.includes("disponivel")
 	);
 }
 
@@ -25,7 +24,7 @@ export function isPickedUp(delivery: Delivery) {
 	return (
 		Boolean(delivery.pickup_date) ||
 		normalizedStatus.includes("entregue") ||
-		normalizedStatus.includes("retirad")
+		normalizedStatus === "retirada"
 	);
 }
 
@@ -57,7 +56,8 @@ export function getStatusClasses(status?: string | null) {
 		return "bg-amber-50 text-amber-600";
 	}
 
-	if ((status ?? "").toLowerCase().includes("entreg")) {
+	const normalizedStatus = (status ?? "").toLowerCase();
+	if (normalizedStatus.includes("entreg") || normalizedStatus === "retirada") {
 		return "bg-emerald-50 text-emerald-600";
 	}
 
