@@ -21,6 +21,6 @@
 | 18/05 - 24/05 | Fundamentos de Projeto e Análise de Algoritmos - Unidade 1 | ✅ |fazer o fluxo de dados das telas de ocorrencia e notificação e residentes  | fiz o fluxo de dados dos residentes e ocorrencias  |
 | 25/05 - 31/05 | Fundamentos de Projeto e Análise de Algoritmos - Unidade 2 | ✅ |fazer o fluxo de dados de notificação e caso de teste do front web  | fiz o fluxo de dados de notificações e os testes do front web  |
 | 01/06 - 07/06 |  | ✅ | fazer o casos de teste do front mobile | fazer os casos de teste do front mobile  |
-| 08/06 - 14/06 |  | ✅ |  |  |
+| 08/06 - 14/06 |  | ✅ | Fazer o video da apresentação | fiz o video da apresentação  |
 
 **Legenda:** ✅ Estudou | ⬜ Não estudou
